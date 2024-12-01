@@ -22,3 +22,5 @@ Este é um projeto simples desenvolvido com **FastAPI** para gerenciar times e p
    
 ## 📋 Rotas da API com Exemplos Visuais
 Destaca que o foco é apresentar exemplos de uso prático das rotas.
+
+![Captura de tela de 2024-12-01 13-16-18](https://github.com/user-attachments/assets/278e0b95-c753-4e72-8271-2413204cd816)
