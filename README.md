@@ -23,7 +23,7 @@ Este é um projeto simples desenvolvido com **FastAPI** para gerenciar times e p
 ## 📋 Rotas da API com Exemplos Visuais
 Destaca que o foco é apresentar exemplos de uso prático das rotas.
 
-#testando rota via docs(http://127.0.0.1:8000/docs#/)
+- **testando rota via docs(http://127.0.0.1:8000/docs#/)**
 ![Captura de tela de 2024-12-01 13-16-18](https://github.com/user-attachments/assets/278e0b95-c753-4e72-8271-2413204cd816)
-#testando rota via Postman
+- **testando rota via Postman**
 ![Captura de tela de 2024-12-01 13-16-35](https://github.com/user-attachments/assets/014822d0-2c7d-4efc-b34d-3e98ae719b51)
