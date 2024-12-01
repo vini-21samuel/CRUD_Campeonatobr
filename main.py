@@ -40,7 +40,8 @@ partidas = {
 jogadores = {
     1: {"id": 1, "nome": "Gabigol", "posicao": "Atacante", "time": "Flamengo", "gols": 10},
     2: {"id": 2, "nome": "Calleri", "posicao": "Atacante", "time": "São Paulo", "gols": 8},
-    3: {"id": 3, "nome": "Yuri Alberto", "posicao": "Atacante", "time": "Corinthians", "gols": 12}
+    3: {"id": 3, "nome": "Yuri Alberto", "posicao": "Atacante", "time": "Corinthians", "gols": 12},
+    4: {"id": 4, "nome": "Vini caça-rato", "posicao": "Atacante", "time": "Flamengo", "gols": 2000 }
 }
 @app.get("/", tags=["Principal"])
 def exibir_campeonato():
@@ -89,12 +90,29 @@ def atualizar_resultado(partida_id: int, resultado: str):
         return partidas[partida_id]
     raise HTTPException(status_code=404, detail="Partida não encontrada.")
 
+
 @app.put("/partidas/{partida_id}/gols", tags=["Partidas"])
-def registrar_gols(partida_id: int, gols: List[dict]):
-    if partida_id in partidas:
-        partidas[partida_id]["gols"] = gols
-        return partidas[partida_id]
-    raise HTTPException(status_code=404, detail="Partida não encontrada.")
+def registrar_gols(partida_id: int, jogador_id: int, quantidade_gols: int):
+    if partida_id not in partidas:
+        raise HTTPException(status_code=404, detail="Partida não encontrada.")
+    if jogador_id not in jogadores:
+        raise HTTPException(status_code=404, detail="Jogador não encontrado.")
+
+    jogador = jogadores[jogador_id]
+    partida = partidas[partida_id]
+
+    # Atualizar a lista de gols na partida
+    for _ in range(quantidade_gols):
+        partida["gols"].append({"jogador": jogador["nome"], "time": jogador["time"]})
+
+    # Atualizar o total de gols do jogador
+    jogador["gols"] += quantidade_gols
+
+    return {
+        "mensagem": f"{jogador['nome']} marcou {quantidade_gols} gol(s) na partida {partida_id}.",
+        "partida": partida,
+        "jogador": jogador
+    }
 
 @app.delete("/partidas/{partida_id}", tags=["Partidas"])
 def deletar_partida(partida_id: int):
