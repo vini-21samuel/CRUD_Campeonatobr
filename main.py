@@ -43,6 +43,16 @@ jogadores = {
     3: {"id": 3, "nome": "Yuri Alberto", "posicao": "Atacante", "time": "Corinthians", "gols": 12}
 }
 
+@app.get("/", tags=["Campeonato"])
+def root():
+    return {
+        "mensagem": "Bem-vindo à API do Campeonato Brasileiro!",
+        "status": {
+                      "total_times": len(times),
+                      "total_partidas": len(partidas),
+                      "total_jogadores": len(jogadores),
+                  }
+        }
 
 # Rotas para Times
 @app.get("/times/", tags=["Times"])
