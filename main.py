@@ -59,6 +59,14 @@ jogadores = {
     12: {"id": 12, "nome": "Gabriel Tavares", "posicao": "Atacante", "time": "Servidores", "gols": 5}
 }
 
+class Time(BaseModel):
+    nome: str
+
+class Partida(BaseModel):
+    time_1: str
+    time_2: str
+    data: str
+    resultado: str = None
 
 class PartidaUpdate(BaseModel):
     time_1: str
@@ -71,6 +79,14 @@ class GolsInput(BaseModel):
     jogador_id: int
     quantidade_gols: int
 
+contador_jogadores = max(jogadores.keys())  # Último ID usado nos jogadores
+
+# Classe base (model) para representar um jogador
+class Jogador(BaseModel):
+    nome: str
+    posicao: str
+    time: str
+    gols: int = 0
 
 # Rota raiz
 @app.get("/", tags=["Raiz"])
@@ -93,11 +109,12 @@ def buscar_time(time_id: int):
 
 
 @app.post("/times/", tags=["Times"])
-def adicionar_time(nome: str):
+def adicionar_time(time: Time):
     novo_id = max(times.keys(), default=0) + 1
-    time = {"id": novo_id, "nome": nome}
-    times[novo_id] = time
-    return time
+    time_data = {"id": novo_id, "nome": time.nome}
+    times[novo_id] = time_data
+    return time_data
+
 
 
 @app.delete("/times/{time_id}", tags=["Times"])
@@ -115,12 +132,18 @@ def listar_partidas():
 
 
 @app.post("/partidas/", tags=["Partidas"])
-def adicionar_partida(time_1: str, time_2: str, data: str):
+def adicionar_partida(partida: Partida):
     novo_id = max(partidas.keys(), default=0) + 1
-    partida = {"id": novo_id, "time_1": time_1, "time_2": time_2, "data": data, "resultado": None, "gols": []}
-    partidas[novo_id] = partida
-    return partida
-
+    partida_data = {
+        "id": novo_id,
+        "time_1": partida.time_1,
+        "time_2": partida.time_2,
+        "data": partida.data,
+        "resultado": partida.resultado,
+        "gols": []
+    }
+    partidas[novo_id] = partida_data
+    return partida_data
 
 @app.put("/partidas/{partida_id}/gols", tags=["Partidas"])
 def registrar_gols(partida_id: int, input: GolsInput):
@@ -185,11 +208,11 @@ def buscar_jogador(jogador_id: int):
 
 
 @app.post("/jogadores/", tags=["Jogadores"])
-def adicionar_jogador(nome: str, posicao: str, time: str, gols: int):
-    novo_id = max(jogadores.keys(), default=0) + 1
-    jogador = {"id": novo_id, "nome": nome, "posicao": posicao, "time": time, "gols": gols}
-    jogadores[novo_id] = jogador
-    return jogador
+def adicionar_jogador(jogador: Jogador):
+    global contador_jogadores
+    contador_jogadores += 1
+    jogadores[contador_jogadores] = jogador.dict()
+    return {"id": contador_jogadores, **jogador.dict()}
 
 
 @app.delete("/jogadores/{jogador_id}", tags=["Jogadores"])
