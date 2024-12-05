@@ -1,8 +1,9 @@
 # Gerenciador de Campeonato :soccer:
 
 Este é um projeto simples desenvolvido com **FastAPI** para gerenciar times e partidas de um campeonato. O objetivo principal é aprender os conceitos de **CRUD** (Create, Read, Update, Delete) e os métodos HTTP: **GET**, **POST**, **PUT** e **DELETE**, além de utilizar o **Postman** para testar rotas de APIs.  
+API Interclasse tem como objetivo fornecer uma plataforma para gerenciar partidas, jogadores e times em uma competição de interclasse. Através desta API, é possível cadastrar times, adicionar jogadores, registrar partidas e consultar os resultados, criando uma base de dados simples para o campeonato interclasse. Este sistema permite o gerenciamento eficiente de times, partidas e jogadores para competições esportivas dentro de uma instituição.
 
-Essa API Interclasse tem como objetivo fornecer uma plataforma para gerenciar partidas, jogadores e times em uma competição de interclasse. Através desta API, é possível cadastrar times, adicionar jogadores, registrar partidas e consultar os resultados, criando uma base de dados simples para o campeonato interclasse. Este sistema permite o gerenciamento eficiente de times, partidas e jogadores para competições esportivas dentro de uma instituição.
+
 ---
 
 ## Tecnologias Utilizadas  
