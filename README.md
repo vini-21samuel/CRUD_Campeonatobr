@@ -27,14 +27,13 @@ Você pode começar baixando o projeto diretamente do repositório GitHub ou pel
    
 ### Pré-requisitos  
 
-1. Instale as dependências necessárias com o comando:  
+1. Tenha o **Python** instalado em sua máquina.
+2. Instale as dependências necessárias com o comando:  
    ```bash
    pip install fastapi uvicorn
    ```
-2. Tenha o **Python** instalado em sua máquina.
-3. python -m venv venv
-4. Ambiente virtual
-
+3. Criar Ambiente virtual
+  ``` python -m venv venv ```
 ### No Windows:
 ```
 venv\Scripts\activate
