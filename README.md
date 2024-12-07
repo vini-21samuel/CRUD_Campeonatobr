@@ -42,6 +42,11 @@ venv\Scripts\activate
 ```
 source venv/bin/activate
 ```
+
+### testar API
+```
+uvicorn main:app -- reload
+```
    
 ## 📋 Rotas da API com Exemplos Visuais
 Destaca que o foco é apresentar exemplos de uso prático das rotas.
