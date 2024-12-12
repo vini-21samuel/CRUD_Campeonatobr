@@ -1,8 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from database import SessionLocal
-from models import Time
-from schemas import TimeCreate, TimeResponse
+from App.database import SessionLocal
+from App.models import Time
+from App.schemas import TimeCreate, TimeResponse
 
 router = APIRouter()
 

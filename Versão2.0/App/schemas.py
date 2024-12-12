@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional, List
 
 class TimeBase(BaseModel):
     nome: str
@@ -9,6 +10,7 @@ class TimeCreate(TimeBase):
 
 class TimeResponse(TimeBase):
     id: int
+    jogadores: List["JogadorResponse"] = []
 
     class Config:
         orm_mode = True
@@ -16,14 +18,15 @@ class TimeResponse(TimeBase):
 class JogadorBase(BaseModel):
     nome: str
     posicao: str
+    gols: int
     time_id: int
-    gols: int = 0
 
 class JogadorCreate(JogadorBase):
     pass
 
 class JogadorResponse(JogadorBase):
     id: int
+    time: Optional[TimeResponse] = None
 
     class Config:
         orm_mode = True
