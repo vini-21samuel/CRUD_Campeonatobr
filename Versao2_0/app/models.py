@@ -1,47 +1,46 @@
-from .database import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP, Date, Time
+# app/models.py
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
+from app.database import Base
+from sqlalchemy import Date  # Adicione esta linha no início do seu arquivo
 
+
+# Modelo de Time
 class Time(Base):
     __tablename__ = 'times'
 
     id = Column(Integer, primary_key=True, index=True)
-    nome = Column(String, nullable=False)
-    cidade = Column(String, nullable=False)
-    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
-    updated_at = Column(TIMESTAMP(timezone=True), default=None, onupdate=func.now())
+    nome = Column(String)
+    lugar = Column(String)
 
-    jogadores = relationship("Jogador", back_populates="time")  # Relacionamento explícito
-    partidas = relationship("Partida", back_populates="time1")  # Relacionamento com partidas (time1)
-    partidas_oponente = relationship("Partida", back_populates="time2")  # Relacionamento com partidas (time2)
 
+    
+    jogadores = relationship("Jogador", back_populates="time")
+    partidas_time1 = relationship("Partida", foreign_keys="[Partida.time1_id]", back_populates="time1")
+    partidas_time2 = relationship("Partida", foreign_keys="[Partida.time2_id]", back_populates="time2")
 
 class Jogador(Base):
     __tablename__ = 'jogadores'
 
     id = Column(Integer, primary_key=True, index=True)
-    nome = Column(String, nullable=False)
-    posicao = Column(String, nullable=False)
-    time_id = Column(Integer, ForeignKey("times.id"), nullable=False)
-    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
-    updated_at = Column(TIMESTAMP(timezone=True), default=None, onupdate=func.now())
+    nome = Column(String)
+    posicao = Column(String)
+    time_id = Column(Integer, ForeignKey('times.id'))  # Chave estrangeira para 'times'
 
-    time = relationship("Time", back_populates="jogadores")  # Relacionamento explícito
+    # Relacionamento com time
+    time = relationship("Time", back_populates="jogadores")
+    # outros campos...
 
 
+# Modelo Partida
 class Partida(Base):
     __tablename__ = 'partidas'
-
+    
     id = Column(Integer, primary_key=True, index=True)
-    time1_id = Column(Integer, ForeignKey("times.id"), nullable=False)  # Time 1
-    time2_id = Column(Integer, ForeignKey("times.id"), nullable=False)  # Time 2
-    data = Column(Date, nullable=False)  # Data da partida
-    placar_time1 = Column(Integer, nullable=True)  # Placar do Time 1
-    placar_time2 = Column(Integer, nullable=True)  # Placar do Time 2
-    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
-    updated_at = Column(TIMESTAMP(timezone=True), default=None, onupdate=func.now())
-
-    # Relacionamento com os times
-    time1 = relationship("Time", foreign_keys=[time1_id], back_populates="partidas")
-    time2 = relationship("Time", foreign_keys=[time2_id], back_populates="partidas_oponente")
+    time1_id = Column(Integer, ForeignKey('times.id'))
+    time2_id = Column(Integer, ForeignKey('times.id'))
+    resultado = Column(String)
+    data = Column(Date)
+    
+    time1 = relationship("Time", foreign_keys=[time1_id], back_populates="partidas_time1")
+    time2 = relationship("Time", foreign_keys=[time2_id], back_populates="partidas_time2")
