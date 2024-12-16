@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import List
 from datetime import datetime
+from datetime import date
 
 # Schema para Jogador
 class JogadorBase(BaseModel):
@@ -8,7 +9,10 @@ class JogadorBase(BaseModel):
     posicao: str
     gols: int
 
-class JogadorCreate(JogadorBase):
+class JogadorCreate(BaseModel):
+    nome: str
+    posicao: str
+    gols: int = 0  # Define gols com valor padrão 0, para que não seja obrigatório
     time_id: int
 
 class JogadorResponse(BaseModel):
@@ -41,8 +45,8 @@ class TimeResponse(BaseModel):
 class PartidaBase(BaseModel):
     time1_id: int
     time2_id: int
-    resultado: str
-    data: datetime
+    data: date
+    resultado: str | None = None  # O resultado pode ser None (não preenchido)
 
 class PartidaCreate(PartidaBase):
     pass
@@ -51,10 +55,10 @@ class PartidaResponse(BaseModel):
     id: int
     time1_id: int
     time2_id: int
-    resultado: str
-    data: datetime
-    time1: TimeResponse
-    time2: TimeResponse
-    
+    data: date
+    resultado: str | None
+    time1: 'TimeResponse'  # Presumindo que você tem um schema TimeResponse para os times
+    time2: 'TimeResponse'
+
     class Config:
         orm_mode = True
