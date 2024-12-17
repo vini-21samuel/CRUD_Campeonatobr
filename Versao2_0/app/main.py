@@ -25,6 +25,6 @@ def root():
     return {"message": "API está rodando!"}
 
 # Incluir routers de outras rotas
-app.include_router(jogadores_router, prefix="/jogadores", tags=["Jogadores"])
 app.include_router(times_router, prefix="/times", tags=["Times"])
+app.include_router(jogadores_router, prefix="/jogadores", tags=["Jogadores"])
 app.include_router(partidas_router, prefix="/partidas", tags=["Partidas"])

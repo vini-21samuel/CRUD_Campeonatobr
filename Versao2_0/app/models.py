@@ -12,9 +12,6 @@ class Time(Base):
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String)
     lugar = Column(String)
-
-
-    
     jogadores = relationship("Jogador", back_populates="time")
     partidas_time1 = relationship("Partida", foreign_keys="[Partida.time1_id]", back_populates="time1")
     partidas_time2 = relationship("Partida", foreign_keys="[Partida.time2_id]", back_populates="time2")
@@ -36,14 +33,13 @@ class Jogador(Base):
 # Modelo Partida
 
 class Partida(Base):
-    __tablename__ = 'partidas'
-    
+    __tablename__ = "partidas"
     id = Column(Integer, primary_key=True, index=True)
-    time1_id = Column(Integer, ForeignKey('times.id'), nullable=False)
-    time2_id = Column(Integer, ForeignKey('times.id'), nullable=False)
-    data = Column(Date, nullable=False)
-    resultado = Column(String(255), nullable=True)
+    time1_id = Column(Integer, ForeignKey("times.id"))
+    time2_id = Column(Integer, ForeignKey("times.id"))
+    resultado = Column(String)
+    data = Column(Date)
 
-    time1 = relationship("Time", foreign_keys=[time1_id], back_populates="partidas_time1")
-    time2 = relationship("Time", foreign_keys=[time2_id], back_populates="partidas_time2")
+    time1 = relationship("Time", foreign_keys=[time1_id], lazy="joined")
+    time2 = relationship("Time", foreign_keys=[time2_id], lazy="joined")
 

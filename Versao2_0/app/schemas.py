@@ -10,6 +10,7 @@ class JogadorBase(BaseModel):
     gols: int
 
 class JogadorCreate(BaseModel):
+    id: int  # Inclui o identificador no corpo
     nome: str
     posicao: str
     gols: int = 0  # Define gols com valor padrão 0, para que não seja obrigatório
@@ -26,6 +27,7 @@ class JogadorResponse(BaseModel):
 
 # Modelo Time
 class TimeBase(BaseModel):  # Agora existe a classe TimeBase para criação
+    id: int
     nome: str
     lugar: str
 
@@ -45,20 +47,19 @@ class TimeResponse(BaseModel):
 class PartidaBase(BaseModel):
     time1_id: int
     time2_id: int
-    data: date
-    resultado: str | None = None  # O resultado pode ser None (não preenchido)
+    data: date  # Alterado para tipo `date`
+    resultado: str | None = None
 
 class PartidaCreate(PartidaBase):
     pass
 
 class PartidaResponse(BaseModel):
-    id: int
-    time1_id: int
-    time2_id: int
-    data: date
-    resultado: str | None
-    time1: 'TimeResponse'  # Presumindo que você tem um schema TimeResponse para os times
-    time2: 'TimeResponse'
+    id: int  # O campo id deve ser obrigatório
+    time1_id: int | None  # Permitir que seja nulo ou um inteiro
+    time2_id: int | None
+    data: str  # Mantemos como string
+    resultado: str | None  # Permitir que seja nulo
+
 
     class Config:
-        orm_mode = True
+        orm_mode = True 
