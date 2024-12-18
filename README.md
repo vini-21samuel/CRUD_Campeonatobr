@@ -1,4 +1,4 @@
-# API de Interclasse Escolar
+# API de Interclasse Escolar :soccer:
 
 Este projeto é uma API desenvolvida para gerenciar competições esportivas de interclasse em ambiente escolar. A API permite criar, listar, atualizar e deletar informações sobre partidas, equipes, e resultados, promovendo uma organização eficiente das competições. Além disso, fornece endpoints bem documentados para interação com o sistema.
 
