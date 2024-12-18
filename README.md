@@ -97,7 +97,23 @@ O servidor será iniciado no endereço: http://127.0.0.1:8000
 | 16  | 2         | 3         | 2024-12-20 | 1x0       |
 
 
-### Teste das rotas no docs e no postman
+### Teste das rotas no docs e no Postman
+
+<div style="display: flex; justify-content: space-around;">
+  <div style="text-align: center;">
+    <h4>Docs</h4>
+    <img src="https://github.com/user-attachments/assets/de0a1c07-1634-4705-a7e3-200f59b39d78" alt="docsg" width="400">
+  </div>
+  
+  ### Link da documentação das rotas no postman
+  ```
+  https://web.postman.co/workspace/My-Workspace~54174e29-390c-458d-8157-e7602835305e/documentation/40116141-6d6fb095-3ef6-4ad5-bfd6-76cd0a68b049
+  ```
+  <div style="text-align: center;">
+    <h4>Postman</h4>
+    <img src="https://github.com/user-attachments/assets/cb1af95d-af8d-46e5-b8de-1e4f8ee7e9ce" alt="teste" width="400">
+  </div>
+</div>
 
 
 
