@@ -20,7 +20,6 @@ Este projeto pode ser adaptado para atender a qualquer tipo de torneio ou compet
 - **FastAPI**: Framework para construção de APIs rápidas e eficientes.
 - **Uvicorn**: Servidor ASGI para rodar a aplicação.
 - **SQLAlchemy**: ORM para gerenciamento de banco de dados.
-- **SQLite** (ou outro banco de dados à sua escolha): Para armazenamento de dados.
 - **Pydantic**: Validação e tipagem de dados.
 - **Git**: Controle de versão.
 
