@@ -36,9 +36,9 @@ def criar_jogador(jogador: schemas.JogadorCreate, db: Session = Depends(get_db))
                              detail=f"Erro ao criar jogador: {str(e)}")
 
 # Update (PUT) - Atualizar jogador
-@router.put("/{jogador_id}", response_model=schemas.JogadorResponse)
-def atualizar_jogador(jogador_id: int, jogador: schemas.JogadorCreate, db: Session = Depends(get_db)):
-    db_jogador = db.query(models.Jogador).filter(models.Jogador.id == jogador_id).first()
+@router.put("/", response_model=schemas.JogadorResponse)
+def atualizar_jogador(jogador: schemas.JogadorCreate, db: Session = Depends(get_db)):
+    db_jogador = db.query(models.Jogador).filter(models.Jogador.id == jogador.id).first()
     
     if not db_jogador:
         raise HTTPException(status_code=404, detail="Jogador não encontrado")
@@ -47,6 +47,7 @@ def atualizar_jogador(jogador_id: int, jogador: schemas.JogadorCreate, db: Sessi
     db_jogador.posicao = jogador.posicao
     db_jogador.gols = jogador.gols
     db_jogador.time_id = jogador.time_id
+    
     db.commit()
     db.refresh(db_jogador)
     

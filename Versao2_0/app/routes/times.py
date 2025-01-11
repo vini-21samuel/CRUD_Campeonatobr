@@ -38,7 +38,6 @@ def atualizar_time(time_id: int, time: schemas.TimeCreate, db: Session = Depends
     if not db_time:
         raise HTTPException(status_code=404, detail="Time não encontrado")
     
-    db.time_id = time.id
     db_time.nome = time.nome
     db_time.lugar = time.lugar
     db.commit()
@@ -46,7 +45,7 @@ def atualizar_time(time_id: int, time: schemas.TimeCreate, db: Session = Depends
     
     return db_time
 
-# Delete (DELETE) - Excluir time
+# Excluir time
 @router.delete("/{time_id}", response_model=schemas.TimeResponse)
 def excluir_time(time_id: int, db: Session = Depends(get_db)):
     try:
@@ -54,7 +53,13 @@ def excluir_time(time_id: int, db: Session = Depends(get_db)):
 
         if not db_time:
             raise HTTPException(status_code=404, detail="Time não encontrado")
+
+        # Atualizar as partidas envolvendo o time
+        db.query(models.Partida).filter(
+            (models.Partida.time1_id == time_id) | (models.Partida.time2_id == time_id)
+        ).update({models.Partida.time1_id: None, models.Partida.time2_id: None}, synchronize_session=False)
         
+        # Excluir o time
         db.delete(db_time)
         db.commit()
         
