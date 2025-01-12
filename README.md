@@ -58,6 +58,8 @@ Teste as rotas na documentação interativa:
     http://localhost:8000/docs
 ```
 ### 4. 🐳 Resultados dos Testes com Docke
+![Captura de tela de 2025-01-11 20-07-04](https://github.com/user-attachments/assets/7a867b6d-6aa3-4878-93c7-43528ae2102e)
+
  
 
 
