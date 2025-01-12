@@ -59,6 +59,9 @@ Teste as rotas na documentação interativa:
 ```
 ### 4. 🐳 Resultados dos Testes com Docke
 ![Captura de tela de 2025-01-11 20-07-04](https://github.com/user-attachments/assets/7a867b6d-6aa3-4878-93c7-43528ae2102e)
+![image docker](https://github.com/user-attachments/assets/92bced96-6d72-4136-b793-7526bd53a3b4)
+![docker](https://github.com/user-attachments/assets/02b52158-c986-49e9-a4f4-bda008fe8604)
+
 
  
 
