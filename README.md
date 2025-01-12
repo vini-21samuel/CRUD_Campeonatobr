@@ -57,6 +57,7 @@ Teste as rotas na documentação interativa:
 ```bash
     http://localhost:8000/docs
 ```
-
+### 4. 🐳 Resultados dos Testes com Docke
+ 
 
 
