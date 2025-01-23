@@ -62,6 +62,13 @@ A aplicação utiliza Jinja2 para renderizar templates HTML. A partir de agora, 
 
 ### 5. resultados dos templates
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/dd6b7d7b-3435-40c7-85b7-adb23c42a9aa" />
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/54d147c7-1cfc-4bd8-a124-0d8fd3b2e708" />
+</p>
 
 
 
