@@ -1,0 +1,25 @@
+<div class="container">
+    <h2 class="text-center">Adicionar Time</h2>
+
+    <!-- Início da seção de formulário de times -->
+    <section class="form-section">
+        <form action="/times/adicionar" method="post">
+            <div class="mb-4">
+                <label for="nome" class="form-label">Nome do Time</label>
+                <input type="text" name="nome" id="nome" class="form-control" placeholder="Digite o nome do time" value="" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="lugar" class="form-label">Lugar</label>
+                <input type="text" name="lugar" id="lugar" class="form-control" placeholder="Digite a localização do time" value="" required>
+            </div>
+
+            <!-- Botões de ação -->
+            <div class="form-actions text-center">
+                <button type="submit" class="btn btn-primary w-100">Salvar</button>
+                <a href="/times" class="btn btn-secondary w-100 mt-2">Voltar</a>
+            </div>
+        </form>
+    </section>
+    <!-- Fim da seção de formulário de times -->
+</div

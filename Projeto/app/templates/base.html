@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CRUD Interclasse{% endblock %}</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>CRUD</h1>
+        </div>
+    </header>
+    <main>
+        <div class="main-container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    <footer>
+        <div class="footer-container">
+            <p>Desenvolvido por Vinícius Samuel</p>
+        </div>
+    </footer>
+</body>
+</html>

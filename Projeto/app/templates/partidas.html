@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Partidas</title>
+</head>
+<body>
+    <div class="container">
+        <h2>Lista de Partidas</h2>
+
+        <!-- Botão Adicionar Partida -->
+        <a href="/partidas/adicionar">
+            <button class="add-partida">Adicionar Nova Partida</button>
+        </a>
+
+        <!-- Verificação de partidas -->
+        {% if partidas %}
+        <table class="partidas-table">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Time 1</th>
+                    <th>Time 2</th>
+                    <th>Resultado</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for partida in partidas %}
+                <tr>
+                    <td>{{ partida.data }}</td>
+                    <td>{{ partida.time1.nome if partida.time1 else 'Não encontrado' }}</td>
+                    <td>{{ partida.time2.nome if partida.time2 else 'Não encontrado' }}</td>
+                    <td>{{ partida.resultado or '-' }}</td>
+                    <td>
+                        <a href="/partidas/editar/{{ partida.id }}" class="edit">Editar</a>
+                        <form action="/partidas/deletar/{{ partida.id }}" method="post" style="display: inline;">
+                            <button type="submit" class="delete" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="no-partidas">Nenhuma partida cadastrada. Clique no botão acima para adicionar uma partida.</p>
+        {% endif %}
+    </div>
+</body>
+
+<!-- CSS Inline -->
+<style>
+    /* Estilo global */
+    body {
+        background-image: url('./imagens/fundo.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        font-family: Arial, sans-serif;
+        color: #333;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    /* Container principal */
+    .container {
+        background-color: rgba(255, 255, 255, 0.6);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 95%;
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+
+    /* Botão Adicionar Partida */
+    .add-partida {
+        background-color: #28a745;
+        color: white;
+        padding: 15px 25px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 20px;
+        font-size: 16px;
+        text-align: center;
+        transition: all 0.3s ease;
+        display: block;
+    }
+
+    .add-partida:hover {
+        background-color: #218838;
+        transform: scale(1.05);
+    }
+
+    /* Tabela de Partidas */
+    table.partidas-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table.partidas-table th,
+    table.partidas-table td {
+        padding: 15px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+
+    table.partidas-table th {
+        background-color: #007BFF;
+        color: white;
+    }
+
+    table.partidas-table td {
+        background-color: #f9f9f9;
+    }
+
+    table.partidas-table td a {
+        color: white;
+        padding: 8px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    /* Botões de ação */
+    table.partidas-table td a.edit {
+        background-color: #ffc107;
+    }
+
+    table.partidas-table td a.edit:hover {
+        background-color: #e0a800;
+    }
+
+    table.partidas-table td .delete {
+        background-color: #dc3545;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    table.partidas-table td .delete:hover {
+        background-color: #c82333;
+        transform: scale(1.05);
+    }
+
+    /* Mensagem quando não há partidas */
+    .no-partidas {
+        text-align: center;
+        font-size: 18px;
+        color: #666;
+        margin-top: 20px;
+    }
+</style>
+</html>

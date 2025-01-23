@@ -1,0 +1,239 @@
+/* Variáveis Globais */
+:root {
+    --primary-color: #007BFF;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --text-color: #333;
+    --background-opacity: rgba(255, 255, 255, 0.6);
+    --font-family: Arial, sans-serif;
+    --btn-padding: 12px 20px;
+    --btn-font-size: 16px;
+    --btn-border-radius: 50px;
+    --btn-transition: all 0.3s ease;
+}
+
+/* Estilo global */
+body {
+    background-image: url('./imagens/testefundo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    font-family: var(--font-family);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+/* Estilo do container principal */
+.container {
+    background-color: var(--background-opacity);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 95%;
+    max-width: 1500px;
+    margin: 20px auto;
+}
+
+/* Formulário geral */
+.form-section {
+    margin-bottom: 40px;
+}
+
+.form-section h3 {
+    color: var(--primary-color);
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Estilo dos inputs e labels */
+.form-control {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.form-label {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Estilo dos botões */
+button {
+    background-color: var(--success-color); /* Cor verde */
+    color: black; /* Texto preto */
+    padding: var(--btn-padding);
+    font-size: var(--btn-font-size);
+    border: none;
+    border-radius: var(--btn-border-radius);
+    cursor: pointer;
+    transition: var(--btn-transition);
+}
+
+button.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+button.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+button.btn-secondary {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+button.btn-secondary:hover {
+    background-color: #c82333;
+}
+
+/* Estilo dos botões de ação */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Estilo da tabela */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 12px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+table th {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+table td {
+    background-color: #f9f9f9;
+}
+
+table td a {
+    text-decoration: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+table td a.edit {
+    background-color: var(--warning-color);
+    color: #333;
+}
+
+table td a.edit:hover {
+    background-color: #e0a800;
+}
+
+table td .delete {
+    background-color: var(--danger-color);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: var(--btn-transition);
+}
+
+table td .delete:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo das mensagens */
+.no-times {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-top: 20px;
+}
+
+/* Botões arredondados e coloridos */
+a.btn-rounded {
+    padding: var(--btn-padding);
+    font-size: var(--btn-font-size);
+    border-radius: var(--btn-border-radius);
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition: var(--btn-transition);
+    color: white;
+    background-color: var(--primary-color);
+}
+
+/* Botão de Adicionar Time */
+a.btn-rounded.add {
+    background-color: var(--success-color); /* Cor verde */
+    color: black; /* Texto preto */
+    padding: 12px 20px; /* Ajuste do padding conforme necessário */
+    font-size: 16px;
+    border-radius: 0; /* Retira o border-radius, deixando o botão retangular */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    margin: 0 auto; /* Centraliza o botão */
+    display: block; /* Faz o botão se comportar como um bloco e centralizar */
+    width: 200px; /* Ajuste o tamanho do botão conforme necessário */
+}
+
+a.btn-rounded.add:hover {
+    background-color: #218838; /* Cor verde mais escura ao passar o mouse */
+}
+
+
+a.btn-rounded.edit {
+    background-color: var(--warning-color);
+}
+
+a.btn-rounded.edit:hover {
+    background-color: #e0a800;
+}
+
+a.btn-rounded.delete {
+    background-color: var(--danger-color);
+}
+
+a.btn-rounded.delete:hover {
+    background-color: #c82333;
+}
+
+a.btn-rounded.default {
+    background-color: var(--primary-color);
+}
+
+a.btn-rounded.default:hover {
+    background-color: #0056b3;
+}
+
+/* Centralização do botão */
+
+
+/* Ajustes adicionais */
+hr {
+    border: 0;
+    border-top: 2px solid var(--primary-color);
+    margin: 30px 0;
+}

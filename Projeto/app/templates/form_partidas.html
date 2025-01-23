@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titulo }}</title>
+</head>
+<body>
+    <h1>{{ titulo }}</h1>
+    <form method="POST" action="{{ acao }}">
+        <label for="data">Data:</label>
+        <input type="date" name="data" value="{{ partida.data if partida else '' }}" required><br><br>
+
+        <label for="time1">Time 1:</label>
+        <select name="time1_id" required>
+            {% for time in times %}
+                <option value="{{ time.id }}" {% if partida and time.id == partida.time1_id %}selected{% endif %}>
+                    {{ time.nome }}
+                </option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="time2">Time 2:</label>
+        <select name="time2_id" required>
+            {% for time in times %}
+                <option value="{{ time.id }}" {% if partida and time.id == partida.time2_id %}selected{% endif %}>
+                    {{ time.nome }}
+                </option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="resultado">Resultado:</label>
+        <input type="text" name="resultado" value="{{ partida.resultado if partida else '' }}"><br><br>
+
+        <button type="submit">Salvar</button>
+    </form>
+</body>
+</html>

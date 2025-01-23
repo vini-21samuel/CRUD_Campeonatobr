@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo }}</title>
+    <style>
+        /* Variáveis Globais */
+        :root {
+            --primary-color: #007BFF;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --text-color: #333;
+            --background-opacity: rgba(255, 255, 255, 0.6);
+            --font-family: Arial, sans-serif;
+        }
+
+        /* Estilo global */
+        body {
+            background-image: url(./static/imagens/fundo.jpg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: var(--font-family);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center; /* Centraliza o conteúdo na horizontal */
+            align-items: center;     /* Centraliza o conteúdo na vertical */
+            margin: 0;
+        }
+
+        /* Estilo do container principal */
+        .container {
+            background-color: var(--background-opacity);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px; /* Limita a largura do formulário */
+            margin: 20px;
+        }
+
+        /* Formulário geral */
+        .form-section {
+            margin-bottom: 20px; /* Diminui o espaço entre os campos */
+        }
+
+        .form-section h3 {
+            color: var(--primary-color);
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        /* Estilo dos inputs e labels */
+        .form-control {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%; /* Garante que os campos ocupem toda a largura do container */
+            box-sizing: border-box; /* Inclui padding e borda no tamanho total */
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        .form-label {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* Estilo dos botões */
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%; /* Faz os botões ocupar toda a largura */
+        }
+
+        button.btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        button.btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        button.btn-secondary {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        button.btn-secondary:hover {
+            background-color: #c82333;
+        }
+
+        /* Estilo dos botões de ação */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Ajuste do link "Voltar" */
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ titulo }}</h1>
+
+        <form action="{{ acao }}" method="post">
+            <div class="form-section">
+                <label for="nome" class="form-label">Nome:</label>
+                <input type="text" name="nome" id="nome" class="form-control" value="{{ jogador.nome if jogador else '' }}" required>
+            </div>
+
+            <div class="form-section">
+                <label for="posicao" class="form-label">Posição:</label>
+                <input type="text" name="posicao" id="posicao" class="form-control" value="{{ jogador.posicao if jogador else '' }}" required>
+            </div>
+
+            <div class="form-section">
+                <label for="time_id" class="form-label">Time:</label>
+                <select name="time_id" id="time_id" class="form-control">
+                    <option value="">Selecione o time</option>
+                    {% for time in times %}
+                        <option value="{{ time.id }}" {% if jogador and jogador.time_id == time.id %}selected{% endif %}>
+                            {{ time.nome }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Salvar</button>
+            </div>
+        </form>
+
+        <a href="/jogadores">Voltar</a>
+    </div>
+</body>
+</html>
