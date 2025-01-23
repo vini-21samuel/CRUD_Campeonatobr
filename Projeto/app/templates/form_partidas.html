@@ -2,37 +2,116 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ titulo }}</title>
+    <style>
+        /* Reutilizando o mesmo estilo do form_jogadores */
+        :root {
+            --primary-color: #007BFF;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --text-color: #333;
+            --background-opacity: rgba(255, 255, 255, 0.6);
+            --font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-image: url(./static/imagens/fundo.jpg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: var(--font-family);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .container {
+            background-color: var(--background-opacity);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .form-control {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        button.btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        button.btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>{{ titulo }}</h1>
-    <form method="POST" action="{{ acao }}">
-        <label for="data">Data:</label>
-        <input type="date" name="data" value="{{ partida.data if partida else '' }}" required><br><br>
-
-        <label for="time1">Time 1:</label>
-        <select name="time1_id" required>
-            {% for time in times %}
-                <option value="{{ time.id }}" {% if partida and time.id == partida.time1_id %}selected{% endif %}>
-                    {{ time.nome }}
-                </option>
-            {% endfor %}
-        </select><br><br>
-
-        <label for="time2">Time 2:</label>
-        <select name="time2_id" required>
-            {% for time in times %}
-                <option value="{{ time.id }}" {% if partida and time.id == partida.time2_id %}selected{% endif %}>
-                    {{ time.nome }}
-                </option>
-            {% endfor %}
-        </select><br><br>
-
-        <label for="resultado">Resultado:</label>
-        <input type="text" name="resultado" value="{{ partida.resultado if partida else '' }}"><br><br>
-
-        <button type="submit">Salvar</button>
-    </form>
+    <div class="container">
+        <h2>{{ titulo }}</h2>
+        <form method="POST" action="{{ acao }}">
+            <div class="form-section">
+                <label for="data" class="form-label">Data:</label>
+                <input type="date" name="data" id="data" class="form-control" value="{{ partida.data if partida else '' }}" required>
+            </div>
+            <div class="form-section">
+                <label for="time1" class="form-label">Time 1:</label>
+                <select name="time1_id" id="time1" class="form-control" required>
+                    {% for time in times %}
+                        <option value="{{ time.id }}" {% if partida and time.id == partida.time1_id %}selected{% endif %}>
+                            {{ time.nome }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-section">
+                <label for="time2" class="form-label">Time 2:</label>
+                <select name="time2_id" id="time2" class="form-control" required>
+                    {% for time in times %}
+                        <option value="{{ time.id }}" {% if partida and time.id == partida.time2_id %}selected{% endif %}>
+                            {{ time.nome }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-section">
+                <label for="resultado" class="form-label">Resultado:</label>
+                <input type="text" name="resultado" id="resultado" class="form-control" value="{{ partida.resultado if partida else '' }}">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Salvar</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>
