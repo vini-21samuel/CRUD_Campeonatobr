@@ -40,7 +40,7 @@ body {
     margin: 20px auto;
 }
 
-/* Formulário geral */
+/* Estilo do formulário */
 .form-section {
     margin-bottom: 40px;
 }
@@ -51,60 +51,57 @@ body {
     margin-bottom: 20px;
 }
 
-/* Estilo dos inputs e labels */
+/* Estilo dos campos de entrada (inputs) */
 .form-control {
+    width: 100%;
     padding: 10px;
     font-size: 16px;
-    border-radius: 5px;
+    border-radius: 10px;
     border: 1px solid #ccc;
     margin-bottom: 20px;
+    transition: border-color 0.3s ease;
 }
 
+/* Estilo ao focar nos campos de entrada */
 .form-control:focus {
     border-color: var(--primary-color);
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
+/* Estilo dos labels */
 .form-label {
     font-weight: bold;
     font-size: 16px;
 }
 
-/* Estilo dos botões */
+/* Estilo do botão de submit */
 button {
-    background-color: var(--success-color); /* Cor verde */
-    color: black; /* Texto preto */
+    background-color: var(--primary-color); /* Cor azul */
+    color: white; /* Texto branco */
     padding: var(--btn-padding);
     font-size: var(--btn-font-size);
     border: none;
     border-radius: var(--btn-border-radius);
     cursor: pointer;
     transition: var(--btn-transition);
+    width: 100%;
 }
 
+/* Hover para o botão */
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo dos botões primários */
 button.btn-primary {
     background-color: var(--primary-color);
     color: white;
 }
 
-button.btn-primary:hover {
-    background-color: #0056b3;
-}
-
+/* Estilo dos botões secundários */
 button.btn-secondary {
     background-color: var(--danger-color);
     color: white;
-}
-
-button.btn-secondary:hover {
-    background-color: #c82333;
-}
-
-/* Estilo dos botões de ação */
-.form-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 }
 
 /* Estilo da tabela */
@@ -148,12 +145,17 @@ table td a.edit:hover {
 
 table td .delete {
     background-color: var(--danger-color);
-    padding: 10px 20px;
+    padding: 5px 10px; /* Reduzi o padding para diminuir o tamanho do botão */
+    font-size: 14px;  /* Reduzi o tamanho da fonte */
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: var(--btn-transition);
+    width: auto; /* Deixa o botão ajustar ao tamanho do texto */
+    min-width: 70px; /* Evita que fique pequeno demais */
+    text-align: center;
 }
+
 
 table td .delete:hover {
     background-color: #c82333;
@@ -229,7 +231,6 @@ a.btn-rounded.default:hover {
 }
 
 /* Centralização do botão */
-
 
 /* Ajustes adicionais */
 hr {

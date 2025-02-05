@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import List
 from datetime import datetime
 from datetime import date
@@ -60,6 +60,28 @@ class PartidaResponse(BaseModel):
     data: str  # Mantemos como string
     resultado: str | None  # Permitir que seja nulo
 
+
+    class Config:
+        orm_mode = True 
+
+class UsuarioCreate(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+
+class UsuarioLogin(BaseModel):
+    username: str
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+# Se estiver utilizando ORM, pode ser necessário configurar:
+class Usuario(BaseModel):
+    id: int
+    username: str
+    email: EmailStr
 
     class Config:
         orm_mode = True 

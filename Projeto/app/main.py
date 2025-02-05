@@ -30,7 +30,9 @@ def root():
 from app.routes.times import router as times_router
 from app.routes.jogadores import router as jogadores_router
 from app.routes.partidas import router as partidas_router
+from app.routes.usuarios import router as usuarios_router
 
+app.include_router(usuarios_router, prefix="/usuarios", tags=["Usuarios"])
 app.include_router(times_router, prefix="/times", tags=["Times"])
 app.include_router(jogadores_router, prefix="/jogadores", tags=["Jogadores"])
 app.include_router(partidas_router, prefix="/partidas", tags=["Partidas"])

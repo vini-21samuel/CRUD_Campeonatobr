@@ -1,4 +1,4 @@
-#!/home/vini/Crud_Interclasse/venv/bin/python3
+#!/home/vini/FinalN1/CRUD_Campeonatobr/Projeto/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

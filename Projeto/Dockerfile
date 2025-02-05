@@ -1,22 +1,18 @@
-FROM python:3.12-slim
+FROM python:3.10-slim
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    libpq-dev \
-    postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
+COPY requirements.txt .
 
-# Copiar requirements.txt de dentro da pasta app
-COPY app/requirements.txt .
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Instalar dependências
-RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
 
-# Copiar todo o código da pasta app para o contêiner
-COPY app/ .
+COPY wait-for-it.sh /usr/local/bin/wait-for-it.sh
+RUN chmod +x /usr/local/bin/wait-for-it.sh
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+RUN useradd -m appuser
+USER appuser

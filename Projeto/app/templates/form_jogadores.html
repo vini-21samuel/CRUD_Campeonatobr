@@ -126,17 +126,21 @@
     <div class="container">
         <h1>{{ titulo }}</h1>
 
-        <form action="{{ acao }}" method="post">
+        <form action="{{ url_for('salvar_edicao_jogador', jogador_id=jogador.id) }}" method="post">
+
+            <!-- Campo oculto para indicar o método PUT -->
+            <input type="hidden" name="_method" value="PUT">
+        
             <div class="form-section">
                 <label for="nome" class="form-label">Nome:</label>
                 <input type="text" name="nome" id="nome" class="form-control" value="{{ jogador.nome if jogador else '' }}" required>
             </div>
-
+        
             <div class="form-section">
                 <label for="posicao" class="form-label">Posição:</label>
                 <input type="text" name="posicao" id="posicao" class="form-control" value="{{ jogador.posicao if jogador else '' }}" required>
             </div>
-
+        
             <div class="form-section">
                 <label for="time_id" class="form-label">Time:</label>
                 <select name="time_id" id="time_id" class="form-control">
@@ -148,12 +152,18 @@
                     {% endfor %}
                 </select>
             </div>
-
+        
+            <!-- Novo campo para editar a quantidade de gols -->
+            <div class="form-section">
+                <label for="gols" class="form-label">Gols:</label>
+                <input type="number" name="gols" id="gols" class="form-control" value="{{ jogador.gols if jogador else 0 }}" min="0">
+            </div>
+        
             <div class="form-actions">
                 <button type="submit" class="btn-primary">Salvar</button>
             </div>
         </form>
-
+        
         <a href="/jogadores">Voltar</a>
     </div>
 </body>

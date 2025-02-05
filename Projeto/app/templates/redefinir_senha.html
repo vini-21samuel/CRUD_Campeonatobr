@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Redefinir Senha</h2>
+    <form action="/usuarios/redefinir-senha" method="POST" class="form-recover">
+        <input type="hidden" name="_method" value="PUT"> <!-- Este campo é necessário para fazer uma requisição PUT em formulários HTML -->
+        <label for="email">Digite seu e-mail:</label>
+        <input type="email" id="email" name="email" required class="form-input">
+        
+        <label for="nova-senha">Digite a nova senha:</label>
+        <input type="password" id="nova-senha" name="nova-senha" required class="form-input">
+        
+        <label for="confirmar-senha">Confirme a nova senha:</label>
+        <input type="password" id="confirmar-senha" name="confirmar-senha" required class="form-input">
+        
+        <button type="submit" class="btn-submit">Redefinir Senha</button>
+    </form>
+</div>
+
+<style>
+    /* Estilo do container do formulário */
+    .container {
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 600px;
+        text-align: center;
+        margin: auto;
+        padding: 40px;
+    }
+
+    h2 {
+        color: #007BFF;
+        margin-bottom: 20px;
+    }
+
+    /* Estilo dos inputs e labels */
+    .form-input {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+    }
+
+    .form-input:focus {
+        border-color: #007BFF;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    .form-recover label {
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 8px;
+        display: block;
+        text-align: left;
+    }
+
+    /* Estilo do botão */
+    .btn-submit {
+        background-color: #28a745;
+        color: white;
+        padding: 12px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        width: 100%;
+    }
+
+    .btn-submit:hover {
+        background-color: #218838;
+    }
+</style>
+{% endblock %}

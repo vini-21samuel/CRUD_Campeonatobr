@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Form, Request
 from fastapi.responses import RedirectResponse, HTMLResponse
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
-from app import models
+from app import models 
 from fastapi.templating import Jinja2Templates
 
 # Configuração do Jinja2Templates
@@ -63,14 +63,18 @@ async def salvar_edicao_jogador(
     nome: str = Form(...), 
     posicao: str = Form(...), 
     time_id: int = Form(None), 
+    gols: int = Form(...),  # Novo campo de gols
     db: Session = Depends(get_db)
 ):
     jogador = db.query(models.Jogador).filter(models.Jogador.id == jogador_id).first()
     if not jogador:
         raise HTTPException(status_code=404, detail="Jogador não encontrado")
+    
     jogador.nome = nome
     jogador.posicao = posicao
     jogador.time_id = time_id
+    jogador.gols = gols  # Atualiza os gols
+
     db.commit()
     return RedirectResponse(url="/jogadores", status_code=303)
 
