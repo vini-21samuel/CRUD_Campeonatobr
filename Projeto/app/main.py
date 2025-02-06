@@ -9,6 +9,8 @@ from app import models
 # Instanciar o FastAPI
 app = FastAPI()
 
+DATABASE_URL = "postgresql://vini_samuel:210503@db:5432/interclasse_db"
+
 # Configuração dos templates
 templates = Jinja2Templates(directory="app/templates")
 

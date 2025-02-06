@@ -1,42 +1,41 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  postgres:
+  db:
     image: postgres:15
-    container_name: postgres_db
-    networks:
-      - fastapi_net
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-vini_samuel}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-210503}
+      POSTGRES_DB: ${POSTGRES_DB:-interclasse_db}
     ports:
-      - "5432:5432"
-    env_file:
-      - ./.env
+      - "${DATABASE_PORT:-5432}:5432"
     volumes:
-      - postgres-db:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mynetwork
 
-  app:
+  fastapi-app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: fastapi_api
-    networks:
-      - fastapi_net
+    container_name: fastapi-container
     ports:
       - "8000:8000"
     depends_on:
-      - postgres
-    env_file:
-      - ./.env
+      - db
     volumes:
-      - ./app/static:/app/static
-      - ./app/templates:/app/templates
+      - .:/app
+    environment:
+      - ENV=development
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${DATABASE_PORT:-5432}/${POSTGRES_DB}
     command: >
-      sh -c "wait-for-it.sh postgres:5432 -- 
-      uvicorn app.main:app --host 0.0.0.0 --port 8000"
-
-volumes:
-  postgres-db:
-    driver: local
+      /bin/bash -c "until pg_isready -h db -p 5432 -U ${POSTGRES_USER}; do sleep 2; done; uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    networks:
+      - mynetwork
 
 networks:
-  fastapi_net:
-    driver: bridge
+  mynetwork:
+
+volumes:
+  postgres_data:
