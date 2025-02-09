@@ -1,4 +1,3 @@
-
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from app.database import Base
@@ -17,7 +16,6 @@ class Usuario(Base):
     phone = Column(String(20), nullable=False)
     email = Column(String(100), unique=True, nullable=False)
     hashed_password = Column(Text, nullable=False)
-
 
 # Modelo de Time
 class Time(Base):
@@ -43,7 +41,6 @@ class Jogador(Base):
     time = relationship("Time", back_populates="jogadores")
 
 # Modelo Partida
-
 class Partida(Base):
     __tablename__ = "partidas"
     id = Column(Integer, primary_key=True, index=True)
@@ -54,4 +51,3 @@ class Partida(Base):
 
     time1 = relationship("Time", foreign_keys=[time1_id], lazy="joined")
     time2 = relationship("Time", foreign_keys=[time2_id], lazy="joined")
-

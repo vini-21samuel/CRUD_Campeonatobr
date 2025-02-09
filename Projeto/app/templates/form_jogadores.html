@@ -126,10 +126,13 @@
     <div class="container">
         <h1>{{ titulo }}</h1>
 
-        <form action="{{ url_for('salvar_edicao_jogador', jogador_id=jogador.id) }}" method="post">
+        <!-- Ajuste o action do formulário para usar a ação correta -->
+        <form action="{{ acao }}" method="post">
 
-            <!-- Campo oculto para indicar o método PUT -->
-            <input type="hidden" name="_method" value="PUT">
+            <!-- Campo oculto para indicar o método PUT (apenas para edição) -->
+            {% if jogador %}
+                <input type="hidden" name="_method" value="PUT">
+            {% endif %}
         
             <div class="form-section">
                 <label for="nome" class="form-label">Nome:</label>
