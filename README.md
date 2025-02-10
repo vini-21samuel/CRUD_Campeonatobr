@@ -35,8 +35,8 @@ Este projeto pode ser adaptado para atender a qualquer tipo de torneio ou compet
 
 | Método  | Rota         | Descrição |
 |---------|-------------|-----------|
-| GET     | `/`         | Página principal com lista de partidas. |
-| GET     | `/api`      | Teste da API. |
+| GET     | `/`         | Página principal |
+
 
 ### 👤 Usuários
 
