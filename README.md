@@ -110,7 +110,48 @@ Teste as rotas na documentação interativa:
 ### 4. Uso de Jinja2 para Templates
 A aplicação utiliza Jinja2 para renderizar templates HTML. A partir de agora, ao acessar o sistema, você pode ver as páginas com o conteúdo dinâmico sendo gerado diretamente pelo servidor.
 
-### 5. resultados dos templates
+### 5 Banco de Dados - Estrutura de Tabelas
+
+Este projeto utiliza o banco de dados PostgreSQL e as seguintes tabelas foram criadas:
+
+## Tabela que tem que criar ao subir os conteiners
+
+Armazena as informações dos usuários do sistema.
+
+```sql
+CREATE TABLE usuarios (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    hashed_password TEXT NOT NULL
+);
+
+CREATE TABLE times (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100),
+    lugar VARCHAR(100)
+);
+
+CREATE TABLE jogadores (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100),
+    posicao VARCHAR(100),
+    gols INT DEFAULT 0,
+    time_id INT REFERENCES times(id)
+);
+CREATE TABLE partidas (
+    id SERIAL PRIMARY KEY,
+    time1_id INT REFERENCES times(id),
+    time2_id INT REFERENCES times(id),
+    resultado VARCHAR(100),
+    data DATE
+);
+```
+
+
+### 6. resultados dos templates
 
 <p align="center">
   <img src="https://github.com/user-attachments/assets/dd6b7d7b-3435-40c7-85b7-adb23c42a9aa" />
