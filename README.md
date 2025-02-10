@@ -90,8 +90,8 @@ Certifique-se de ter os seguintes softwares instalados:
 ### 2. Clonar o Repositório
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
-cd seu-repositorio
+git clone https://github.com/vini-21samuel/CRUD_Campeonatobr.git
+cd Projeto
 ```
 ### 3. Configuração com Docker
 
