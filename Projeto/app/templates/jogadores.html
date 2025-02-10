@@ -34,7 +34,10 @@
                 <td>{{ jogador.gols }}</td>
                 <td>
                     <a href="/jogadores/editar/{{ jogador.id }}" class="edit">Editar</a>
+
+                    <!-- Formulário de Exclusão -->
                     <form action="/jogadores/deletar/{{ jogador.id }}" method="post" style="display: inline;">
+                        <input type="hidden" name="_method" value="DELETE">
                         <button type="submit" class="delete" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
                     </form>
                 </td>

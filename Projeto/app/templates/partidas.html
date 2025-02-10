@@ -37,7 +37,7 @@
                         <a href="/partidas/editar/{{ partida.id }}" class="edit">Editar</a>
                         <form action="/partidas/deletar/{{ partida.id }}" method="post" style="display: inline;">
                             <button type="submit" class="delete" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
-                        </form>
+                        </form>                                          
                     </td>
                 </tr>
                 {% endfor %}

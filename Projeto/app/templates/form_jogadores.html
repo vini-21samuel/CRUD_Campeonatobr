@@ -120,6 +120,16 @@
         a:hover {
             text-decoration: underline;
         }
+
+        /* Estilo para a exibição da foto */
+        .foto-jogador {
+            margin-bottom: 20px;
+        }
+
+        .foto-jogador img {
+            max-width: 200px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -127,11 +137,18 @@
         <h1>{{ titulo }}</h1>
 
         <!-- Ajuste o action do formulário para usar a ação correta -->
-        <form action="{{ acao }}" method="post">
+        <form action="{{ acao }}" method="post" enctype="multipart/form-data">
 
             <!-- Campo oculto para indicar o método PUT (apenas para edição) -->
             {% if jogador %}
                 <input type="hidden" name="_method" value="PUT">
+                <!-- Exibição da foto do jogador, se existir -->
+                {% if jogador.foto_url %}
+                    <div class="foto-jogador">
+                        <h3>Foto do Jogador:</h3>
+                        <img src="{{ jogador.foto_url }}" alt="Foto do jogador">
+                    </div>
+                {% endif %}
             {% endif %}
         
             <div class="form-section">
@@ -161,7 +178,7 @@
                 <label for="gols" class="form-label">Gols:</label>
                 <input type="number" name="gols" id="gols" class="form-control" value="{{ jogador.gols if jogador else 0 }}" min="0">
             </div>
-        
+
             <div class="form-actions">
                 <button type="submit" class="btn-primary">Salvar</button>
             </div>
