@@ -29,6 +29,56 @@ Este projeto pode ser adaptado para atender a qualquer tipo de torneio ou compet
 
 ---
 
+## 📌 Documentação das Rotas
+
+### 🏠 Main
+
+| Método  | Rota         | Descrição |
+|---------|-------------|-----------|
+| GET     | `/`         | Página principal com lista de partidas. |
+| GET     | `/api`      | Teste da API. |
+
+### 👤 Usuários
+
+| Método  | Rota                     | Descrição |
+|---------|--------------------------|-----------|
+| GET     | `/usuarios/register`      | Retorna o formulário de registro de usuários. |
+| POST    | `/usuarios/register`      | Cadastra um novo usuário. |
+| GET     | `/usuarios/login`         | Retorna o formulário de login. |
+| POST    | `/usuarios/login`         | Autentica um usuário. |
+
+### ⚽ Times
+
+| Método  | Rota                | Descrição |
+|---------|---------------------|-----------|
+| GET     | `/times/`           | Retorna a lista de times. |
+| POST    | `/times/`           | Cadastra um novo time. |
+| GET     | `/times/{time_id}`  | Retorna detalhes de um time específico. |
+| PUT     | `/times/{time_id}`  | Atualiza um time. |
+| DELETE  | `/times/{time_id}`  | Remove um time. |
+
+### 🏃 Jogadores
+
+| Método  | Rota                     | Descrição |
+|---------|--------------------------|-----------|
+| GET     | `/jogadores/`            | Retorna a lista de jogadores. |
+| POST    | `/jogadores/`            | Cadastra um novo jogador. |
+| GET     | `/jogadores/{jogador_id}` | Retorna detalhes de um jogador. |
+| PUT     | `/jogadores/{jogador_id}` | Atualiza um jogador. |
+| DELETE  | `/jogadores/{jogador_id}` | Remove um jogador. |
+
+### 🏟️ Partidas
+
+| Método  | Rota                     | Descrição |
+|---------|--------------------------|-----------|
+| GET     | `/partidas/`             | Retorna a lista de partidas. |
+| POST    | `/partidas/`             | Cadastra uma nova partida. |
+| GET     | `/partidas/{partida_id}` | Retorna detalhes de uma partida. |
+| PUT     | `/partidas/{partida_id}` | Atualiza uma partida. |
+| DELETE  | `/partidas/{partida_id}` | Remove uma partida. |
+
+
+
 ## 🚀 Como usar o projeto
 
 ### 1. Pré-requisitos
