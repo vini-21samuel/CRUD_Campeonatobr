@@ -46,8 +46,7 @@ async def salvar_adicao_jogador(
         nome=nome,
         posicao=posicao,
         time_id=time_id,
-        gols=gols,
-        foto_url=None  # Remover a parte de foto
+        gols=gols
     )
     db.add(novo_jogador)
     db.commit()
