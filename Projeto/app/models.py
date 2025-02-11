@@ -35,7 +35,6 @@ class Jogador(Base):
     nome = Column(String)
     posicao = Column(String)
     gols = Column(Integer, default=0) 
-    foto_url = Column(String, nullable=True)
     time_id = Column(Integer, ForeignKey('times.id'))
 
 
