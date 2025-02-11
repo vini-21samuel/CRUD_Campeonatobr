@@ -17,10 +17,9 @@ templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/templates/static"), name="static")
 
 # Rota para renderizar a página inicial
-@app.get("/", response_class=HTMLResponse)  # Alterando de @router.get para @app.get
+@app.get("/", response_class=HTMLResponse)
 async def listar_partidas_html(request: Request, db: Session = Depends(get_db)):
-    partidas = db.query(models.Partida).all()  # Buscando todas as partidas
-    return templates.TemplateResponse("index.html", {"request": request, "partidas": partidas})
+    return templates.TemplateResponse("index.html", {"request": request})
 
 # Incluir routers para outras rotas
 from app.routes.times import router as times_router
