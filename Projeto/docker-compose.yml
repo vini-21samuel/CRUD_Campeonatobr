@@ -4,10 +4,11 @@ services:
   db:
     image: postgres:15
     container_name: postgres-container
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
     ports:
       - "5432:5432"
     volumes:
@@ -16,30 +17,32 @@ services:
       - mynetwork
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 10s
-      timeout: 5s
+      interval: 5s
+      timeout: 3s
       retries: 5
 
   fastapi-app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: interclasse-container
-    ports:
-      - "8000:8000"
+    container_name: fastapi-container
+    restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
+    ports:
+      - "8001:8000"  # Altere para a porta 8001
     volumes:
       - .:/app
     env_file:
       - .env
     command: >
-      /bin/bash -c "
-      until pg_isready -h db -p 5432 -U ${POSTGRES_USER}; do
-        echo 'Esperando o banco de dados...';
+      sh -c "
+      echo 'Aguardando o banco de dados...';
+      while ! pg_isready -h db -p 5432 -U ${POSTGRES_USER}; do
         sleep 2;
       done;
+      echo 'Banco de dados disponível. Iniciando FastAPI...';
       uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
     networks:
       - mynetwork
@@ -49,4 +52,4 @@ networks:
 
 volumes:
   postgres_data:
-    external: false
+    name: postgres_data
