@@ -1,20 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, Form, Request
-from fastapi.responses import RedirectResponse, HTMLResponse
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.database import SessionLocal
-from app import models
-from fastapi.templating import Jinja2Templates  # Adicionando Jinja2Templates
-from app.models import Partida  # Adicionando o modelo Partida
-
-
-# Configuração do Jinja2Templates
-templates = Jinja2Templates(directory="app/templates")
+from typing import List
+from database.database import get_db
+from app.services.times_service import TimeService
+from app.schemas.schemas import TimeCreate, TimeResponse
+from database.database import SessionLocal
+from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
-
-# Função para obter todas as partidas
-def get_partida(db: Session):
-    return db.query(Partida).all()
+templates = Jinja2Templates(directory="app/templates")
 
 # Função para obter a sessão do banco de dados
 def get_db():
@@ -24,62 +18,23 @@ def get_db():
     finally:
         db.close()
 
-## Rota HTML: Listar Times
-@router.get("/", response_class=HTMLResponse)
-async def listar_times_html(request: Request, db: Session = Depends(get_db)):
-    times = db.query(models.Time).all()
-    return templates.TemplateResponse("times.html", {"request": request, "times": times})
+@router.post("/", response_model=TimeResponse)
+def criar_time(time: TimeCreate, db: Session = Depends(get_db)):
+    return TimeService.criar_time(db, time)
 
-# Rota HTML: Formulário para Adicionar Time
-@router.get("/adicionar", response_class=HTMLResponse)
-async def adicionar_time(request: Request):
-    return templates.TemplateResponse("form.html", {
-        "request": request, "titulo": "Adicionar Time", "acao": "/times/adicionar"
-    })
+@router.get("/", response_model=List[TimeResponse])
+def listar_times(db: Session = Depends(get_db)):
+    return TimeService.listar_times(db)
 
-# Rota HTML: Adicionar Time
-@router.post("/adicionar", response_class=HTMLResponse)
-async def salvar_adicao_time(nome: str = Form(...), lugar: str = Form(...), db: Session = Depends(get_db)):
-    # Criação de um novo time
-    novo_time = models.Time(nome=nome, lugar=lugar)
-    db.add(novo_time)
-    db.commit()
-    
-    return RedirectResponse(url="/times", status_code=303)
+@router.get("/{time_id}", response_model=TimeResponse)
+def obter_time(time_id: int, db: Session = Depends(get_db)):
+    return TimeService.obter_time(db, time_id)
 
+@router.put("/{time_id}", response_model=TimeResponse)
+def atualizar_time(time_id: int, time: TimeCreate, db: Session = Depends(get_db)):
+    return TimeService.atualizar_time(db, time_id, time)
 
-# Rota HTML: Atualizar Time
-@router.get("/editar/{time_id}", response_class=HTMLResponse)
-async def editar_time(request: Request, time_id: int, db: Session = Depends(get_db)):
-    time = db.query(models.Time).filter(models.Time.id == time_id).first()
-    if not time:
-        raise HTTPException(status_code=404, detail="Time não encontrado")
-    
-    return templates.TemplateResponse(
-        "form.html", 
-        {"request": request, "time": time, "titulo": "Editar Time", "acao": f"/times/editar/{time.id}"}
-    )
-
-@router.post("/editar/{time_id}", response_class=HTMLResponse)
-async def salvar_edicao_time(time_id: int, nome: str = Form(...), lugar: str = Form(...), db: Session = Depends(get_db)):
-    time = db.query(models.Time).filter(models.Time.id == time_id).first()
-    if not time:
-        raise HTTPException(status_code=404, detail="Time não encontrado")
-    
-    time.nome = nome
-    time.lugar = lugar
-    db.commit()
-    
-    return RedirectResponse(url="/times", status_code=303)
-
-# Rota HTML: Excluir Time
-@router.post("/deletar/{time_id}")
-async def deletar_time(time_id: int, db: Session = Depends(get_db)):
-    time = db.query(models.Time).filter(models.Time.id == time_id).first()
-    if not time:
-        raise HTTPException(
-            status_code=404, detail="Time não encontrado para exclusão."
-        )
-    db.delete(time)
-    db.commit()
-    return RedirectResponse(url="/times", status_code=303)
+@router.delete("/{time_id}")
+def deletar_time(time_id: int, db: Session = Depends(get_db)):
+    TimeService.deletar_time(db, time_id)
+    return {"detail": "Time deletado com sucesso"}

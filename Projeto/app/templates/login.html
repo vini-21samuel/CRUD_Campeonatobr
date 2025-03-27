@@ -1,100 +1,16 @@
-{% extends "base.html" %}
-
-{% block content %}
-<div class="container">
-    <h2>Login</h2>
+<!-- app/templates/login.html -->
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Página de Login</h1>
     <form method="post" action="/usuarios/login">
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email" required class="form-input">
-        
-        <label for="password">Senha:</label>
-        <input type="password" id="password" name="password" required class="form-input">
-        
-        <button type="submit" class="btn-login">Entrar</button>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Senha" required>
+        <button type="submit">Entrar</button>
     </form>
-
-    <div class="forgot-password">
-        <a href="/usuarios/redefinir-senha">Esqueceu a senha?</a>
-    </div>
-</div>
-
-<style>
-    /* Estilo do container do formulário */
-    .container {
-        background-color: rgba(255, 255, 255, 0.8);
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: 400px;  /* Diminuindo o tamanho do container */
-        text-align: center;
-        margin: auto;
-        padding: 40px;
-    }
-
-    h2 {
-        color: #007BFF;
-        margin-bottom: 20px;
-    }
-
-    /* Estilo dos labels */
-    label {
-        display: block;
-        font-weight: bold;
-        color: #000; /* Cor forte para os textos */
-        margin-bottom: 5px;
-        text-align: left; /* Alinha à esquerda */
-    }
-
-    /* Estilo dos inputs */
-    .form-input {
-        width: 100%;
-        padding: 10px;
-        font-size: 14px;
-        border-radius: 25px;
-        border: 1px solid #ccc;
-        background-color: #fff;
-        margin-bottom: 15px;
-        box-sizing: border-box;
-    }
-
-
-    .form-input:focus {
-        border-color: #007BFF;
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    }
-
-    /* Estilo do botão */
-    .btn-login {
-        background-color: #28a745;
-        color: white;
-        padding: 8px 16px;
-        font-size: 14px;
-        border: none;
-        border-radius: 25px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-        width: auto;
-        margin-top: 20px;
-    }
-
-    .btn-login:hover {
-        background-color: #218838;
-    }
-
-    /* Estilo do link de "Esqueceu a senha?" */
-    .forgot-password {
-        margin-top: 20px;
-    }
-
-    .forgot-password a {
-        color: #007BFF;
-        text-decoration: none;
-        font-size: 14px;
-    }
-
-    .forgot-password a:hover {
-        text-decoration: underline;
-    }
-</style>
-{% endblock %}
+</body>
+</html>

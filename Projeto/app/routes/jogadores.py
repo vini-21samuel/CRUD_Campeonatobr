@@ -1,14 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, Form, Request
-from fastapi.responses import RedirectResponse, HTMLResponse
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.database import SessionLocal
-from app import models
+from typing import List
 from fastapi.templating import Jinja2Templates
-
-# Configuração do Jinja2Templates
-templates = Jinja2Templates(directory="app/templates")
+from sqlalchemy.orm import Session
+from database.database import SessionLocal, get_db
+from app.services.jogadores_service import JogadorService
+from app.schemas.schemas import JogadorCreate, JogadorResponse
 
 router = APIRouter()
+templates = Jinja2Templates(directory="app/templates")
 
 # Função para obter a sessão do banco de dados
 def get_db():
@@ -18,83 +18,23 @@ def get_db():
     finally:
         db.close()
 
-# Rota HTML: Listar Jogadores
-@router.get("/", response_class=HTMLResponse)
-async def listar_jogadores_html(request: Request, db: Session = Depends(get_db)):
-    jogadores = db.query(models.Jogador).all()
-    return templates.TemplateResponse("jogadores.html", {"request": request, "jogadores": jogadores})
+@router.post("/", response_model=JogadorResponse)
+def criar_jogador(jogador: JogadorCreate, db: Session = Depends(get_db)):
+    return JogadorService.criar_jogador(db, jogador)
 
-# Rota HTML: Formulário para Adicionar Jogador
-@router.get("/adicionar", response_class=HTMLResponse)
-async def adicionar_jogador(request: Request, db: Session = Depends(get_db)):
-    times = db.query(models.Time).all()  # Listar times para vincular ao jogador
-    return templates.TemplateResponse("form_jogadores.html", {
-        "request": request, "titulo": "Adicionar Jogador", "acao": "/jogadores/adicionar", "times": times
-    })
+@router.get("/", response_model=List[JogadorResponse])
+def listar_jogadores(db: Session = Depends(get_db)):
+    return JogadorService.listar_jogadores(db)
 
-# Rota HTML: Adicionar Jogador
-@router.post("/adicionar", response_class=HTMLResponse)
-async def salvar_adicao_jogador(
-    nome: str = Form(...), 
-    posicao: str = Form(...), 
-    time_id: int = Form(None), 
-    gols: int = Form(...),
-    db: Session = Depends(get_db)
-):
-    # Criar o jogador no banco de dados
-    novo_jogador = models.Jogador(
-        nome=nome,
-        posicao=posicao,
-        time_id=time_id,
-        gols=gols
-    )
-    db.add(novo_jogador)
-    db.commit()
+@router.get("/{jogador_id}", response_model=JogadorResponse)
+def obter_jogador(jogador_id: int, db: Session = Depends(get_db)):
+    return JogadorService.obter_jogador(db, jogador_id)
 
-    return RedirectResponse(url="/jogadores", status_code=303)
+@router.put("/{jogador_id}", response_model=JogadorResponse)
+def atualizar_jogador(jogador_id: int, jogador: JogadorCreate, db: Session = Depends(get_db)):
+    return JogadorService.atualizar_jogador(db, jogador_id, jogador)
 
-# Rota HTML: Atualizar Jogador
-@router.get("/editar/{jogador_id}", response_class=HTMLResponse)
-async def editar_jogador(request: Request, jogador_id: int, db: Session = Depends(get_db)):
-    jogador = db.query(models.Jogador).filter(models.Jogador.id == jogador_id).first()
-    if not jogador:
-        raise HTTPException(status_code=404, detail="Jogador não encontrado")
-    times = db.query(models.Time).all()
-    return templates.TemplateResponse(
-        "form_jogadores.html", 
-        {"request": request, "jogador": jogador, "titulo": "Editar Jogador", "acao": f"/jogadores/editar/{jogador.id}", "times": times}
-    )
-
-@router.post("/editar/{jogador_id}", response_class=HTMLResponse)
-async def salvar_edicao_jogador(
-    jogador_id: int, 
-    nome: str = Form(...), 
-    posicao: str = Form(...), 
-    time_id: int = Form(None), 
-    gols: int = Form(...),
-    db: Session = Depends(get_db)
-):
-    jogador = db.query(models.Jogador).filter(models.Jogador.id == jogador_id).first()
-    if not jogador:
-        raise HTTPException(status_code=404, detail="Jogador não encontrado")
-    
-    # Atualizar os dados do jogador
-    jogador.nome = nome
-    jogador.posicao = posicao
-    jogador.time_id = time_id
-    jogador.gols = gols
-
-    db.commit()
-    return RedirectResponse(url="/jogadores", status_code=303)
-
-# Rota para deletar um jogador
-@router.post("/deletar/{jogador_id}", response_class=HTMLResponse)
-async def deletar_jogador(jogador_id: int, db: Session = Depends(get_db)):
-    jogador = db.query(models.Jogador).filter(models.Jogador.id == jogador_id).first()
-    if not jogador:
-        raise HTTPException(status_code=404, detail="Jogador não encontrado")
-
-    db.delete(jogador)
-    db.commit()
-
-    return RedirectResponse(url="/jogadores", status_code=303)
+@router.delete("/{jogador_id}")
+def deletar_jogador(jogador_id: int, db: Session = Depends(get_db)):
+    JogadorService.deletar_jogador(db, jogador_id)
+    return {"detail": "Jogador deletado com sucesso"}

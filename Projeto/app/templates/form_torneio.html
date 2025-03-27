@@ -1,0 +1,61 @@
+<div id="formTorneio" style="display: none;">
+    <h2>Criar Novo Campeonato</h2>
+    <form id="formTorneioCreate" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome do Torneio:</label>
+            <input type="text" id="nome" name="nome" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="organizador" class="form-label">Organizador:</label>
+            <input type="text" id="organizador" name="organizador" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="data_inicio" class="form-label">Data de Início:</label>
+            <input type="date" id="data_inicio" name="data_inicio" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição:</label>
+            <textarea id="descricao" name="descricao" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="formato" class="form-label">Formato do Torneio:</label>
+            <select id="formato" name="formato" class="form-control" required>
+                <option value="grupo">Fases de Grupo</option>
+                <option value="pontos">Pontos Corridos</option>
+                <option value="mata-mata">Mata-Mata</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="capa" class="form-label">Capa do Torneio:</label>
+            <input type="file" id="capa" name="capa" class="form-control" accept="image/*" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">Salvar</button>
+        <button type="button" class="btn btn-secondary" onclick="document.getElementById('formTorneio').style.display='none'">Fechar</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById("formTorneioCreate").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+
+        fetch("/torneios/", {
+            method: "POST",
+            body: formData
+        })
+        .then(response => response.json())
+        .then(torneio => {
+            adicionarTorneioCard(torneio);
+            document.getElementById("formTorneio").style.display = "none";
+            document.getElementById("formTorneioCreate").reset();
+        })
+        .catch(error => console.error('Erro ao salvar torneio:', error));
+    });
+</script>

@@ -18,3 +18,7 @@ starlette~=0.41.3
 jinja2
 python-jose~=3.3.0
 passlib~=1.7.4
+marshmallow==3.26.1
+packaging==24.2
+pip==24.0
+
