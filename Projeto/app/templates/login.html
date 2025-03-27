@@ -1,16 +1,118 @@
-<!-- app/templates/login.html -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <style>
+        /* Estilo do fundo */
+        body {
+            background: linear-gradient(135deg, #136db0, #11a125);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Estilo do container */
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px; /* Largura do formulário ajustada */
+            height: auto; /* Ajuste de altura */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Título do formulário */
+        h2 {
+            color: #136db0;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        /* Estilo do formulário */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+            text-align: left;
+            width: 100%;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        input {
+            padding: 8px;
+            width: 100%; /* Ocupar toda a largura do formulário */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        /* Adicionando o texto de sugestão dentro dos campos */
+        input::placeholder {
+            color: #999;
+            font-style: italic;
+        }
+
+        button {
+            padding: 8px 15px;
+            background-color: #136db0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%; /* O botão também ocupa toda a largura */
+        }
+
+        button:hover {
+            background-color: #0f5f8d;
+        }
+
+        p {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        a {
+            color: #136db0;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h1>Página de Login</h1>
-    <form method="post" action="/usuarios/login">
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Senha" required>
-        <button type="submit">Entrar</button>
-    </form>
+    <div class="container">
+        <h2>Login</h2>
+        <form method="post" action="/usuarios/login">
+            <label for="email">E-mail:</label>
+            <input type="email" name="email" id="email" placeholder="Digite seu e-mail" required>
+
+            <label for="password">Senha:</label>
+            <input type="password" name="password" id="password" placeholder="Digite sua senha" required>
+
+            <button type="submit">Entrar</button>
+        </form>
+        <p>Não tem uma conta? <a href="/usuarios/cadastrar">Cadastre-se</a></p>
+    </div>
 </body>
 </html>

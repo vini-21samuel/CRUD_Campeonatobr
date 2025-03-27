@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from database.database import get_db
 from app.models.models import *  # Importando os modelos corretamente
-from fastapi.staticfiles import StaticFiles
+
 
 # Instanciando o FastAPI
 app = FastAPI()
@@ -14,7 +14,7 @@ app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
 
 # Serve arquivos estáticos (como CSS, imagens, etc.)
-app.mount("/static", StaticFiles(directory="app/templates/static/imagens"), name="static")
+app.mount("/static", StaticFiles(directory="app/templates/static/"), name="static")
 
 # Rota para renderizar a página inicial
 @app.get("/", response_class=HTMLResponse)

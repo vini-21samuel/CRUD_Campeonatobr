@@ -4,80 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Campus League{% endblock %}</title>
+    <link rel="stylesheet" href="./static/styles.css">    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .navbar {
-            background-color: #136db0;
-            padding: 15px;
-        }
-        .navbar-brand {
-            font-weight: bold;
-        }
-        .footer {
-            background-color: #11a125;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            margin-top: 20px;
-            font-size: 14px;
-        }
-        #formTorneio {
-            display: none;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            margin: 20px auto;
-        }
-        .torneio-card {
-            margin-top: 20px;
-        }
-        .btn-custom {
-            background-color: #11a125;
-            color: white;
-            border-radius: 20px;
-            padding: 10px 20px;
-            font-weight: bold;
-            transition: all 0.3s ease-in-out;
-        }
-        .btn-custom:hover {
-            background-color: #0f8c20;
-            transform: scale(1.05);
-        }
-        .welcome-banner {
-            background: linear-gradient(135deg, #136db0, #11a125);
-            color: white;
-            padding: 30px;
-            text-align: center;
-            border-radius: 8px;
-            margin: 20px auto;
-            max-width: 900px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-        }
-    </style>
 </head>
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">Campus League</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">Início</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Campeonatos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Sobre</a></li>
-                </ul>
-            </div>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <!-- Logo antes do nome -->
+            <img src="./static/imagens/logoCL.png" alt="Logo Campus League" style="max-height: 30px; margin-right: 10px;">
+            Campus League
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="#">Início</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Campeonatos</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Sobre</a></li>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <!-- Mensagem de Boas-Vindas -->
     <div class="welcome-banner">
@@ -85,67 +36,68 @@
         <p>O lugar perfeito para organizar seus torneios com facilidade e segurança. Nossa plataforma garante transparência e gestão eficiente. Confie no sistema e venha fazer parte desta jornada!</p>
     </div>
 
-    <!-- Seção de Campeonatos -->
-    <div class="container mt-4">
-        <h2 class="text-center">Campeonatos Disponíveis</h2>
-        <div class="text-center">
-            <button id="btnCriarTorneio" class="btn btn-custom">Criar Novo Campeonato</button>
-        </div>
-        <div id="torneiosList" class="row row-cols-1 row-cols-md-3 g-4 mt-3"></div>
+ <!-- Seção de Campeonatos -->
+<div class="container mt-4">
+    <h2 class="text-center">Campeonatos Disponíveis</h2>
+    <div class="text-center">
+        <button id="btnCriarTorneio" class="btn btn-criar-torneio">Criar Novo Campeonato</button>
     </div>
+    <div id="torneiosList" class="row row-cols-1 row-cols-md-3 g-4 mt-3"></div>
+</div>
 
-    <!-- Formulário do Torneio -->
-    {% include "form_torneio.html" %}
+<!-- Formulário do Torneio -->
+{% include "form_torneio.html" %}
 
-    <!-- Footer -->
-    <div class="footer">
-        Desenvolvido por <strong>Vinicius Samuel</strong>
-    </div>
+<!-- Footer -->
+<div class="footer">
+    Desenvolvido por <strong>Vinicius Samuel</strong>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById("btnCriarTorneio").addEventListener("click", function () {
-            document.getElementById("formTorneio").style.display = "block";
-        });
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById("btnCriarTorneio").addEventListener("click", function () {
+        document.getElementById("formTorneio").style.display = "block";
+    });
 
-        function carregarTorneios() {
-            fetch('/torneios/dados')
-                .then(response => response.json())
-                .then(torneios => {
-                    document.getElementById("torneiosList").innerHTML = "";
-                    torneios.forEach(torneio => adicionarTorneioCard(torneio));
-                })
-                .catch(error => console.error('Erro ao carregar torneios:', error));
-        }
+    function carregarTorneios() {
+        fetch('/torneios/dados')
+            .then(response => response.json())
+            .then(torneios => {
+                document.getElementById("torneiosList").innerHTML = "";
+                torneios.forEach(torneio => adicionarTorneioCard(torneio));
+            })
+            .catch(error => console.error('Erro ao carregar torneios:', error));
+    }
 
-        function adicionarTorneioCard(torneio) {
-            const torneiosList = document.getElementById("torneiosList");
+    function adicionarTorneioCard(torneio) {
+        const torneiosList = document.getElementById("torneiosList");
 
-            const nome = torneio.nome || "Nome não disponível";
-            const organizador = torneio.organizador || "Desconhecido";
-            const data_inicio = torneio.data_inicio || "Data não definida";
-            const formato = torneio.formato || "Formato não informado";
-            const capa = torneio.capa ? torneio.capa : "/static/imagens/default.jpg"; // Evita imagem quebrada
+        const nome = torneio.nome || "Nome não disponível";
+        const organizador = torneio.organizador || "Desconhecido";
+        const data_inicio = torneio.data_inicio || "Data não definida";
+        const formato = torneio.formato || "Formato não informado";
+        const capa = torneio.capa ? torneio.capa : "/static/imagens/default.jpg"; // Evita imagem quebrada
 
-            const card = `
-                <div class="col">
-                    <div class="card shadow-sm" style="border-radius: 10px; overflow: hidden;">
-                        <img src="${capa}" class="card-img-top" alt="Capa do Torneio">
-                        <div class="card-body">
-                            <h5 class="card-title">${nome}</h5>
-                            <p class="card-text">Organizador: ${organizador}</p>
-                            <p class="card-text">Data de Início: ${data_inicio}</p>
-                            <p class="card-text">Formato: ${formato}</p>
-                            <a href="#" class="btn btn-custom">Gerenciar</a>
-                        </div>
+        const card = `
+            <div class="col">
+                <div class="card shadow-sm torneio-card">
+                    <img src="${capa}" class="card-img-top torneio-capa" alt="Capa do Torneio">
+                    <div class="card-body">
+                        <h5 class="card-title">${nome}</h5>
+                        <p class="card-text">Organizador: ${organizador}</p>
+                        <p class="card-text">Data de Início: ${data_inicio}</p>
+                        <p class="card-text">Formato: ${formato}</p>
+                        <a href="#" class="btn btn-gerenciar">Gerenciar</a>
                     </div>
                 </div>
-            `;
+            </div>
+        `;
 
-            torneiosList.innerHTML += card;
-        }
+        torneiosList.innerHTML += card;
+    }
 
-        document.addEventListener("DOMContentLoaded", carregarTorneios);
-    </script>
+    document.addEventListener("DOMContentLoaded", carregarTorneios);
+</script>
+
 </body>
 </html>

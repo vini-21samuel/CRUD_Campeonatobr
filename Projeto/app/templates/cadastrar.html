@@ -4,27 +4,131 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Usuário</title>
+    <style>
+        /* Estilo do fundo */
+        body {
+            background: linear-gradient(135deg, #136db0, #11a125);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Estilo do container */
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px; /* Largura do formulário ajustada */
+            height: auto; /* Ajuste de altura */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Logo acima do formulário */
+        .logo {
+            width: 80px; /* Logo ajustada para ficar mais compacta */
+            margin-bottom: 15px;
+        }
+
+        /* Título do formulário */
+        h2 {
+            color: #136db0;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        /* Estilo do formulário */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+            text-align: left;
+            width: 100%;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        input {
+            padding: 8px;
+            width: 100%; /* Ocupar toda a largura do formulário */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        /* Adicionando o texto de sugestão dentro dos campos */
+        input::placeholder {
+            color: #999;
+            font-style: italic;
+        }
+
+        button {
+            padding: 8px 15px;
+            background-color: #136db0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%; /* O botão também ocupa toda a largura */
+        }
+
+        button:hover {
+            background-color: #0f5f8d;
+        }
+
+        p {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        a {
+            color: #136db0;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h2>Cadastrar Usuário</h2>
-    <form action="/usuarios/cadastrar" method="post">
-        <label for="username">Nome de usuário:</label>
-        <input type="text" id="username" name="username" required><br><br>
+    <div class="container">
+        
+        <h2>Cadastrar Usuário</h2>
+        <form action="/usuarios/cadastrar" method="post">
+            <label for="username">Nome de usuário:</label>
+            <input type="text" id="username" name="username" placeholder="Digite seu nome de usuário" required>
 
-        <label for="email">E-mail:</label>
-        <input type="email" id="email" name="email" required><br><br>
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
 
-        <label for="password">Senha:</label>
-        <input type="password" id="password" name="password" required><br><br>
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
 
-        <label for="phone">Telefone:</label>
-        <input type="text" id="phone" name="phone" required><br><br>
+            <label for="phone">Telefone:</label>
+            <input type="text" id="phone" name="phone" placeholder="Digite seu telefone" required>
 
-        <label for="name">Nome Completo:</label>
-        <input type="text" id="name" name="name" required><br><br>
+            <label for="name">Nome Completo:</label>
+            <input type="text" id="name" name="name" placeholder="Digite seu nome completo" required>
 
-        <button type="submit">Cadastrar</button>
-    </form>
-    <p>Já tem uma conta? <a href="/usuarios/login">Faça login</a></p>
+            <button type="submit">Cadastrar</button>
+        </form>
+        <p>Já tem uma conta? <a href="/usuarios/login">Faça login</a></p>
+    </div>
 </body>
 </html>
