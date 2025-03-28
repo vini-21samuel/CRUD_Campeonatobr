@@ -4,15 +4,11 @@ body {
 
 .navbar {
     background-color: #136db0;
-    padding: 8px 15px; /* Diminui o padding da navbar */
+    padding: 8px;
 }
 
 .navbar-brand {
     font-weight: bold;
-}
-
-.navbar-toggler-icon {
-    color: white;
 }
 
 .footer {
@@ -38,18 +34,24 @@ body {
     margin-top: 20px;
 }
 
-.btn-criar-torneio {
+.icon-menu {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.icon-dropdown {
+    width: 18px;
+    margin-right: 8px;
+}
+
+#btnCriarTorneio {
     background-color: #11a125;
-    color: rgb(29, 190, 14);
+    color: white;
     border-radius: 20px;
     padding: 10px 20px;
     font-weight: bold;
     transition: all 0.3s ease-in-out;
-}
-
-.btn-criar-torneio:hover {
-    background-color: #0f8c20;
-    transform: scale(1.05);
 }
 
 .welcome-banner {
@@ -60,54 +62,10 @@ body {
     border-radius: 8px;
     margin: 20px auto;
     max-width: 900px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.torneio-card {
-    border-radius: 10px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-.torneio-capa {
-    height: 200px;
-    object-fit: cover;
-    width: 100%;
-}
-
-.card {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.card-body {
-    flex-grow: 1;
-}
-
-/* Seção de Campeonatos */
-.container {
-    margin-top: 30px;
 }
 
 .btn-gerenciar {
-    background-color: #136db0;
-    color: white;
+    background-color: #0ed107;
+    color: black;
     border-radius: 20px;
-    padding: 10px 20px;
-    font-weight: bold;
-    transition: all 0.3s ease-in-out;
-}
-
-.btn-gerenciar:hover {
-    background-color: #0f5f8d;
-}
-
-/* Ajuste de Layout do Footer */
-.footer {
-    text-align: center;
-    padding: 10px;
-    background-color: #f1f1f1;
-    margin-top: 20px;
 }

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Form, UploadFile, File
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+from app.models.models import Torneio
 from database.database import get_db
 from app.services.torneios_services import TorneioService
 from app.schemas.schemas import TorneioResponse
@@ -63,23 +64,32 @@ def criar_torneio(
         raise HTTPException(status_code=500, detail="Erro interno ao criar torneio.")
 
 
-# 📌 Atualizar torneio
-@router.put("/{torneio_id}", response_model=TorneioResponse)
-def atualizar_torneio(
+@router.get("/torneios/{torneio_id}")
+def obter_torneio(torneio_id: int, db: Session = Depends(get_db)):
+    torneio = db.query(Torneio).filter(Torneio.id == torneio_id).first()
+    if not torneio:
+        raise HTTPException(status_code=404, detail="Torneio não encontrado.")
+    return torneio
+
+@router.put("/torneios/{torneio_id}")
+async def editar_torneio(
     torneio_id: int,
     nome: str = Form(None),
     organizador: str = Form(None),
     data_inicio: str = Form(None),
     descricao: str = Form(None),
     formato: str = Form(None),
+    capa: UploadFile = None,
     db: Session = Depends(get_db)
 ):
-    dados = {k: v for k, v in locals().items() if v is not None and k not in ["torneio_id", "db"]}
     try:
-        torneio_atualizado = TorneioService.atualizar_torneio(db, torneio_id, dados)
-        return torneio_atualizado
+        torneio_atualizado = TorneioService.editar_torneio(
+            db, torneio_id, nome, organizador, data_inicio, descricao, formato, capa
+        )
+        return {"message": "Torneio atualizado com sucesso", "torneio": torneio_atualizado}
     except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=400, detail=str(e))
+
 
 # 📌 Deletar torneio
 @router.delete("/{torneio_id}")
