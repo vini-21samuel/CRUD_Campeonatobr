@@ -91,7 +91,6 @@ async def editar_torneio(
         raise HTTPException(status_code=400, detail=str(e))
 
 
-# 📌 Deletar torneio
 @router.delete("/{torneio_id}")
 def deletar_torneio(torneio_id: int, db: Session = Depends(get_db)):
     try:

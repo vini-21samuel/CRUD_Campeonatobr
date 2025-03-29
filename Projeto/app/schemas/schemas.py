@@ -2,6 +2,8 @@ from pydantic import BaseModel, EmailStr, ConfigDict, field_validator
 from typing import List
 from datetime import date
 from marshmallow import Schema, fields
+from pydantic import BaseModel
+from typing import List
 
 # Schema para Jogador
 class JogadorBase(BaseModel):
@@ -26,8 +28,6 @@ class JogadorResponse(BaseModel):
         orm_mode = True
         
 # Modelo Time
-from pydantic import BaseModel
-from typing import List
 
 class TimeBase(BaseModel):
     id: int
