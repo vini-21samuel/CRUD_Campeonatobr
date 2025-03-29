@@ -45,9 +45,9 @@ body {
 }
 
 .card-img-top {
-    width: 100%; /* Garante que a imagem ocupe toda a largura do card */
-    height: auto; /* Mantém a proporção da imagem */
-    max-height: 220px; /* Limita a altura máxima para garantir que não distorça */
+    width: 100%; 
+    height: auto; 
+    max-height: 220px; 
     object-fit: cover;
 }
 

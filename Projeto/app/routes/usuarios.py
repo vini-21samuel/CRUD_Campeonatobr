@@ -3,7 +3,7 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 from sqlalchemy.orm import Session
 from database.database import SessionLocal
 from fastapi.templating import Jinja2Templates
-from app.models.models import Usuario  # Importação correta
+from app.models.models import Usuario 
 from app.schemas.schemas import UsuarioCreate, UsuarioLogin
 from app.auth import get_password_hash, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 from datetime import timedelta
@@ -81,3 +81,4 @@ async def login_user(
     response = RedirectResponse(url="/", status_code=303)
     response.set_cookie(key="access_token", value=access_token, httponly=True)
     return response
+
