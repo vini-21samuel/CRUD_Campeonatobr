@@ -57,7 +57,7 @@ body {
 }
 
 .torneio-card:hover .card-body {
-    background: linear-gradient(135deg, #136db0, #11a125); 
+    background: #6d6565e0; 
 }
 
 .torneio-card:hover .card-title {
