@@ -5,7 +5,7 @@ from database.database import SessionLocal
 from fastapi.templating import Jinja2Templates
 from app.models.models import Usuario 
 from app.schemas.schemas import UsuarioCreate, UsuarioLogin
-from app.auth import get_password_hash, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from app.utils.auth import get_password_hash, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 from datetime import timedelta
 
 router = APIRouter()
