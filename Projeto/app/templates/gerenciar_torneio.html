@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Torneio - {{ torneio.nome }}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <header class="container mt-4">
+        <h1>Gerenciar Torneio</h1>
+    </header>
+
+    <div class="container mt-4">
+        <!-- Capa e informações do torneio -->
+        <div class="torneio-info row">
+            <div class="col-md-4">
+                <img src="{{ torneio.capa }}" alt="Capa do Torneio" class="torneio-capa img-fluid">
+            </div>
+            <div class="col-md-8">
+                <h2>{{ torneio.nome }}</h2>
+                <p><strong>Organizador:</strong> {{ torneio.organizador }}</p>
+                <p><strong>Data de Início:</strong> {{ torneio.data_inicio }}</p>
+                <p><strong>Formato:</strong> {{ torneio.formato }}</p>
+                <p><strong>Descrição:</strong> {{ torneio.descricao }}</p>
+            </div>
+        </div>
+
+        <!-- Botões de gerenciamento -->
+        <div class="mt-4 gerenciar-botoes">
+            <button class="btn-gerenciar-times" onclick="gerenciarTimes()">Gerenciar Times</button>
+            <button class="btn-gerenciar-jogadores" onclick="gerenciarJogadores()">Gerenciar Jogadores</button>
+            <button class="btn-gerenciar-partidas" onclick="gerenciarPartidas()">Gerenciar Partidas</button>
+            <button class="btn-editar-torneio" onclick="editarTorneio('{{ torneio.id }}')">Editar Torneio</button>
+            <button class="btn-excluir-torneio" onclick="deletarTorneio('{{ torneio.id }}')">Excluir Torneio</button>
+        </div>
+
+        <!-- Lista de times -->
+        <div class="mt-4 lista-container">
+            <h3>Times Cadastrados</h3>
+            <ul id="lista-times" class="list-group"></ul>
+        </div>
+
+        <!-- Lista de jogadores -->
+        <div class="mt-4 lista-container">
+            <h3>Jogadores Cadastrados</h3>
+            <ul id="lista-jogadores" class="list-group"></ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function carregarTimes(torneioId) {
+            fetch(`/torneios/${torneioId}/times`)
+                .then(response => response.json())
+                .then(times => {
+                    const lista = document.getElementById("lista-times");
+                    lista.innerHTML = "";
+                    times.forEach(time => {
+                        lista.innerHTML += `<li class="list-group-item">${time.nome}</li>`;
+                    });
+                })
+                .catch(error => console.error("Erro ao carregar times:", error));
+        }
+
+        function carregarJogadores(torneioId) {
+            fetch(`/torneios/${torneioId}/jogadores`)
+                .then(response => response.json())
+                .then(jogadores => {
+                    const lista = document.getElementById("lista-jogadores");
+                    lista.innerHTML = "";
+                    jogadores.forEach(jogador => {
+                        lista.innerHTML += `<li class="list-group-item">${jogador.nome}</li>`;
+                    });
+                })
+                .catch(error => console.error("Erro ao carregar jogadores:", error));
+        }
+
+        function gerenciarTimes() {
+            alert("Funcionalidade de gerenciar times ainda não implementada.");
+        }
+
+        function gerenciarJogadores() {
+            alert("Funcionalidade de gerenciar jogadores ainda não implementada.");
+        }
+
+        function gerenciarPartidas() {
+            alert("Funcionalidade de gerenciar partidas ainda não implementada.");
+        }
+
+        function editarTorneio(id) {
+            window.location.href = `/torneios/editar/${id}`;
+        }
+
+        function deletarTorneio(id) {
+            if (confirm("Tem certeza que deseja excluir este torneio?")) {
+                fetch(`/torneios/${id}`, { method: "DELETE" })
+                    .then(response => {
+                        if (response.ok) {
+                            alert("Torneio excluído com sucesso!");
+                            window.location.href = "/";
+                        } else {
+                            alert("Erro ao excluir torneio!");
+                        }
+                    })
+                    .catch(error => console.error("Erro ao deletar torneio:", error));
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const torneioId = "{{ torneio.id }}";
+            carregarTimes(torneioId);
+            carregarJogadores(torneioId);
+        });
+    </script>
+</body>
+</html>

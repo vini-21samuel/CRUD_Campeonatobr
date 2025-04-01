@@ -2,6 +2,7 @@
 body {
     background-color: #f8f9fa;
     transition: background-color 0.3s ease-in-out;
+    font-family: Arial, sans-serif;
 }
 
 .navbar {
@@ -45,40 +46,35 @@ body {
 }
 
 .card-img-top {
-    width: 100%; 
-    height: auto; 
-    max-height: 220px; 
+    width: 100%;
+    height: auto;
+    max-height: 220px;
     object-fit: cover;
 }
 
 .torneio-card:hover {
-    transform: translateY(-10px); 
+    transform: translateY(-10px);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
 .torneio-card:hover .card-body {
-    background: #6d6565e0; 
+    background: #6d6565e0;
 }
 
 .torneio-card:hover .card-title {
-    color: #ffffff; 
+    color: #ffffff;
 }
 
 .torneio-card:hover .btn-gerenciar {
-    background-color: #0a9e05; 
-    transform: scale(1.1); 
-}
-
-.torneio-card:hover ~ body {
-    background-color: rgba(0, 0, 0, 0.4); 
-    pointer-events: none; 
+    background-color: #0a9e05;
+    transform: scale(1.1);
 }
 
 /* Estilo do conteúdo dentro do card */
 .card-body {
     padding: 15px;
     transition: background-color 0.3s ease-in-out;
-    background-color: #ffffff; /* Cor inicial do fundo */
+    background-color: #ffffff;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -86,17 +82,17 @@ body {
 }
 
 .card-body p {
-    font-size: 16px; 
-    color: #000; 
-    font-weight: bold; 
-    margin: 5px 0; 
+    font-size: 16px;
+    color: #000;
+    font-weight: bold;
+    margin: 5px 0;
 }
 
 .card-body .card-title {
     font-size: 20px;
     color: #136db0;
-    font-weight: bold; 
-    transition: color 0.3s ease-in-out; 
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
 }
 
 .icon-menu {
@@ -110,24 +106,22 @@ body {
     margin-right: 8px;
 }
 
-/* Botão 'Gerenciar' */
+/* Botão 'Gerenciar' na página inicial */
 .btn-gerenciar {
     background-color: #11a125;
     color: black;
-    border-radius: 12px; 
-    padding: 6px 15px; 
+    border-radius: 12px;
+    padding: 6px 15px;
     font-weight: bold;
     text-transform: uppercase;
-    text-decoration: none; 
+    text-decoration: none;
     transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 .btn-gerenciar:hover {
-    background-color: #0a9e05; 
-    transform: scale(1.05); 
+    background-color: #0a9e05;
+    transform: scale(1.05);
 }
-
-
 
 #btnCriarTorneio {
     background-color: #11a125;
@@ -148,28 +142,137 @@ body {
     max-width: 900px;
 }
 
-
 .row {
     display: flex;
-    flex-wrap: wrap; 
-    gap: 20px; 
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .col {
     display: flex;
-    justify-content: center; 
-    flex-basis: 22%; 
-    min-width: 250px; 
+    justify-content: center;
+    flex-basis: 22%;
+    min-width: 250px;
 }
 
 @media (max-width: 768px) {
     .col {
-        flex-basis: 45%; 
+        flex-basis: 45%;
     }
 }
 
 @media (max-width: 480px) {
     .col {
-        flex-basis: 100%; 
+        flex-basis: 100%;
     }
+}
+
+/* Estilos específicos para gerenciar_torneio.html */
+.torneio-info h2 {
+    font-size: 24px;
+    color: #136db0;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.torneio-info p {
+    font-size: 16px;
+    color: #333;
+    margin: 5px 0;
+}
+
+.torneio-capa {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.gerenciar-botoes {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Botões de gerenciamento */
+.btn-gerenciar-times, .btn-gerenciar-jogadores, .btn-gerenciar-partidas, .btn-editar-torneio, .btn-excluir-torneio {
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-gerenciar-times {
+    background-color: #136db0;
+}
+
+.btn-gerenciar-times:hover {
+    background-color: #0e5a8f;
+    transform: scale(1.05);
+}
+
+.btn-gerenciar-jogadores {
+    background-color: #11a125;
+}
+
+.btn-gerenciar-jogadores:hover {
+    background-color: #0a9e05;
+    transform: scale(1.05);
+}
+
+.btn-gerenciar-partidas {
+    background-color: #ff8c00;
+}
+
+.btn-gerenciar-partidas:hover {
+    background-color: #e07b00;
+    transform: scale(1.05);
+}
+
+.btn-editar-torneio {
+    background-color: #ffc107;
+    color: black;
+}
+
+.btn-editar-torneio:hover {
+    background-color: #e0a800;
+    transform: scale(1.05);
+}
+
+.btn-excluir-torneio {
+    background-color: #dc3545;
+}
+
+.btn-excluir-torneio:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+/* Estilo das listas */
+.lista-container h3 {
+    font-size: 20px;
+    color: #136db0;
+    margin-bottom: 10px;
+}
+
+.list-group {
+    max-width: 600px;
+}
+
+.list-group-item {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.list-group-item:hover {
+    background-color: #f1f1f1;
 }

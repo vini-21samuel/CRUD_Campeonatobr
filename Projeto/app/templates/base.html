@@ -79,15 +79,15 @@
     }
 
     function adicionarTorneioCard(torneio) {
-        const torneiosList = document.getElementById("torneiosList");
+    const torneiosList = document.getElementById("torneiosList");
 
-        const nome = torneio.nome || "Nome não disponível";
-        const organizador = torneio.organizador || "Desconhecido";
-        const data_inicio = torneio.data_inicio || "Data não definida";
-        const formato = torneio.formato || "Formato não informado";
-        const capa = torneio.capa ? torneio.capa : "/static/imagens/default.jpg"; 
+    const nome = torneio.nome || "Nome não disponível";
+    const organizador = torneio.organizador || "Desconhecido";
+    const data_inicio = torneio.data_inicio || "Data não definida";
+    const formato = torneio.formato || "Formato não informado";
+    const capa = torneio.capa ? torneio.capa : "/static/imagens/default.jpg"; 
 
-        const card = `
+    const card = `
 <div class="col">
     <div class="card shadow-sm torneio-card">
         <img src="${capa}" class="card-img-top torneio-capa" alt="Capa do Torneio">
@@ -109,19 +109,19 @@
             <p class="card-text">Organizador: ${organizador}</p>
             <p class="card-text">Data de Início: ${data_inicio}</p>
             <p class="card-text">Formato: ${formato}</p>
-            <a href="#" class="btn-gerenciar">Gerenciar</a>
+            <!-- Link de Gerenciamento com o prefixo /torneios e ID dinâmico -->
+            <a href="/torneios/gerenciar_torneio/${torneio.id}" class="btn-gerenciar">Gerenciar</a>
         </div>
     </div>
 </div>
+`;
 
-        `;
-
-        torneiosList.innerHTML += card;
-    }
+    torneiosList.insertAdjacentHTML('beforeend', card);  
+}
 
     function editarTorneio(id) {
-    window.location.href = `/torneios/editar/${id}`;
-}
+        window.location.href = `/torneios/editar/${id}`;
+    }
 
     function deletarTorneio(id) {
         if (confirm("Tem certeza que deseja deletar este torneio?")) {

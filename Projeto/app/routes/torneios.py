@@ -1,25 +1,33 @@
-from fastapi import APIRouter, Depends, HTTPException, Form, UploadFile, File
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends, HTTPException, Form, Request, UploadFile, File
+from fastapi.responses import JSONResponse, HTMLResponse
 from sqlalchemy.orm import Session
 from app.models.models import Torneio
-from database.database import get_db
+from database.database import get_db, SessionLocal
 from app.services.torneios_services import TorneioService
 from app.schemas.schemas import TorneioResponse
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
 from typing import List
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
+# Função para obter a sessão do banco de dados
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# Rota para a página inicial de torneios
 @router.get("/", response_class=HTMLResponse)
-async def pagina_torneios(request):
+async def pagina_torneios(request: Request):
     return templates.TemplateResponse("torneios.html", {"request": request})
 
+# Rota para listar os torneios em formato JSON
 @router.get("/dados", response_model=List[TorneioResponse])
 def listar_torneios(db: Session = Depends(get_db)):
     torneios = TorneioService.listar_torneios(db)
-
     return [
         {
             "id": t.id,
@@ -33,8 +41,7 @@ def listar_torneios(db: Session = Depends(get_db)):
         for t in torneios
     ]
 
-
-# 📌 Criar torneio
+# Rota para criar um torneio
 @router.post("/", response_model=TorneioResponse, status_code=201)
 def criar_torneio(
     nome: str = Form(...),
@@ -47,8 +54,6 @@ def criar_torneio(
 ):
     try:
         novo_torneio = TorneioService.criar_torneio(db, nome, organizador, data_inicio, descricao, formato, capa)
-
-        # Garante que o caminho completo da capa seja retornado corretamente
         return {
             "id": novo_torneio.id,
             "nome": novo_torneio.nome,
@@ -58,19 +63,27 @@ def criar_torneio(
             "formato": novo_torneio.formato,
             "capa": f"/static/imagens/torneios/{novo_torneio.capa}" if novo_torneio.capa else "/static/imagens/default.jpg"
         }
-
     except Exception as e:
         print(f"Erro ao criar torneio: {e}")
         raise HTTPException(status_code=500, detail="Erro interno ao criar torneio.")
 
-
+# Rota para obter um torneio específico (usada para edição ou consulta)
 @router.get("/torneios/{torneio_id}")
 def obter_torneio(torneio_id: int, db: Session = Depends(get_db)):
     torneio = db.query(Torneio).filter(Torneio.id == torneio_id).first()
     if not torneio:
         raise HTTPException(status_code=404, detail="Torneio não encontrado.")
-    return torneio
+    return {
+        "id": torneio.id,
+        "nome": torneio.nome,
+        "organizador": torneio.organizador,
+        "data_inicio": torneio.data_inicio.strftime("%Y-%m-%d"),
+        "descricao": torneio.descricao,
+        "formato": torneio.formato,
+        "capa": f"/static/imagens/torneios/{torneio.capa}" if torneio.capa else "/static/imagens/default.jpg"
+    }
 
+# Rota para editar um torneio
 @router.put("/torneios/{torneio_id}")
 async def editar_torneio(
     torneio_id: int,
@@ -90,7 +103,7 @@ async def editar_torneio(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
+# Rota para deletar um torneio
 @router.delete("/{torneio_id}")
 def deletar_torneio(torneio_id: int, db: Session = Depends(get_db)):
     try:
@@ -100,3 +113,26 @@ def deletar_torneio(torneio_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail=str(e))
     except Exception:
         raise HTTPException(status_code=500, detail="Erro interno ao deletar torneio.")
+
+# Rota para a página de gerenciamento de torneio
+@router.get("/gerenciar_torneio/{torneio_id}", response_class=HTMLResponse)
+async def gerenciar_torneio(request: Request, torneio_id: int, db: Session = Depends(get_db)):
+    torneio = db.query(Torneio).filter(Torneio.id == torneio_id).first()
+    if not torneio:
+        raise HTTPException(status_code=404, detail="Torneio não encontrado.")
+    
+    return templates.TemplateResponse(
+        "gerenciar_torneio.html",
+        {
+            "request": request,
+            "torneio": {
+                "id": torneio.id,
+                "nome": torneio.nome,
+                "organizador": torneio.organizador,
+                "data_inicio": torneio.data_inicio.strftime("%Y-%m-%d"),
+                "formato": torneio.formato,
+                "descricao": torneio.descricao or "Sem descrição.",
+                "capa": f"/static/imagens/torneios/{torneio.capa}" if torneio.capa else "/static/imagens/default.jpg"
+            }
+        }
+    )
