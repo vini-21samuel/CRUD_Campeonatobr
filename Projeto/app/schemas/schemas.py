@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, ConfigDict, field_validator
-from typing import List
+from typing import List, Optional
 from datetime import date
 from marshmallow import Schema, fields
 from pydantic import BaseModel
@@ -17,6 +17,7 @@ class JogadorCreate(BaseModel):
     posicao: str
     gols: int = 0  # Define gols com valor padrão 0, para que não seja obrigatório
     time_id: int
+    
 
 class JogadorResponse(BaseModel):
     id: int
@@ -27,24 +28,24 @@ class JogadorResponse(BaseModel):
     class Config:
         orm_mode = True
         
-# Modelo Time
-
 class TimeBase(BaseModel):
-    id: int
     nome: str
     lugar: str
 
-class TimeCreate(TimeBase):
-    pass
+class TimeCreate(BaseModel):
+    nome: str
+    lugar: str
+    torneio_id: int
 
-class TimeResponse(TimeBase):
+class TimeResponse(BaseModel):
     id: int
     nome: str
     lugar: str
+    torneio_id: Optional[int] = None
+    logo: Optional[str] = None
 
     class Config:
         orm_mode = True
-
 
 # Modelo Partida
 class PartidaBase(BaseModel):
