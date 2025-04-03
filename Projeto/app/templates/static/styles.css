@@ -201,7 +201,7 @@ body {
     border-radius: 12px;
     font-weight: bold;
     text-transform: uppercase;
-    color: white;
+    color: rgb(2, 201, 45);
     transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
     cursor: pointer;
     border: none;
@@ -275,4 +275,48 @@ body {
 
 .list-group-item:hover {
     background-color: #f1f1f1;
+}
+
+/* Estilos para a tabela de times */
+.table {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 10px;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.table th, .table td {
+    padding: 10px;
+    text-align: left;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #136db0;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.table-striped tbody tr:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+.table-striped tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+.logo-col {
+    width: 10%; /* A tabela define a largura da coluna, ajustável */
+    text-align: center;
+}
+
+.logo-time {
+    width: 10%; /* A imagem ocupa toda a largura da célula */
+    height: auto; /* Altura ajustada automaticamente para manter proporção */
+    display: block;
+    margin: 0 auto; /* Centraliza a imagem */
 }

@@ -5,7 +5,7 @@ from app.schemas.schemas import TimeCreate, TimeResponse
 import os
 import shutil
 
-UPLOAD_DIR_TIMES = "app/templates/static/imagens/Times"
+UPLOAD_DIR_TIMES = "app/templates/static/imagens/times"
 os.makedirs(UPLOAD_DIR_TIMES, exist_ok=True, mode=0o775)
 
 class TimeService:
