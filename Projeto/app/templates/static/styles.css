@@ -201,7 +201,7 @@ body {
     border-radius: 12px;
     font-weight: bold;
     text-transform: uppercase;
-    color: rgb(2, 201, 45);
+    color: white;
     transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
     cursor: pointer;
     border: none;
@@ -315,7 +315,7 @@ body {
 }
 
 .logo-time {
-    width: 10%; /* A imagem ocupa toda a largura da célula */
+    width: 100%; /* A imagem ocupa toda a largura da célula */
     height: auto; /* Altura ajustada automaticamente para manter proporção */
     display: block;
     margin: 0 auto; /* Centraliza a imagem */

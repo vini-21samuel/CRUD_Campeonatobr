@@ -29,15 +29,18 @@ class Time(Base):
     partidas_time2 = relationship("Partida", foreign_keys="[Partida.time2_id]", back_populates="time2")
     torneio = relationship("Torneio", back_populates="times")
 
-# Modelo de Jogador
+from sqlalchemy.orm import relationship
+
 class Jogador(Base):
     __tablename__ = 'jogadores'
-
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String, nullable=False)
     posicao = Column(String, nullable=False)
     gols = Column(Integer, default=0)
     time_id = Column(Integer, ForeignKey('times.id'), nullable=False)
+
+    time = relationship("Time")  
+
 
     # Relacionamento com Time
     time = relationship("Time", back_populates="jogadores")

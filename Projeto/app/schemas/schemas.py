@@ -5,29 +5,6 @@ from marshmallow import Schema, fields
 from pydantic import BaseModel
 from typing import List
 
-# Schema para Jogador
-class JogadorBase(BaseModel):
-    nome: str
-    posicao: str
-    gols: int
-
-class JogadorCreate(BaseModel):
-    id: int  # Inclui o identificador no corpo
-    nome: str
-    posicao: str
-    gols: int = 0  # Define gols com valor padrão 0, para que não seja obrigatório
-    time_id: int
-    
-
-class JogadorResponse(BaseModel):
-    id: int
-    nome: str
-    posicao: str
-    time_id: int
-
-    class Config:
-        orm_mode = True
-        
 class TimeBase(BaseModel):
     nome: str
     lugar: str
@@ -47,6 +24,30 @@ class TimeResponse(BaseModel):
     class Config:
         orm_mode = True
 
+# Schema para Jogador
+class JogadorBase(BaseModel):
+    nome: str
+    posicao: str
+    gols: int
+
+class JogadorCreate(BaseModel):
+    id: int  # Inclui o identificador no corpo
+    nome: str
+    posicao: str
+    gols: int = 0  # Define gols com valor padrão 0, para que não seja obrigatório
+    time_id: int
+    
+
+class JogadorResponse(BaseModel):
+    id: int
+    nome: str
+    posicao: str
+    gols: int
+    time: TimeResponse
+
+    class Config:
+        orm_mode = True
+    
 # Modelo Partida
 class PartidaBase(BaseModel):
     time1_id: int

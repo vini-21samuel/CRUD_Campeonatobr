@@ -1,7 +1,9 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
+from app.models.models import Jogador
 from app.repositories.jogador_repository import JogadorRepository
 from app.schemas.schemas import JogadorCreate
+from sqlalchemy.orm import joinedload
 
 class JogadorService:
     @staticmethod
@@ -10,7 +12,7 @@ class JogadorService:
 
     @staticmethod
     def listar_jogadores(db: Session):
-        return JogadorRepository.listar_jogadores(db)
+        return db.query(Jogador).options(joinedload(Jogador.time)).all()
 
     @staticmethod
     def obter_jogador(db: Session, jogador_id: int):
