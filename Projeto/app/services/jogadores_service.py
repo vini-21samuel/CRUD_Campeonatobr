@@ -1,8 +1,8 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from app.models.models import Jogador
+from app.models.jogador import Jogador
 from app.repositories.jogador_repository import JogadorRepository
-from app.schemas.schemas import JogadorCreate
+from app.schemas.jogador import JogadorCreate
 from sqlalchemy.orm import joinedload
 
 class JogadorService:

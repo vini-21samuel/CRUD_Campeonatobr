@@ -20,52 +20,16 @@
             display: inline-block;
         }
 
-        .btn-gerenciar-times {
-            background-color: #136db0;
-        }
-
-        .btn-gerenciar-times:hover {
-            background-color: #0e5a8f;
-            transform: translateY(-5px);
-        }
-
-        .btn-gerenciar-jogadores {
-            background-color: #11a125;
-        }
-
-        .btn-gerenciar-jogadores:hover {
-            background-color: #0a9e05;
-            transform: translateY(-5px);
-        }
-
-        .btn-gerenciar-partidas {
-            background-color: #ff8c00;
-        }
-
-        .btn-gerenciar-partidas:hover {
-            background-color: #e07b00;
-            transform: translateY(-5px);
-        }
-
-        .btn-editar-torneio {
-            background-color: #ffc107;
-            color: black;
-        }
-
-        .btn-editar-torneio:hover {
-            background-color: #e0a800;
-            transform: translateY(-5px);
-        }
-
-        .btn-excluir-torneio {
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .btn-excluir-torneio:hover {
-            background-color: #c82333;
-            transform: translateY(-5px);
-        }
+        .btn-gerenciar-times { background-color: #136db0; }
+        .btn-gerenciar-times:hover { background-color: #0e5a8f; transform: translateY(-5px); }
+        .btn-gerenciar-jogadores { background-color: #11a125; }
+        .btn-gerenciar-jogadores:hover { background-color: #0a9e05; transform: translateY(-5px); }
+        .btn-gerenciar-partidas { background-color: #ff8c00; }
+        .btn-gerenciar-partidas:hover { background-color: #e07b00; transform: translateY(-5px); }
+        .btn-editar-torneio { background-color: #ffc107; color: black; }
+        .btn-editar-torneio:hover { background-color: #e0a800; transform: translateY(-5px); }
+        .btn-excluir-torneio { background-color: #dc3545; color: white; }
+        .btn-excluir-torneio:hover { background-color: #c82333; transform: translateY(-5px); }
 
         /* Estilo das listas */
         .lista-container h3 {
@@ -74,10 +38,7 @@
             margin-bottom: 10px;
         }
 
-        .list-group {
-            max-width: 600px;
-        }
-
+        .list-group { max-width: 600px; }
         .list-group-item {
             background-color: #ffffff;
             border: 1px solid #ddd;
@@ -86,10 +47,7 @@
             margin-bottom: 5px;
             transition: background-color 0.3s ease-in-out;
         }
-
-        .list-group-item:hover {
-            background-color: #f1f1f1;
-        }
+        .list-group-item:hover { background-color: #f1f1f1; }
 
         /* Estilos para a tabela de times */
         .table {
@@ -115,22 +73,12 @@
             text-transform: uppercase;
         }
 
-        .table-striped tbody tr:nth-child(odd) {
-            background-color: #f8f9fa;
-        }
-
-        .table-striped tbody tr:hover {
-            background-color: #e9ecef;
-        }
-
-        .logo-col {
-            width: 60px;
-            text-align: center;
-        }
-
+        .table-striped tbody tr:nth-child(odd) { background-color: #f8f9fa; }
+        .table-striped tbody tr:hover { background-color: #e9ecef; }
+        .logo-col { width: 75px; text-align: center; }
         .logo-time {
-            width: 30px;
-            height: 30px;
+            width: 60px;
+            height: 50px;
             object-fit: contain;
             display: block;
             margin: 0 auto;
@@ -138,8 +86,7 @@
     </style>
 </head>
 <body>
-    <header class="container mt-4">
-    </header>
+    <header class="container mt-4"></header>
 
     <div class="container mt-4">
         <!-- Capa e informações do torneio -->
@@ -252,7 +199,6 @@
                             <label for="jogadorTimeId" class="form-label">Time</label>
                             <select class="form-control" id="jogadorTimeId" required>
                                 <option value="">Selecione um time</option>
-                                <!-- Opções serão preenchidas dinamicamente -->
                             </select>
                         </div>
                         <button type="submit" class="btn btn-gerenciar-jogadores">Adicionar Jogador</button>
@@ -275,12 +221,12 @@
                 <div class="modal-body">
                     <form id="formPartida">
                         <div class="mb-3">
-                            <label for="partidaTime1Id" class="form-label">Time 1 (ID)</label>
-                            <input type="number" class="form-control" id="partidaTime1Id" required>
+                            <label for="partidaTime1Id" class="form-label">Time 1</label>
+                            <select class="form-select" id="partidaTime1Id" required></select>
                         </div>
                         <div class="mb-3">
-                            <label for="partidaTime2Id" class="form-label">Time 2 (ID)</label>
-                            <input type="number" class="form-control" id="partidaTime2Id" required>
+                            <label for="partidaTime2Id" class="form-label">Time 2</label>
+                            <select class="form-select" id="partidaTime2Id" required></select>
                         </div>
                         <div class="mb-3">
                             <label for="partidaData" class="form-label">Data</label>
@@ -290,7 +236,7 @@
                             <label for="partidaResultado" class="form-label">Resultado (opcional)</label>
                             <input type="text" class="form-control" id="partidaResultado">
                         </div>
-                        <button type="submit" class="btn btn-gerenciar-partidas">Adicionar Partida</button>
+                        <button type="submit" class="btn btn-gerenciar-partidas" id="btnSalvarPartida">Adicionar Partida</button>
                     </form>
                     <h6 class="mt-3">Partidas Existentes</h6>
                     <ul id="lista-partidas-modal" class="list-group"></ul>
@@ -303,7 +249,7 @@
     <script>
         const torneioId = "{{ torneio.id }}";
 
-        // Função para carregar times no select do formulário
+        // Função para carregar times no select do formulário de jogadores
         function carregarTimesNoSelect() {
             fetch(`/times/torneio/${torneioId}/`)
                 .then(response => {
@@ -312,7 +258,7 @@
                 })
                 .then(times => {
                     const select = document.getElementById("jogadorTimeId");
-                    select.innerHTML = '<option value="">Selecione um time</option>'; // Reseta o select
+                    select.innerHTML = '<option value="">Selecione um time</option>';
                     times.forEach(time => {
                         select.innerHTML += `<option value="${time.id}">${time.nome}</option>`;
                     });
@@ -344,28 +290,27 @@
         }
 
         function carregarJogadores() {
-    fetch("/jogadores/")
-        .then(response => {
-            if (!response.ok) throw new Error("Erro ao carregar jogadores");
-            return response.json();
-        })
-        .then(jogadores => {
-            const lista = document.getElementById("lista-jogadores");
-            lista.innerHTML = "";
-            jogadores.forEach(jogador => {
-                lista.innerHTML += `
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        ${jogador.nome} - ${jogador.posicao} (Gols: ${jogador.gols}) - Time: ${jogador.time.nome}
-                        <div>
-                            <button class="btn btn-sm btn-warning me-2" onclick="abrirModalEditarJogador(${jogador.id}, '${jogador.nome}', '${jogador.posicao}', ${jogador.time.id})">Editar</button>
-                            <button class="btn btn-sm btn-danger" onclick="deletarJogador(${jogador.id})">Excluir</button>
-                        </div>
-                    </li>
-                `;
-            });
-        })
-        .catch(error => console.error("Erro ao carregar jogadores:", error));
-}
+            fetch("/jogadores/")
+                .then(response => {
+                    if (!response.ok) throw new Error("Erro ao carregar jogadores");
+                    return response.json();
+                })
+                .then(jogadores => {
+                    const lista = document.getElementById("lista-jogadores");
+                    lista.innerHTML = "";
+                    jogadores.forEach(jogador => {
+                        lista.innerHTML += `
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                ${jogador.nome} - ${jogador.posicao} (Gols: ${jogador.gols}) - Time: ${jogador.time.nome}
+                                <div>
+                                    <button class="btn btn-sm btn-warning me-2" onclick="abrirModalEditarJogador(${jogador.id}, '${jogador.nome}', '${jogador.posicao}', ${jogador.time.id})">Editar</button>
+                                    <button class="btn btn-sm btn-danger" onclick="deletarJogador(${jogador.id})">Excluir</button>
+                                </div>
+                            </li>`;
+                    });
+                })
+                .catch(error => console.error("Erro ao carregar jogadores:", error));
+        }
 
         // Carregar listas nos modais
         function carregarTimesModal() {
@@ -420,22 +365,41 @@
 
         function carregarPartidasModal() {
             fetch(`/partidas/`)
-                .then(response => {
-                    if (!response.ok) throw new Error("Erro ao carregar partidas no modal");
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(partidas => {
                     const lista = document.getElementById("lista-partidas-modal");
                     lista.innerHTML = "";
                     partidas.forEach(partida => {
                         lista.innerHTML += `
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                ${partida.time1_nome} vs ${partida.time2_nome} - ${partida.data} (${partida.resultado || 'Sem resultado'})
-                                <button class="btn btn-sm btn-danger" onclick="deletarPartida(${partida.id})">Excluir</button>
+                            <li class="list-group-item">
+                                <div><strong>${partida.time1_nome}</strong> vs <strong>${partida.time2_nome}</strong> - ${partida.data}</div>
+                                <div>Resultado: ${partida.resultado || 'Sem resultado'}</div>
+                                <button class="btn btn-sm btn-warning mt-1 me-1" onclick="editarPartida(${partida.id})">Editar</button>
+                                <button class="btn btn-sm btn-danger mt-1" onclick="deletarPartida(${partida.id})">Excluir</button>
                             </li>`;
                     });
                 })
                 .catch(error => console.error("Erro ao carregar partidas no modal:", error));
+        }
+
+        // Função para carregar times nos selects do modal de partidas
+        function carregarTimesSelect() {
+            fetch('/times/')
+                .then(response => response.json())
+                .then(times => {
+                    const select1 = document.getElementById("partidaTime1Id");
+                    const select2 = document.getElementById("partidaTime2Id");
+                    select1.innerHTML = '<option value="">Selecione o Time 1</option>';
+                    select2.innerHTML = '<option value="">Selecione o Time 2</option>';
+                    times.forEach(time => {
+                        const option = document.createElement("option");
+                        option.value = time.id;
+                        option.text = time.nome;
+                        select1.appendChild(option);
+                        select2.appendChild(option.cloneNode(true));
+                    });
+                })
+                .catch(error => console.error("Erro ao carregar times:", error));
         }
 
         // CRUD Times
@@ -465,7 +429,7 @@
                 console.log("Time criado com sucesso:", data);
                 carregarTimes();
                 carregarTimesModal();
-                carregarTimesNoSelect(); // Atualiza o select após adicionar um time
+                carregarTimesNoSelect();
                 document.getElementById("timeNome").value = "";
                 document.getElementById("timeLugar").value = "";
                 document.getElementById("timeLogo").value = "";
@@ -496,7 +460,7 @@
                     if (!response.ok) throw new Error("Erro ao editar time");
                     carregarTimes();
                     carregarTimesModal();
-                    carregarTimesNoSelect(); // Atualiza o select após edição
+                    carregarTimesNoSelect();
                 })
                 .catch(error => console.error("Erro ao editar time:", error));
             };
@@ -509,7 +473,7 @@
                     if (!response.ok) throw new Error("Erro ao deletar time");
                     carregarTimes();
                     carregarTimesModal();
-                    carregarTimesNoSelect(); // Atualiza o select após exclusão
+                    carregarTimesNoSelect();
                 })
                 .catch(error => console.error("Erro ao deletar time:", error));
             }
@@ -575,30 +539,61 @@
         }
 
         // CRUD Partidas
+        let partidaEmEdicao = null;
+
         document.getElementById("formPartida").addEventListener("submit", function(e) {
             e.preventDefault();
+
             const time1Id = document.getElementById("partidaTime1Id").value;
             const time2Id = document.getElementById("partidaTime2Id").value;
             const data = document.getElementById("partidaData").value;
             const resultado = document.getElementById("partidaResultado").value || null;
-            fetch("/partidas/", {
-                method: "POST",
+
+            const partidaData = {
+                time1_id: parseInt(time1Id),
+                time2_id: parseInt(time2Id),
+                data,
+                resultado
+            };
+
+            const url = partidaEmEdicao ? `/partidas/${partidaEmEdicao}/` : "/partidas/";
+            const method = partidaEmEdicao ? "PUT" : "POST";
+
+            fetch(url, {
+                method: method,
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ time1_id: parseInt(time1Id), time2_id: parseInt(time2Id), data, resultado })
+                body: JSON.stringify(partidaData)
             })
             .then(response => {
-                if (!response.ok) throw new Error("Erro ao adicionar partida");
+                if (!response.ok) throw new Error("Erro ao salvar partida");
                 return response.json();
             })
             .then(() => {
                 carregarPartidasModal();
-                document.getElementById("partidaTime1Id").value = "";
-                document.getElementById("partidaTime2Id").value = "";
-                document.getElementById("partidaData").value = "";
-                document.getElementById("partidaResultado").value = "";
+                resetarFormularioPartida();
             })
-            .catch(error => console.error("Erro ao adicionar partida:", error));
+            .catch(error => console.error("Erro ao salvar partida:", error));
         });
+
+        function editarPartida(id) {
+            fetch(`/partidas/${id}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Erro ao carregar partida");
+                    return response.json();
+                })
+                .then(partida => {
+                    partidaEmEdicao = id;
+                    document.getElementById("partidaTime1Id").value = partida.time1_id;
+                    document.getElementById("partidaTime2Id").value = partida.time2_id;
+                    document.getElementById("partidaData").value = partida.data;
+                    document.getElementById("partidaResultado").value = partida.resultado || "";
+                    document.getElementById("btnSalvarPartida").textContent = "Salvar Alterações";
+
+                    const modal = new bootstrap.Modal(document.getElementById("modalPartidas"));
+                    if (!modal._isShown) modal.show();
+                })
+                .catch(error => console.error("Erro ao carregar partida para edição:", error));
+        }
 
         function deletarPartida(id) {
             if (confirm("Tem certeza que deseja excluir esta partida?")) {
@@ -611,6 +606,23 @@
             }
         }
 
+        function resetarFormularioPartida() {
+            document.getElementById("formPartida").reset();
+            document.getElementById("btnSalvarPartida").textContent = "Adicionar Partida";
+            partidaEmEdicao = null;
+            carregarTimesSelect();
+        }
+
+        // Função para abrir modal de edição de jogador (usada na lista principal)
+        function abrirModalEditarJogador(id, nome, posicao, timeId) {
+            document.getElementById("jogadorId").value = id;
+            document.getElementById("jogadorNome").value = nome;
+            document.getElementById("jogadorPosicao").value = posicao;
+            document.getElementById("jogadorTimeId").value = timeId;
+            const modal = new bootstrap.Modal(document.getElementById("modalJogadores"));
+            modal.show();
+        }
+
         // Carregar dados ao abrir a página e os modais
         document.addEventListener("DOMContentLoaded", () => {
             carregarTimes();
@@ -620,9 +632,13 @@
         document.getElementById("modalTimes").addEventListener("shown.bs.modal", carregarTimesModal);
         document.getElementById("modalJogadores").addEventListener("shown.bs.modal", () => {
             carregarJogadoresModal();
-            carregarTimesNoSelect(); // Carrega os times no select ao abrir o modal
+            carregarTimesNoSelect();
         });
-        document.getElementById("modalPartidas").addEventListener("shown.bs.modal", carregarPartidasModal);
+        document.getElementById("modalPartidas").addEventListener("shown.bs.modal", () => {
+            carregarTimesSelect();
+            carregarPartidasModal();
+        });
+        document.getElementById("modalPartidas").addEventListener("hidden.bs.modal", resetarFormularioPartida);
     </script>
 </body>
 </html>

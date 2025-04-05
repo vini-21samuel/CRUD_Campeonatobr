@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, UploadFile
 from app.repositories.time_repository import TimeRepository
-from app.schemas.schemas import TimeCreate, TimeResponse
+from app.schemas.time import TimeCreate, TimeResponse
 import os
 import shutil
 

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models import Usuario
-from app.schemas import UsuarioCreate
+from app.models.usuario import Usuario
+from app.schemas.usuario import UsuarioCreate
 
 def get_usuario(db: Session, user_id: int):
     return db.query(Usuario).filter(Usuario.id == user_id).first()

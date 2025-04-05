@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from database.database import get_db
 from app.services.times_service import TimeService
-from app.schemas.schemas import TimeCreate, TimeResponse
+from app.schemas.time import TimeCreate, TimeResponse
 from database.database import SessionLocal
 from fastapi.templating import Jinja2Templates
 

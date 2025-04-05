@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from database.database import SessionLocal, get_db
 from app.services.jogadores_service import JogadorService
-from app.schemas.schemas import JogadorCreate, JogadorResponse
+from app.schemas.jogador import JogadorCreate, JogadorResponse
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")

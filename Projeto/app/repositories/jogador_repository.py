@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models.models import Jogador
-from app.schemas.schemas import JogadorCreate
+from app.models.jogador import Jogador
+from app.schemas.jogador import JogadorCreate
 
 class JogadorRepository:
     @staticmethod

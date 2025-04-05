@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models.models import Torneio
-from app.schemas.schemas import TorneioCreate
+from app.models.torneio import Torneio
+from app.schemas.torneio import TorneioCreate
 
 class TorneiosRepository:
 

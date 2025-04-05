@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from app.models.models import Time
-from app.schemas.schemas import TimeCreate
+from app.models.time import Time
+from app.schemas.time import TimeCreate
 
 class TimeRepository:
     @staticmethod

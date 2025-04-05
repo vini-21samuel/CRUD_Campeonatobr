@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, Form, Request, UploadFile, File
 from fastapi.responses import JSONResponse, HTMLResponse
 from sqlalchemy.orm import Session
-from app.models.models import Torneio
+from app.models.torneio import Torneio
 from database.database import get_db, SessionLocal
 from app.services.torneios_services import TorneioService
-from app.schemas.schemas import TorneioResponse
+from app.schemas.torneio import TorneioResponse
 from fastapi.templating import Jinja2Templates
 from typing import List
 

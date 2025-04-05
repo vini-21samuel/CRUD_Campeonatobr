@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 from database.database import get_db
 from app.utils.auth import decode_token
-from app.models.models import Torneio
+from app.models.torneio import Torneio
 
 app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
