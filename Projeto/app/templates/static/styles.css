@@ -1,19 +1,68 @@
 /* Estilos gerais */
 body {
-    background-color: #f8f9fa;
+    background-color: #f8f9fab9;
     transition: background-color 0.3s ease-in-out;
     font-family: Arial, sans-serif;
 }
 
 .navbar {
-    background-color: #136db0;
-    padding: 8px;
+    background: linear-gradient(135deg, #136db0, #11a125);
+    padding: 8px 10px; /* Reduzi o padding para diminuir o tamanho (era 15px 20px) */
+    position: fixed; /* Garantindo que fique fixo */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 75px;
+    z-index: 100; /* Mantém o navbar acima de outros elementos */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .navbar-brand {
     font-weight: bold;
+    color: #fff;
+    font-size: 1.5rem; /* Tamanho da fonte do logo/texto */
+    transition: color 0.3s ease-in-out;
 }
 
+.navbar-brand:hover {
+    color: #fff; /* Mantém branco no hover para contraste */
+}
+
+.navbar-nav .nav-link {
+    color: #fff;
+    font-weight: 500;
+    padding: 8px 12px; /* Reduzi o padding dos links para acompanhar o navbar menor (era 10px 15px) */
+    font-size: 1.1rem; /* Tamanho da fonte dos links */
+    transition: all 0.3s ease-in-out;
+    position: relative;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #fff; /* Mantém branco para contraste */
+    background: rgba(19, 109, 176, 0.3); /* Fundo sutil baseado em #136db0 com transparência */
+    transform: scale(1.05); /* Leve aumento */
+    border-radius: 5px; /* Bordas suaves no hover */
+}
+
+/* Welcome Banner */
+.welcome-banner {
+    background: linear-gradient(135deg, #136db0, #11a125);
+    color: white;
+    padding: 70px 20px;
+    text-align: center;
+    width: 100%;
+    margin-top: 70px; /* ⬅️ Isso empurra o banner pra baixo da navbar */
+    border-radius: 0;
+}
+
+.welcome-banner h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.welcome-banner p {
+    font-size: 1.2rem;
+}
 .footer {
     background-color: #11a125;
     color: white;
@@ -33,7 +82,6 @@ body {
     margin: 20px auto;
 }
 
-/* Estilos para os cards de torneio */
 .torneio-card {
     margin-top: 20px;
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
@@ -41,24 +89,32 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 100%;
-    width: 100%;
+    width: 300%; /* Corrigido de 200% para 100% para respeitar o grid do Bootstrap */
+    max-width: 250px; /* Reduzi de 320px para 250px para cards menores */
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 35px; /* Cantos arredondados */
+    border: 1px solid #ddd; /* Borda leve */
+    background-color: #fff; /* Fundo branco */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.952); /* Sombra para destaque */
+}
+
+.torneio-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 }
 
 .card-img-top {
     width: 100%;
     height: auto;
-    max-height: 220px;
+    max-height: 100px; /* Reduzi de 120px para 100px para cards menores */
     object-fit: cover;
-}
-
-.torneio-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
 }
 
 .torneio-card:hover .card-body {
-    background: #6d6565e0;
+    background: #136db0;
 }
 
 .torneio-card:hover .card-title {
@@ -72,7 +128,7 @@ body {
 
 /* Estilo do conteúdo dentro do card */
 .card-body {
-    padding: 15px;
+    padding: 10px; /* Reduzi de 15px para 10px para compactar */
     transition: background-color 0.3s ease-in-out;
     background-color: #ffffff;
     display: flex;
@@ -82,14 +138,14 @@ body {
 }
 
 .card-body p {
-    font-size: 16px;
+    font-size: 14px; /* Reduzi de 16px para 14px para compactar o texto */
     color: #000;
     font-weight: bold;
-    margin: 5px 0;
+    margin: 3px 0; /* Reduzi de 5px para 3px */
 }
 
 .card-body .card-title {
-    font-size: 20px;
+    font-size: 18px; /* Reduzi de 20px para 18px */
     color: #136db0;
     font-weight: bold;
     transition: color 0.3s ease-in-out;
@@ -111,8 +167,9 @@ body {
     background-color: #11a125;
     color: black;
     border-radius: 12px;
-    padding: 6px 15px;
+    padding: 5px 12px; /* Reduzi de 6px 15px para compactar */
     font-weight: bold;
+    font-size: 14px; /* Adicionei para reduzir o texto */
     text-transform: uppercase;
     text-decoration: none;
     transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
@@ -132,15 +189,6 @@ body {
     transition: all 0.3s ease-in-out;
 }
 
-.welcome-banner {
-    background: linear-gradient(135deg, #136db0, #11a125);
-    color: white;
-    padding: 30px;
-    text-align: center;
-    border-radius: 8px;
-    margin: 20px auto;
-    max-width: 900px;
-}
 
 .row {
     display: flex;
@@ -320,3 +368,4 @@ body {
     display: block;
     margin: 0 auto; /* Centraliza a imagem */
 }
+

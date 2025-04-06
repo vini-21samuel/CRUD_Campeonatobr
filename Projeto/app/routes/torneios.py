@@ -114,7 +114,7 @@ def deletar_torneio(torneio_id: int, db: Session = Depends(get_db)):
     except Exception:
         raise HTTPException(status_code=500, detail="Erro interno ao deletar torneio.")
 
-# Rota para a página de gerenciamento de torneio
+
 @router.get("/gerenciar_torneio/{torneio_id}", response_class=HTMLResponse)
 async def gerenciar_torneio(request: Request, torneio_id: int, db: Session = Depends(get_db)):
     torneio = db.query(Torneio).filter(Torneio.id == torneio_id).first()
@@ -136,3 +136,31 @@ async def gerenciar_torneio(request: Request, torneio_id: int, db: Session = Dep
             }
         }
     )
+
+
+@router.get("/campeonatos", response_class=HTMLResponse)
+async def get_campeonatos(request: Request):
+    return templates.TemplateResponse("campeonatos.html", {"request": request})
+
+
+@router.get("/campeonatos/dados", response_model=List[TorneioResponse])
+def listar_torneios_campeonatos(db: Session = Depends(get_db)):
+    torneios = TorneioService.listar_torneios(db)
+    print("Torneios retornados:", torneios)  
+    return [
+        {
+            "id": t.id,
+            "nome": t.nome,
+            "organizador": t.organizador,
+            "data_inicio": t.data_inicio.strftime("%Y-%m-%d"),
+            "descricao": t.descricao,
+            "formato": t.formato,
+            "capa": f"/static/imagens/torneios/{t.capa}" if t.capa else "/static/imagens/default.jpg"
+        }
+        for t in torneios
+    ]
+
+
+@router.get("/sobre", response_class=HTMLResponse)
+async def get_sobre(request: Request):
+    return templates.TemplateResponse("sobre.html", {"request": request})

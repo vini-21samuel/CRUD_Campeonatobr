@@ -9,26 +9,25 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-
     <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-        <a class="navbar-brand" href="#">
-            <img src="./static/imagens/logoCL.png" alt="Logo Campus League" style="max-height: 80px; margin-right: 30px;">
-            Campus League
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="#">Início</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Campeonatos</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Sobre</a></li>
-            </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="./static/imagens/logoCL.png" alt="Logo Campus League" style="max-height: 80px; margin-right: 30px;">
+                Campus League
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Campeonatos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Sobre</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
     <!-- Mensagem de Boas-Vindas -->
     <div class="welcome-banner">
@@ -36,109 +35,155 @@
         <p>O lugar perfeito para organizar seus torneios com facilidade e segurança. Nossa plataforma garante transparência e gestão eficiente. Confie no sistema e venha fazer parte desta jornada!</p>
     </div>
 
- <!-- Seção de Campeonatos -->
-<div class="container mt-4">
-    <div class="text-center">
-        <button id="btnCriarTorneio" class="btn btn-custom" onclick="scrollToForm()">Criar Novo Campeonato</button>
-    </div>
-    <h2 class="text-center">Campeonatos Disponíveis</h2>
-    <div id="torneiosList" class="row row-cols-1 row-cols-md-3 g-4 mt-3"></div>
-</div>
-
-<!-- Formulário do Torneio -->
-{% include "form_torneio.html" %}
-
-<!-- Footer -->
-<div class="footer">
-    Desenvolvido por <strong>Vinicius Samuel</strong>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    document.getElementById("btnCriarTorneio").addEventListener("click", function () {
-        document.getElementById("formTorneio").style.display = "block";
-    });
-
-    // Função para rolar automaticamente até o formulário
-    function scrollToForm() {
-        const formSection = document.getElementById('formTorneio');
-        window.scrollTo({
-            top: formSection.offsetTop - 60, // Ajuste para alinhar corretamente
-            behavior: 'smooth'
-        });
-    }
-
-    function carregarTorneios() {
-        fetch('/torneios/dados')
-            .then(response => response.json())
-            .then(torneios => {
-                document.getElementById("torneiosList").innerHTML = "";
-                torneios.forEach(torneio => adicionarTorneioCard(torneio));
-            })
-            .catch(error => console.error('Erro ao carregar torneios:', error));
-    }
-
-    function adicionarTorneioCard(torneio) {
-    const torneiosList = document.getElementById("torneiosList");
-
-    const nome = torneio.nome || "Nome não disponível";
-    const organizador = torneio.organizador || "Desconhecido";
-    const data_inicio = torneio.data_inicio || "Data não definida";
-    const formato = torneio.formato || "Formato não informado";
-    const capa = torneio.capa ? torneio.capa : "/static/imagens/default.jpg"; 
-
-    const card = `
-<div class="col">
-    <div class="card shadow-sm torneio-card">
-        <img src="${capa}" class="card-img-top torneio-capa" alt="Capa do Torneio">
-        <div class="card-body">
-            <div class="d-flex justify-content-between">
-                <h5 class="card-title">${nome}</h5>
-                <div class="dropdown">
-                    <img src="/static/imagens/trespontos.png" class="icon-menu" data-bs-toggle="dropdown">
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#" onclick="editarTorneio('${torneio.id}')">
-                            <img src="/static/imagens/editar.png" class="icon-dropdown"> Editar
-                        </a></li>
-                        <li><a class="dropdown-item text-danger" href="#" onclick="deletarTorneio('${torneio.id}')">
-                            <img src="/static/imagens/botao-apagar.png" class="icon-dropdown"> Deletar
-                        </a></li>
-                    </ul>
-                </div>
-            </div>
-            <p class="card-text">Organizador: ${organizador}</p>
-            <p class="card-text">Data de Início: ${data_inicio}</p>
-            <p class="card-text">Formato: ${formato}</p>
-            <!-- Link de Gerenciamento com o prefixo /torneios e ID dinâmico -->
-            <a href="/torneios/gerenciar_torneio/${torneio.id}" class="btn-gerenciar">Gerenciar</a>
+    <!-- Seção de Campeonatos -->
+    <div class="container mt-4">
+        <div class="text-center">
+            <button id="btnCriarTorneio" class="btn btn-custom" onclick="mostrarFormulario()">Criar Novo Campeonato</button>
         </div>
+        <h2 class="text-center">Campeonatos Disponíveis</h2>
+        <div id="torneiosList" class="row row-cols-1 row-cols-md-3 g-4 mt-3"></div>
     </div>
-</div>
-`;
 
-    torneiosList.insertAdjacentHTML('beforeend', card);  
-}
+    <!-- Formulário do Torneio -->
+    {% include "form_torneio.html" %}
 
-    function editarTorneio(id) {
-        window.location.href = `/torneios/editar/${id}`;
-    }
+    <!-- Footer -->
+    <div class="footer">
+        Desenvolvido por <strong>Vinicius Samuel</strong>
+    </div>
 
-    function deletarTorneio(id) {
-        if (confirm("Tem certeza que deseja deletar este torneio?")) {
-            fetch(`/torneios/${id}`, { method: 'DELETE' })
-                .then(response => {
-                    if (response.ok) {
-                        carregarTorneios();
-                    } else {
-                        alert("Erro ao deletar torneio!");
-                    }
-                })
-                .catch(error => console.error("Erro ao deletar torneio:", error));
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let torneioEmEdicao = null;
+
+        // Mostrar o formulário e rolar até ele
+        function mostrarFormulario() {
+            const formSection = document.getElementById('formTorneio');
+            formSection.style.display = 'block';
+            window.scrollTo({
+                top: formSection.offsetTop - 60,
+                behavior: 'smooth'
+            });
+            if (!torneioEmEdicao) resetarFormulario();
         }
-    }
 
-    document.addEventListener("DOMContentLoaded", carregarTorneios);
-</script>
+        // Carregar torneios
+        function carregarTorneios() {
+            fetch('/torneios/dados')
+                .then(response => response.json())
+                .then(torneios => {
+                    document.getElementById("torneiosList").innerHTML = "";
+                    torneios.forEach(torneio => adicionarTorneioCard(torneio));
+                })
+                .catch(error => console.error('Erro ao carregar torneios:', error));
+        }
 
+        // Adicionar card de torneio
+        function adicionarTorneioCard(torneio) {
+            const torneiosList = document.getElementById("torneiosList");
+            const nome = torneio.nome || "Nome não disponível";
+            const organizador = torneio.organizador || "Desconhecido";
+            const data_inicio = torneio.data_inicio || "Data não definida";
+            const formato = torneio.formato || "Formato não informado";
+            const capa = torneio.capa ? torneio.capa : "/static/imagens/default.jpg";
+
+            const card = `
+                <div class="col">
+                    <div class="card shadow-sm torneio-card">
+                        <img src="${capa}" class="card-img-top torneio-capa" alt="Capa do Torneio">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="card-title">${nome}</h5>
+                                <div class="dropdown">
+                                    <img src="/static/imagens/trespontos.png" class="icon-menu" data-bs-toggle="dropdown">
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="#" onclick="editarTorneio('${torneio.id}')">
+                                            <img src="/static/imagens/editar.png" class="icon-dropdown"> Editar
+                                        </a></li>
+                                        <li><a class="dropdown-item text-danger" href="#" onclick="deletarTorneio('${torneio.id}')">
+                                            <img src="/static/imagens/botao-apagar.png" class="icon-dropdown"> Deletar
+                                        </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <p class="card-text">Organizador: ${organizador}</p>
+                            <p class="card-text">Data de Início: ${data_inicio}</p>
+                            <p class="card-text">Formato: ${formato}</p>
+                            <a href="/torneios/gerenciar_torneio/${torneio.id}" class="btn-gerenciar">Gerenciar</a>
+                        </div>
+                    </div>
+                </div>`;
+            torneiosList.insertAdjacentHTML('beforeend', card);
+        }
+
+        // Editar torneio
+        function editarTorneio(id) {
+            fetch(`/torneios/torneios/${id}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Erro ao carregar torneio");
+                    return response.json();
+                })
+                .then(torneio => {
+                    torneioEmEdicao = id;
+                    document.getElementById("torneioNome").value = torneio.nome;
+                    document.getElementById("torneioOrganizador").value = torneio.organizador;
+                    document.getElementById("torneioDataInicio").value = torneio.data_inicio;
+                    document.getElementById("torneioDescricao").value = torneio.descricao || "";
+                    document.getElementById("torneioFormato").value = torneio.formato;
+                    document.getElementById("btnSalvarTorneio").textContent = "Salvar Alterações";
+                        
+                    mostrarFormulario();
+                })
+                .catch(error => console.error("Erro ao carregar torneio para edição:", error));
+        }
+
+        // Deletar torneio
+        function deletarTorneio(id) {
+            if (confirm("Tem certeza que deseja deletar este torneio?")) {
+                fetch(`/torneios/${id}`, { method: 'DELETE' })
+                    .then(response => {
+                        if (uthenticatedResponse.ok) {
+                            carregarTorneios();
+                        } else {
+                            alert("Erro ao deletar torneio!");
+                        }
+                    })
+                    .catch(error => console.error("Erro ao deletar torneio:", error));
+            }
+        }
+
+        // Resetar formulário
+        function resetarFormulario() {
+            document.getElementById("formTorneioForm").reset();
+            document.getElementById("btnSalvarTorneio").textContent = "Criar Torneio";
+            torneioEmEdicao = null;
+        }
+
+        // Enviar formulário
+        document.getElementById("formTorneioForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const url = torneioEmEdicao ? `/torneios/torneios/${torneioEmEdicao}` : "/torneios/";
+            const method = torneioEmEdicao ? "PUT" : "POST";
+
+            fetch(url, {
+                method: method,
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Erro ao salvar torneio");
+                return response.json();
+            })
+            .then(() => {
+                carregarTorneios();
+                resetarFormulario();
+                document.getElementById("formTorneio").style.display = "none";
+            })
+            .catch(error => console.error("Erro ao salvar torneio:", error));
+        });
+
+        // Carregar torneios ao iniciar a página
+        document.addEventListener("DOMContentLoaded", carregarTorneios);
+    </script>
 </body>
 </html>

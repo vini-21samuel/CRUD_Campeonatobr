@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastrar Usuário</title>
+    <link rel="shortcut icon" href="/static/imagens/logoCL.png" type="image/x-icon">   
+    <link rel="stylesheet" href="templates/static/styles.css"> 
     <style>
         /* Estilo do fundo */
         body {
@@ -15,100 +17,101 @@
             height: 100vh;
             margin: 0;
         }
-
-        /* Estilo do container */
+    
+        /* Estilo do container (largura aumentada) */
         .container {
             background-color: white;
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             width: 100%;
-            max-width: 400px; /* Largura do formulário ajustada */
-            height: auto; /* Ajuste de altura */
+            max-width: 500px; /* Aumentado de 350px para 500px */
+            height: auto;
             text-align: center;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
-
-        /* Logo acima do formulário */
+    
+        /* Logo centralizada acima do formulário */
         .logo {
-            width: 80px; /* Logo ajustada para ficar mais compacta */
-            margin-bottom: 15px;
+            width: 60px;
+            margin: 0 auto 10px auto; /* Centraliza horizontalmente e adiciona margem inferior */
+            display: block;
         }
-
+    
         /* Título do formulário */
         h2 {
             color: #136db0;
-            margin-bottom: 10px;
-            font-size: 20px;
+            margin-bottom: 8px;
+            font-size: 18px;
         }
-
+    
         /* Estilo do formulário */
         form {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             align-items: center;
         }
-
+    
         label {
             font-weight: bold;
             color: #333;
             text-align: left;
             width: 100%;
             margin-left: 10px;
-            font-size: 14px;
+            font-size: 13px;
         }
-
+    
         input {
-            padding: 8px;
-            width: 100%; /* Ocupar toda a largura do formulário */
+            padding: 6px;
+            width: 100%;
             border: 1px solid #ccc;
             border-radius: 5px;
-            font-size: 14px;
-            margin-bottom: 10px;
+            font-size: 13px;
+            margin-bottom: 8px;
         }
-
-        /* Adicionando o texto de sugestão dentro dos campos */
+    
         input::placeholder {
             color: #999;
             font-style: italic;
         }
-
+    
         button {
-            padding: 8px 15px;
+            padding: 6px 12px;
             background-color: #136db0;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
-            width: 100%; /* O botão também ocupa toda a largura */
+            font-size: 13px;
+            width: 100%;
         }
-
+    
         button:hover {
             background-color: #0f5f8d;
         }
-
+    
         p {
-            margin-top: 10px;
-            font-size: 14px;
+            margin-top: 8px;
+            font-size: 13px;
         }
-
+    
         a {
             color: #136db0;
             text-decoration: none;
         }
-
+    
         a:hover {
             text-decoration: underline;
         }
     </style>
+    
 </head>
 <body>
     <div class="container">
-        
+        <img src="/static/imagens/user.png" alt="Logo Usuário" class="logo">
         <h2>Cadastrar Usuário</h2>
         <form action="/usuarios/cadastrar" method="post">
             <label for="username">Nome de usuário:</label>

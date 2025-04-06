@@ -9,7 +9,7 @@ from app.models.torneio import Torneio
 
 app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
-app.mount("/static", StaticFiles(directory="app/templates/static/"), name="static")
+app.mount("/static", StaticFiles(directory="app/templates/static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request, db: Session = Depends(get_db)):
