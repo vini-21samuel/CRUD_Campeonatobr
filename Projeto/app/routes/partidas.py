@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from database.database import get_db
+from app.database.database import get_db
 from app.services.partidas_service import PartidaService
 from app.schemas.partida import PartidaCreate, PartidaResponse
-from database.database import SessionLocal
+from app.database.database import SessionLocal
 from fastapi.templating import Jinja2Templates
 
 router = APIRouter()

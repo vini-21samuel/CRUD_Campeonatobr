@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, ForeignKey, Date, String
 from sqlalchemy.orm import relationship
-from database.database import Base
+from app.database.database import Base
 
 class Partida(Base):
     __tablename__ = 'partidas'

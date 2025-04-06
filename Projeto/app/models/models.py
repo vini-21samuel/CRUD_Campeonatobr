@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Date, ForeignKey, Text
 from sqlalchemy.orm import relationship
-from database.database import Base, engine
+from app.database.database import Base, engine
 from datetime import datetime
 
 # Modelo de Usuário

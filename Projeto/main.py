@@ -3,11 +3,13 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
-from database.database import get_db
+
+from app.database.database import get_db
 from app.utils.auth import decode_token
 from app.models.torneio import Torneio
 
 app = FastAPI()
+
 templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/templates/static"), name="static")
 

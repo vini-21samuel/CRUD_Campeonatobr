@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from database.database import SessionLocal, get_db
+from app.database.database import SessionLocal, get_db
 from app.services.jogadores_service import JogadorService
 from app.schemas.jogador import JogadorCreate, JogadorResponse
 

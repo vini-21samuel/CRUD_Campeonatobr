@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Form, Request
 from fastapi.responses import RedirectResponse, HTMLResponse
 from sqlalchemy.orm import Session
-from database.database import SessionLocal
+from app.database.database import SessionLocal
 from fastapi.templating import Jinja2Templates
 from app.models.usuario import Usuario 
 from app.schemas.usuario import UsuarioCreate, UsuarioLogin
@@ -69,7 +69,7 @@ async def login_user(
     password: str = Form(...),
     db: Session = Depends(get_db),
 ):
-    # Busca usuário pelo e-mail
+
     user = db.query(Usuario).filter(Usuario.email == email).first()
     if not user or not verify_password(password, user.hashed_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Email ou senha incorretos")
