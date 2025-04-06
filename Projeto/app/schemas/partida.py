@@ -22,7 +22,7 @@ class PartidaResponse(BaseModel):
     time2_nome: str
     time1_logo: Optional[str] = None
     time2_logo: Optional[str] = None
-    data: str  # Saída como string no formato "YYYY-MM-DD"
+    data: str  
     resultado: Optional[str] = None
     torneio_id: int
 
