@@ -502,14 +502,13 @@
                                     <img src="${time1Logo}" alt="${partida.time1_nome}">
                                     <span>${partida.time1_nome}</span>
                                 </div>
-                                <div class="partida-vs">VS</div>
+                                <div class="partida-vs">${partida.resultado}</div>
                                 <div class="partida-time">
                                     <img src="${time2Logo}" alt="${partida.time2_nome}">
                                     <span>${partida.time2_nome}</span>
                                 </div>
                                 <div class="partida-info">
                                     <div class="data">${partida.data}</div>
-                                    <div class="resultado">${partida.resultado || 'A definir'}</div>
                                 </div>
                                 <div class="partida-actions">
                                     <button class="btn-action-editar" onclick="editarPartida(${partida.id})">Editar</button>
