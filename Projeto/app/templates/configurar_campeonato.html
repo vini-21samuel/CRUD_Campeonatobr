@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurar Campeonato - {{ torneio.nome }}</title>
+    <link rel="shortcut icon" href="/static/imagens/logoCL.png" type="image/x-icon">     
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body { background-color: #f8f9fa; font-family: Arial, sans-serif; padding-top: 90px; }
+        .navbar { background: linear-gradient(135deg, #136db0, #11a125); padding: 8px 10px; position: fixed; top: 0; left: 0; width: 100%; height: 75px; z-index: 100; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
+        .navbar-brand { font-weight: bold; color: #fff; font-size: 1.5rem; transition: color 0.3s ease-in-out; }
+        .navbar-brand:hover { color: #fff; }
+        .navbar-nav .nav-link { color: #fff; font-weight: 500; padding: 8px 12px; font-size: 1.1rem; transition: all 0.3s ease-in-out; }
+        .navbar-nav .nav-link:hover { color: #fff; background: rgba(19, 109, 176, 0.3); transform: scale(1.05); border-radius: 5px; }
+        
+        .btn-configurar { background-color: #136db0; color: white; padding: 10px 20px; border-radius: 12px; font-weight: bold; text-transform: uppercase; transition: all 0.3s ease-in-out; }
+        .btn-configurar:hover { background-color: #0e5a8f; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); }
+
+        .table { width: 100%; max-width: 800px; margin-top: 10px; border-collapse: collapse; background-color: #ffffff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden; }
+        .table th, .table td { padding: 12px; text-align: left; border: 1px solid #ddd; vertical-align: middle; }
+        .table th { background: linear-gradient(135deg, #136db0, #11a125); color: white; font-weight: bold; text-transform: uppercase; }
+        .table-striped tbody tr:nth-child(odd) { background-color: #f8f9fa; }
+        .table-striped tbody tr:hover { background-color: #e9ecef; }
+        .logo-time { width: 40px; height: 40px; object-fit: contain; border-radius: 50%; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); margin-right: 10px; vertical-align: middle; }
+
+        .grupo-container { margin-bottom: 30px; }
+        .grupo-container h3 { font-size: 22px; color: #136db0; margin-bottom: 15px; font-weight: bold; text-transform: uppercase; }
+        .mata-mata-container { margin-top: 40px; }
+        .mata-mata-round { display: flex; flex-direction: column; gap: 20px; margin-bottom: 30px; }
+        .mata-mata-match { background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 15px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); display: flex; align-items: center; justify-content: space-between; }
+        .mata-mata-match span { font-weight: bold; }
+        .regras-container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="/static/imagens/logoCL.png" alt="Logo Campus League" style="max-height: 80px; margin-right: 30px;">
+                Campus League
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/torneios/campeonatos">Campeonatos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/torneios/sobre">Sobre</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/torneios/perfil">Perfil</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>Configurar Campeonato: {{ torneio.nome }}</h2>
+        <p><strong>Formato:</strong> <span id="formatoTorneio">{{ torneio.formato }}</span></p>
+
+        <!-- Quadro de Regras -->
+        <div class="regras-container">
+            <h3>Regras de Pontuação e Desempate</h3>
+            <ul>
+                <li><strong>Pontuação:</strong> Vitória = 3 pontos, Empate = 1 ponto, Derrota = 0 pontos</li>
+                <li><strong>Saldo de Gols:</strong> Gols Marcados - Gols Sofridos</li>
+                <li><strong>Classificação na Fase de Grupos:</strong> Ordem por Pontos, Saldo de Gols, Gols Marcados</li>
+                <li><strong>Mata-mata:</strong> Em caso de empate, o desempate será por saldo de gols da fase anterior. Se persistir, pênaltis (definido manualmente).</li>
+            </ul>
+        </div>
+
+        <div class="mb-4">
+            <button class="btn-configurar" data-bs-toggle="modal" data-bs-target="#modalConfigurar">Configurar Formato</button>
+        </div>
+
+        <div id="grupos-container"></div>
+        <div id="mata-mata-container" class="mata-mata-container"></div>
+    </div>
+
+    <div class="modal fade" id="modalConfigurar" tabindex="-1" aria-labelledby="modalConfigurarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalConfigurarLabel">Configurar Formato do Campeonato</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formConfigurar">
+                        <div class="mb-3">
+                            <label for="formato" class="form-label">Formato</label>
+                            <select class="form-select" id="formato" required onchange="mostrarCamposFormato()">
+                                <option value="grupos">Fase de Grupos + Mata-mata</option>
+                                <option value="mata-mata">Mata-mata</option>
+                                <option value="classificacao">Pontos Corridos</option>
+                            </select>
+                        </div>
+                        <div id="campos-grupos" class="mb-3" style="display: none;">
+                            <label for="numGrupos" class="form-label">Número de Grupos</label>
+                            <input type="number" class="form-control" id="numGrupos" min="1" value="1">
+                            <label for="numClassificados" class="form-label">Classificados por Grupo</label>
+                            <input type="number" class="form-control" id="numClassificados" min="1" value="2">
+                        </div>
+                        <button type="submit" class="btn btn-configurar">Salvar Configuração</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const torneioId = "{{ torneio.id }}";
+        let times = [];
+        let partidas = [];
+        let configuracao = { formato: "{{ torneio.formato }}", numGrupos: 1, numClassificados: 2 };
+
+        function carregarDados() {
+            Promise.all([
+                fetch(`/times/torneio/${torneioId}/`).then(response => response.json()),
+                fetch(`/partidas/?torneio_id=${torneioId}`).then(response => response.json())
+            ])
+            .then(([timesData, partidasData]) => {
+                times = timesData;
+                partidas = partidasData;
+                console.log("Times carregados:", times);
+                console.log("Partidas carregadas:", partidas);
+                atualizarExibicao();
+            })
+            .catch(error => console.error("Erro ao carregar dados:", error));
+        }
+
+        function mostrarCamposFormato() {
+            const formato = document.getElementById("formato").value;
+            document.getElementById("campos-grupos").style.display = formato === "grupos" ? "block" : "none";
+        }
+
+        document.getElementById("formConfigurar").addEventListener("submit", function(e) {
+            e.preventDefault();
+            configuracao.formato = document.getElementById("formato").value;
+            if (configuracao.formato === "grupos") {
+                configuracao.numGrupos = parseInt(document.getElementById("numGrupos").value);
+                configuracao.numClassificados = parseInt(document.getElementById("numClassificados").value);
+            }
+            document.getElementById("formatoTorneio").textContent = configuracao.formato;
+            atualizarExibicao();
+            bootstrap.Modal.getInstance(document.getElementById("modalConfigurar")).hide();
+        });
+
+        function dividirEmGrupos(times, numGrupos) {
+            const grupos = Array.from({ length: numGrupos }, () => []);
+            times.forEach((time, index) => grupos[index % numGrupos].push(time));
+            return grupos;
+        }
+
+        function calcularClassificacao(grupo, partidasGrupo) {
+            const classificacao = grupo.map(time => ({
+                time,
+                pontos: 0,
+                vitorias: 0,
+                empates: 0,
+                derrotas: 0,
+                golsPro: 0,
+                golsContra: 0
+            }));
+
+            console.log("Partidas do grupo:", partidasGrupo);
+
+            partidasGrupo.forEach(partida => {
+                let golsTime1 = 0, golsTime2 = 0;
+                if (partida.resultado) {
+                    // Suporta diferentes formatos: "NxM" ou "N-M"
+                    const resultado = partida.resultado.replace(" ", ""); // Remove espaços
+                    const separador = resultado.includes("x") ? "x" : "-";
+                    [golsTime1, golsTime2] = resultado.split(separador).map(Number);
+                    if (isNaN(golsTime1) || isNaN(golsTime2)) {
+                        console.warn("Resultado inválido:", partida.resultado);
+                        golsTime1 = 0;
+                        golsTime2 = 0;
+                    }
+                }
+
+                const time1 = classificacao.find(c => c.time.id === partida.time1_id);
+                const time2 = classificacao.find(c => c.time.id === partida.time2_id);
+
+                if (!time1 || !time2) {
+                    console.warn("Time não encontrado na classificação:", partida);
+                    return;
+                }
+
+                console.log(`Processando partida: ${time1.time.nome} ${golsTime1} x ${golsTime2} ${time2.time.nome}`);
+
+                if (golsTime1 > golsTime2) {
+                    time1.pontos += 3;
+                    time1.vitorias += 1;
+                    time2.derrotas += 1;
+                } else if (golsTime1 < golsTime2) {
+                    time2.pontos += 3;
+                    time2.vitorias += 1;
+                    time1.derrotas += 1;
+                } else {
+                    time1.pontos += 1;
+                    time2.pontos += 1;
+                    time1.empates += 1;
+                    time2.empates += 1;
+                }
+                time1.golsPro += golsTime1;
+                time1.golsContra += golsTime2;
+                time2.golsPro += golsTime2;
+                time2.golsContra += golsTime1;
+            });
+
+            return classificacao.sort((a, b) => 
+                b.pontos - a.pontos || 
+                (b.golsPro - b.golsContra) - (a.golsPro - a.golsContra) || 
+                b.golsPro - a.golsPro
+            );
+        }
+
+        function determinarVencedorMataMata(partida) {
+            if (!partida.resultado) return null;
+            const [golsTime1, golsTime2] = partida.resultado.includes("x") 
+                ? partida.resultado.split("x").map(Number) 
+                : partida.resultado.split("-").map(Number);
+            if (isNaN(golsTime1) || isNaN(golsTime2)) return null;
+            if (golsTime1 > golsTime2) return partida.time1_id;
+            if (golsTime2 > golsTime1) return partida.time2_id;
+            return null;
+        }
+
+        function atualizarExibicao() {
+            const gruposContainer = document.getElementById("grupos-container");
+            const mataMataContainer = document.getElementById("mata-mata-container");
+            gruposContainer.innerHTML = "";
+            mataMataContainer.innerHTML = "";
+
+            console.log("Formato atual:", configuracao.formato);
+
+            if (configuracao.formato === "grupos") {
+                const grupos = dividirEmGrupos(times, configuracao.numGrupos);
+                const partidasPorGrupo = grupos.map(grupo => 
+                    partidas.filter(p => grupo.some(t => t.id === p.time1_id || t.id === p.time2_id))
+                );
+
+                grupos.forEach((grupo, index) => {
+                    const classificacao = calcularClassificacao(grupo, partidasPorGrupo[index]);
+                    console.log(`Classificação Grupo ${index + 1}:`, classificacao);
+                    gruposContainer.innerHTML += `
+                        <div class="grupo-container">
+                            <h3>Grupo ${index + 1}</h3>
+                            <table class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Pontos</th>
+                                        <th>Vitórias</th>
+                                        <th>Empates</th>
+                                        <th>Derrotas</th>
+                                        <th>Saldo de Gols</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${classificacao.map(c => `
+                                        <tr>
+                                            <td><img src="${c.time.logo ? `/static/imagens/times/${c.time.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${c.time.nome}</td>
+                                            <td>${c.pontos}</td>
+                                            <td>${c.vitorias}</td>
+                                            <td>${c.empates}</td>
+                                            <td>${c.derrotas}</td>
+                                            <td>${c.golsPro - c.golsContra}</td>
+                                        </tr>`).join("")}
+                                </tbody>
+                            </table>
+                        </div>`;
+                });
+
+                const classificados = grupos.flatMap(grupo => 
+                    calcularClassificacao(grupo, partidasPorGrupo[grupos.indexOf(grupo)]).slice(0, configuracao.numClassificados)
+                );
+                const partidasMataMata = partidas.filter(p => !partidasPorGrupo.some(pg => pg.includes(p)));
+                let rodadasMataMata = [];
+
+                if (partidasMataMata.length > 0) {
+                    rodadasMataMata.push(partidasMataMata);
+                    let currentRound = partidasMataMata;
+                    while (currentRound.length > 1) {
+                        const vencedores = currentRound.map(partida => {
+                            const vencedorId = determinarVencedorMataMata(partida);
+                            return { id: vencedorId || Math.random() };
+                        }).filter(v => v.id !== null);
+                        currentRound = [];
+                        for (let i = 0; i < vencedores.length; i += 2) {
+                            if (i + 1 < vencedores.length) {
+                                currentRound.push({
+                                    time1_id: vencedores[i].id,
+                                    time2_id: vencedores[i + 1].id,
+                                    resultado: null
+                                });
+                            }
+                        }
+                        if (currentRound.length > 0) rodadasMataMata.push(currentRound);
+                    }
+                }
+
+                mataMataContainer.innerHTML = "<h3>Mata-mata</h3>";
+                rodadasMataMata.forEach((rodada, idx) => {
+                    mataMataContainer.innerHTML += `
+                        <div class="mata-mata-round">
+                            <h4>${idx === 0 ? "Oitavas" : idx === 1 ? "Quartas" : idx === 2 ? "Semifinal" : "Final"}</h4>
+                            ${rodada.map(partida => {
+                                const time1 = times.find(t => t.id === partida.time1_id);
+                                const time2 = times.find(t => t.id === partida.time2_id);
+                                return `
+                                    <div class="mata-mata-match">
+                                        <span><img src="${time1?.logo ? `/static/imagens/times/${time1.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time1?.nome || "TBD"}</span> 
+                                        vs 
+                                        <span><img src="${time2?.logo ? `/static/imagens/times/${time2.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time2?.nome || "TBD"}</span>
+                                    </div>`;
+                            }).join("")}
+                        </div>`;
+                });
+            } else if (configuracao.formato === "mata-mata") {
+                let rodadasMataMata = [partidas];
+                let currentRound = partidas;
+
+                while (currentRound.length > 1) {
+                    const vencedores = currentRound.map(partida => {
+                        const vencedorId = determinarVencedorMataMata(partida);
+                        return { id: vencedorId || Math.random() };
+                    }).filter(v => v.id !== null);
+                    currentRound = [];
+                    for (let i = 0; i < vencedores.length; i += 2) {
+                        if (i + 1 < vencedores.length) {
+                            currentRound.push({
+                                time1_id: vencedores[i].id,
+                                time2_id: vencedores[i + 1].id,
+                                resultado: null
+                            });
+                        }
+                    }
+                    if (currentRound.length > 0) rodadasMataMata.push(currentRound);
+                }
+
+                mataMataContainer.innerHTML = "<h3>Mata-mata</h3>";
+                rodadasMataMata.forEach((rodada, idx) => {
+                    mataMataContainer.innerHTML += `
+                        <div class="mata-mata-round">
+                            <h4>${idx === 0 ? "Oitavas" : idx === 1 ? "Quartas" : idx === 2 ? "Semifinal" : "Final"}</h4>
+                            ${rodada.map(partida => {
+                                const time1 = times.find(t => t.id === partida.time1_id);
+                                const time2 = times.find(t => t.id === partida.time2_id);
+                                return `
+                                    <div class="mata-mata-match">
+                                        <span><img src="${time1?.logo ? `/static/imagens/times/${time1.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time1?.nome || "TBD"}</span> 
+                                        vs 
+                                        <span><img src="${time2?.logo ? `/static/imagens/times/${time2.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time2?.nome || "TBD"}</span>
+                                    </div>`;
+                            }).join("")}
+                        </div>`;
+                });
+            } else if (configuracao.formato === "classificacao") {
+                const classificacao = calcularClassificacao(times, partidas);
+                console.log("Classificação Geral:", classificacao);
+                gruposContainer.innerHTML = `
+                    <div class="grupo-container">
+                        <h3>Classificação Geral</h3>
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Posição</th>
+                                    <th>Time</th>
+                                    <th>Pontos</th>
+                                    <th>Vitórias</th>
+                                    <th>Empates</th>
+                                    <th>Derrotas</th>
+                                    <th>Saldo de Gols</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${classificacao.map((c, idx) => `
+                                    <tr>
+                                        <td>${idx + 1}</td>
+                                        <td><img src="${c.time.logo ? `/static/imagens/times/${c.time.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${c.time.nome}</td>
+                                        <td>${c.pontos}</td>
+                                        <td>${c.vitorias}</td>
+                                        <td>${c.empates}</td>
+                                        <td>${c.derrotas}</td>
+                                        <td>${c.golsPro - c.golsContra}</td>
+                                    </tr>`).join("")}
+                            </tbody>
+                        </table>
+                    </div>`;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            carregarDados();
+        });
+    </script>
+</body>
+</html>

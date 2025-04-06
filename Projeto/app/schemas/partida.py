@@ -6,8 +6,8 @@ class PartidaBase(BaseModel):
     time1_id: int
     time2_id: int
     data: date
-    resultado: str | None = None
-
+    resultado: Optional[str] = None
+    torneio_id: int
 
 class PartidaCreate(PartidaBase):
     pass
@@ -19,14 +19,10 @@ class PartidaResponse(BaseModel):
     id: int
     time1_nome: str
     time2_nome: str
-    time1_logo: str | None
-    time2_logo: str | None
+    time1_logo: Optional[str] = None
+    time2_logo: Optional[str] = None
     data: str
     resultado: Optional[str] = None
-
-    class Config:
-        orm_mode = True
- 
 
     @field_validator("data", mode="before")
     def formatar_data(cls, v):

@@ -164,3 +164,24 @@ def listar_torneios_campeonatos(db: Session = Depends(get_db)):
 @router.get("/sobre", response_class=HTMLResponse)
 async def get_sobre(request: Request):
     return templates.TemplateResponse("sobre.html", {"request": request})
+
+@router.get("/configurar_campeonato/{torneio_id}", response_class=HTMLResponse)
+async def configurar_campeonato(request: Request, torneio_id: int, db: Session = Depends(get_db)):
+    torneio = db.query(Torneio).filter(Torneio.id == torneio_id).first()
+    if not torneio:
+        raise HTTPException(status_code=404, detail="Torneio não encontrado.")
+    return templates.TemplateResponse(
+        "configurar_campeonato.html",
+        {
+            "request": request,
+            "torneio": {
+                "id": torneio.id,
+                "nome": torneio.nome,
+                "formato": torneio.formato,
+                "organizador": torneio.organizador,
+                "data_inicio": torneio.data_inicio.strftime("%Y-%m-%d"),
+                "descricao": torneio.descricao or "Sem descrição.",
+                "capa": f"/static/imagens/torneios/{torneio.capa}" if torneio.capa else "/static/imagens/default.jpg"
+            }
+        }
+    )
