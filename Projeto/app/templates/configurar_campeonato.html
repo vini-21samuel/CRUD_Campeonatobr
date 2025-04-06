@@ -122,8 +122,8 @@
             .then(([timesData, partidasData]) => {
                 times = timesData;
                 partidas = partidasData;
-                console.log("Times carregados:", times);
-                console.log("Partidas carregadas:", partidas);
+                console.log("Times:", times);
+                console.log("Partidas:", partidas);
                 atualizarExibicao();
             })
             .catch(error => console.error("Erro ao carregar dados:", error));
@@ -163,19 +163,13 @@
                 golsContra: 0
             }));
 
-            console.log("Partidas do grupo:", partidasGrupo);
-
             partidasGrupo.forEach(partida => {
                 let golsTime1 = 0, golsTime2 = 0;
                 if (partida.resultado) {
-                    // Suporta diferentes formatos: "NxM" ou "N-M"
-                    const resultado = partida.resultado.replace(" ", ""); // Remove espaços
-                    const separador = resultado.includes("x") ? "x" : "-";
-                    [golsTime1, golsTime2] = resultado.split(separador).map(Number);
+                    [golsTime1, golsTime2] = partida.resultado.split("x").map(Number);
                     if (isNaN(golsTime1) || isNaN(golsTime2)) {
                         console.warn("Resultado inválido:", partida.resultado);
-                        golsTime1 = 0;
-                        golsTime2 = 0;
+                        return;
                     }
                 }
 
@@ -183,11 +177,9 @@
                 const time2 = classificacao.find(c => c.time.id === partida.time2_id);
 
                 if (!time1 || !time2) {
-                    console.warn("Time não encontrado na classificação:", partida);
+                    console.warn("Time não encontrado:", partida);
                     return;
                 }
-
-                console.log(`Processando partida: ${time1.time.nome} ${golsTime1} x ${golsTime2} ${time2.time.nome}`);
 
                 if (golsTime1 > golsTime2) {
                     time1.pontos += 3;
@@ -218,9 +210,7 @@
 
         function determinarVencedorMataMata(partida) {
             if (!partida.resultado) return null;
-            const [golsTime1, golsTime2] = partida.resultado.includes("x") 
-                ? partida.resultado.split("x").map(Number) 
-                : partida.resultado.split("-").map(Number);
+            const [golsTime1, golsTime2] = partida.resultado.split("x").map(Number);
             if (isNaN(golsTime1) || isNaN(golsTime2)) return null;
             if (golsTime1 > golsTime2) return partida.time1_id;
             if (golsTime2 > golsTime1) return partida.time2_id;
@@ -233,8 +223,6 @@
             gruposContainer.innerHTML = "";
             mataMataContainer.innerHTML = "";
 
-            console.log("Formato atual:", configuracao.formato);
-
             if (configuracao.formato === "grupos") {
                 const grupos = dividirEmGrupos(times, configuracao.numGrupos);
                 const partidasPorGrupo = grupos.map(grupo => 
@@ -243,7 +231,6 @@
 
                 grupos.forEach((grupo, index) => {
                     const classificacao = calcularClassificacao(grupo, partidasPorGrupo[index]);
-                    console.log(`Classificação Grupo ${index + 1}:`, classificacao);
                     gruposContainer.innerHTML += `
                         <div class="grupo-container">
                             <h3>Grupo ${index + 1}</h3>
@@ -359,7 +346,6 @@
                 });
             } else if (configuracao.formato === "classificacao") {
                 const classificacao = calcularClassificacao(times, partidas);
-                console.log("Classificação Geral:", classificacao);
                 gruposContainer.innerHTML = `
                     <div class="grupo-container">
                         <h3>Classificação Geral</h3>
