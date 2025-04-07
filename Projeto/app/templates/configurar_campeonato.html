@@ -299,7 +299,7 @@
                                 return `
                                     <div class="mata-mata-match">
                                         <span><img src="${time1?.logo ? `/static/imagens/times/${time1.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time1?.nome || "TBD"}</span> 
-                                        vs 
+                                        ${partida.resultado || "A definir"}
                                         <span><img src="${time2?.logo ? `/static/imagens/times/${time2.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time2?.nome || "TBD"}</span>
                                     </div>`;
                             }).join("")}
@@ -338,7 +338,7 @@
                                 return `
                                     <div class="mata-mata-match">
                                         <span><img src="${time1?.logo ? `/static/imagens/times/${time1.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time1?.nome || "TBD"}</span> 
-                                        vs 
+                                        ${partida.resultado || "A definir"}
                                         <span><img src="${time2?.logo ? `/static/imagens/times/${time2.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time2?.nome || "TBD"}</span>
                                     </div>`;
                             }).join("")}
