@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -26,12 +26,12 @@ services:
       dockerfile: Dockerfile
     container_name: interclasse-container
     ports:
-      - "8001:8000"
+      - "8001:8000"  # Mapeia 8001 do host para 8000 do container
     depends_on:
       db:
         condition: service_healthy
     volumes:
-      - .:/app
+      - .:/app  # Mapeia o diretório raiz para /app no container
     env_file:
       - .env
     command: >
