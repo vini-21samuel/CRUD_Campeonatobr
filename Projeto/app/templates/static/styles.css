@@ -75,11 +75,21 @@ body {
 #formTorneio {
     display: none;
     background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 500px;
-    margin: 20px auto;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    max-width: 600px; /* Aumentei para dar mais espaço */
+    margin: 30px auto; /* Aumentei a margem para destacar */
+    border: 1px solid #ddd;
+}
+
+#formTorneio h2 {
+    font-size: 24px;
+    color: #136db0;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    text-transform: uppercase;
 }
 
 .torneio-card {
@@ -189,13 +199,64 @@ body {
     transition: all 0.3s ease-in-out;
 }
 
-#btnSalvarTorneio{
-    background-color: #11a125;
+.torneio-form .form-label {
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
 
+.torneio-form .form-control {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 14px;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.torneio-form .form-control:focus {
+    border-color: #11a125;
+    box-shadow: 0 0 5px rgba(17, 161, 37, 0.5);
+    outline: none;
+}
+
+.torneio-form textarea.form-control {
+    resize: vertical; /* Permite redimensionar apenas verticalmente */
+    min-height: 80px;
+}
+
+.torneio-form select.form-control {
+    appearance: none; /* Remove estilo padrão do navegador */
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="gray" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+    background-size: 12px;
+    padding-right: 30px; /* Espaço para o ícone de dropdown */
+}
+
+#btnSalvarTorneio {
+    background-color: #11a125; /* Verde para "Criar Torneio" */
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-weight: bold;
+    font-size: 16px;
+    text-transform: uppercase;
+    width: 100%;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
 
 #btnSalvarTorneio:hover {
-    background-color: #136db0;
+    background-color: #136db0; /* Azul no hover */
+    transform: scale(1.05);
+}
+
+#btnSalvarTorneio.edit-mode {
+    background-color: #ffc107; /* Amarelo para "Salvar Alterações" */
+    color: black;
+}
+
+#btnSalvarTorneio.edit-mode:hover {
+    background-color: #e0a800; /* Amarelo mais escuro no hover */
     transform: scale(1.05);
 }
 

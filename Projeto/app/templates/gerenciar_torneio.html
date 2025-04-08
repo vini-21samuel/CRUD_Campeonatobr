@@ -262,7 +262,9 @@
                     <li class="nav-item"><a class="nav-link" href="/">Início</a></li>
                     <li class="nav-item"><a class="nav-link" href="/torneios/campeonatos">Campeonatos</a></li>
                     <li class="nav-item"><a class="nav-link" href="/torneios/sobre">Sobre</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/usuarios/perfil">Perfil</a></li>
+                    <a class="nav-link" href="/usuarios/logout">
+                        <img src="/static/imagens/logout.png" alt="Logout" style="max-height: 24px; vertical-align: middle;">
+                    </a>
                 </ul>
             </div>
         </div>
@@ -582,13 +584,28 @@
         }
 
         function deletarTime(id) {
-            fetch(`/times/${id}/`, { method: "DELETE" })
-                .then(response => {
-                    if (!response.ok) throw new Error("Erro ao deletar time");
-                    carregarTimes();
-                })
-                .catch(error => console.error("Erro ao deletar time:", error));
-        }
+    fetch(`/times/${id}`, { method: "DELETE" })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => {
+                    let errorMessage = "Erro ao deletar time";
+                    try {
+                        const data = JSON.parse(text);
+                        errorMessage = data.detail || errorMessage;
+                    } catch (e) {
+                        errorMessage = text || errorMessage;
+                    }
+                    throw new Error(errorMessage);
+                });
+            }
+            // Status 204 não tem corpo, então apenas atualiza a lista
+            carregarTimes();
+        })
+        .catch(error => {
+            console.error("Erro ao deletar time:", error);
+            alert(`Falha ao deletar time: ${error.message}`);
+        });
+}
 
         function resetarFormularioTime() {
             document.getElementById("formTime").reset();

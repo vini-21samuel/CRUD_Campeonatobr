@@ -67,7 +67,9 @@
                     <li class="nav-item"><a class="nav-link" href="/">Início</a></li>
                     <li class="nav-item"><a class="nav-link" href="/torneios/campeonatos">Campeonatos</a></li>
                     <li class="nav-item"><a class="nav-link" href="/torneios/sobre">Sobre</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/torneios/perfil">Perfil</a></li>
+                    <a class="nav-link" href="/usuarios/logout">
+                        <img src="/static/imagens/logout.png" alt="Logout" style="max-height: 24px; vertical-align: middle;">
+                    </a>
                 </ul>
             </div>
         </div>
@@ -339,187 +341,165 @@
         }
 
         function atualizarExibicao() {
-            const gruposContainer = document.getElementById("grupos-container");
-            const mataMataContainer = document.getElementById("mata-mata-container");
-            gruposContainer.innerHTML = "";
-            mataMataContainer.innerHTML = "";
+    const gruposContainer = document.getElementById("grupos-container");
+    const mataMataContainer = document.getElementById("mata-mata-container");
+    gruposContainer.innerHTML = "";
+    mataMataContainer.innerHTML = "";
 
-            if (configuracao.formato === "grupos") {
-                const grupos = dividirEmGrupos(times, configuracao.numGrupos);
-                const partidasPorGrupo = grupos.map(grupo => 
-                    partidas.filter(p => grupo.some(t => t.id === p.time1_id || t.id === p.time2_id))
-                );
+    if (configuracao.formato === "grupos") {
+        const grupos = dividirEmGrupos(times, configuracao.numGrupos);
+        const partidasPorGrupo = grupos.map(grupo => 
+            partidas.filter(p => grupo.some(t => t.id === p.time1_id || t.id === p.time2_id))
+        );
 
-                grupos.forEach((grupo, index) => {
-                    const classificacao = calcularClassificacao(grupo, partidasPorGrupo[index]);
-                    gruposContainer.innerHTML += `
-                        <div class="grupo-container">
-                            <h3>Grupo ${index + 1}</h3>
-                            <table class="table table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Time</th>
-                                        <th>Pontos</th>
-                                        <th>Vitórias</th>
-                                        <th>Empates</th>
-                                        <th>Derrotas</th>
-                                        <th>Saldo de Gols</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${classificacao.map(c => `
-                                        <tr>
-                                            <td><img src="${c.time.logo ? `/static/imagens/times/${c.time.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${c.time.nome}</td>
-                                            <td>${c.pontos}</td>
-                                            <td>${c.vitorias}</td>
-                                            <td>${c.empates}</td>
-                                            <td>${c.derrotas}</td>
-                                            <td>${c.golsPro - c.golsContra}</td>
-                                        </tr>`).join("")}
-                                </tbody>
-                            </table>
-                        </div>`;
-                });
+        grupos.forEach((grupo, index) => {
+            const classificacao = calcularClassificacao(grupo, partidasPorGrupo[index]);
+            gruposContainer.innerHTML += `
+                <div class="grupo-container">
+                    <h3>Grupo ${index + 1}</h3>
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Pontos</th>
+                                <th>Vitórias</th>
+                                <th>Empates</th>
+                                <th>Derrotas</th>
+                                <th>Saldo de Gols</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${classificacao.map(c => `
+                                <tr>
+                                    <td><img src="${c.time.logo ? `/static/imagens/times/${c.time.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${c.time.nome}</td>
+                                    <td>${c.pontos}</td>
+                                    <td>${c.vitorias}</td>
+                                    <td>${c.empates}</td>
+                                    <td>${c.derrotas}</td>
+                                    <td>${c.golsPro - c.golsContra}</td>
+                                </tr>`).join("")}
+                        </tbody>
+                    </table>
+                </div>`;
+        });
 
-                const classificados = grupos.flatMap(grupo => 
-                    calcularClassificacao(grupo, partidasPorGrupo[grupos.indexOf(grupo)]).slice(0, configuracao.numClassificados)
-                );
-                const partidasMataMata = partidas.filter(p => !partidasPorGrupo.some(pg => pg.includes(p)));
-                let rodadasMataMata = [];
+        const classificados = grupos.flatMap(grupo => 
+            calcularClassificacao(grupo, partidasPorGrupo[grupos.indexOf(grupo)]).slice(0, configuracao.numClassificados)
+        );
+        const partidasMataMata = partidas.filter(p => !partidasPorGrupo.some(pg => pg.includes(p)));
+        let rodadasMataMata = [];
 
-                if (partidasMataMata.length > 0) {
-                    rodadasMataMata.push(partidasMataMata);
-                    let currentRound = partidasMataMata;
-                    while (currentRound.length > 1) {
-                        const vencedores = currentRound.map(partida => {
-                            const vencedorId = determinarVencedorMataMata(partida);
-                            return { id: vencedorId || Math.random() };
-                        }).filter(v => v.id !== null);
-                        currentRound = [];
-                        for (let i = 0; i < vencedores.length; i += 2) {
-                            if (i + 1 < vencedores.length) {
-                                currentRound.push({
-                                    time1_id: vencedores[i].id,
-                                    time2_id: vencedores[i + 1].id,
-                                    resultado: null
-                                });
-                            }
-                        }
-                        if (currentRound.length > 0) rodadasMataMata.push(currentRound);
+        if (partidasMataMata.length > 0) {
+            rodadasMataMata.push(partidasMataMata);
+            let currentRound = partidasMataMata;
+            while (currentRound.length > 1) {
+                const vencedores = currentRound.map(partida => {
+                    const vencedorId = determinarVencedorMataMata(partida);
+                    return { id: vencedorId || Math.random() };
+                }).filter(v => v.id !== null);
+                currentRound = [];
+                for (let i = 0; i < vencedores.length; i += 2) {
+                    if (i + 1 < vencedores.length) {
+                        currentRound.push({
+                            time1_id: vencedores[i].id,
+                            time2_id: vencedores[i + 1].id,
+                            resultado: null
+                        });
                     }
                 }
-
-                mataMataContainer.innerHTML = "<h3>Mata-mata</h3>";
-                rodadasMataMata.forEach((rodada, idx) => {
-                    mataMataContainer.innerHTML += `
-                        <div class="mata-mata-round">
-                            <h4>${idx === 0 ? "Oitavas" : idx === 1 ? "Quartas" : idx === 2 ? "Semifinal" : "Final"}</h4>
-                            ${rodada.map(partida => {
-                                const time1 = times.find(t => t.id === partida.time1_id);
-                                const time2 = times.find(t => t.id === partida.time2_id);
-                                return `
-                                    <div class="mata-mata-match">
-                                        <span><img src="${time1?.logo ? `/static/imagens/times/${time1.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time1?.nome || "TBD"}</span> 
-                                        ${partida.resultado || "A definir"}
-                                        <span><img src="${time2?.logo ? `/static/imagens/times/${time2.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time2?.nome || "TBD"}</span>
-                                    </div>`;
-                            }).join("")}
-                        </div>`;
-                });
-            } else if (configuracao.formato === "mata-mata") {
-                let rodadasMataMata = [partidas];
-                let currentRound = partidas;
-
-                while (currentRound.length > 1) {
-                    const vencedores = currentRound.map(partida => {
-                        const vencedorId = determinarVencedorMataMata(partida);
-                        return { id: vencedorId || Math.random() };
-                    }).filter(v => v.id !== null);
-                    currentRound = [];
-                    for (let i = 0; i < vencedores.length; i += 2) {
-                        if (i + 1 < vencedores.length) {
-                            currentRound.push({
-                                time1_id: vencedores[i].id,
-                                time2_id: vencedores[i + 1].id,
-                                resultado: null
-                            });
-                        }
-                    }
-                    if (currentRound.length > 0) rodadasMataMata.push(currentRound);
-                }
-
-                mataMataContainer.innerHTML = "<h3>Mata-mata</h3>";
-                rodadasMataMata.forEach((rodada, idx) => {
-                    mataMataContainer.innerHTML += `
-                        <div class="mata-mata-round">
-                            <h4>${idx === 0 ? "Oitavas" : idx === 1 ? "Quartas" : idx === 2 ? "Semifinal" : "Final"}</h4>
-                            ${rodada.map(partida => {
-                                const time1 = times.find(t => t.id === partida.time1_id);
-                                const time2 = times.find(t => t.id === partida.time2_id);
-                                return `
-                                    <div class="mata-mata-match">
-                                        <span><img src="${time1?.logo ? `/static/imagens/times/${time1.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time1?.nome || "TBD"}</span> 
-                                        ${partida.resultado || "A definir"}
-                                        <span><img src="${time2?.logo ? `/static/imagens/times/${time2.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time2?.nome || "TBD"}</span>
-                                    </div>`;
-                            }).join("")}
-                        </div>`;
-                });
-            } else if (configuracao.formato === "classificacao") {
-                const classificacao = calcularClassificacao(times, partidas);
-                gruposContainer.innerHTML = `
-                    <div class="grupo-container">
-                        <h3>Classificação Geral</h3>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Posição</th>
-                                    <th>Time</th>
-                                    <th>Pontos</th>
-                                    <th>Vitórias</th>
-                                    <th>Empates</th>
-                                    <th>Derrotas</th>
-                                    <th>Saldo de Gols</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${classificacao.map((c, idx) => `
-                                    <tr>
-                                        <td>${idx + 1}</td>
-                                        <td><img src="${c.time.logo ? `/static/imagens/times/${c.time.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${c.time.nome}</td>
-                                        <td>${c.pontos}</td>
-                                        <td>${c.vitorias}</td>
-                                        <td>${c.empates}</td>
-                                        <td>${c.derrotas}</td>
-                                        <td>${c.golsPro - c.golsContra}</td>
-                                    </tr>`).join("")}
-                            </tbody>
-                        </table>
-                        <!-- Tabela de Jogadores dos Times Envolvidos -->
-                        <h3>Jogadores dos Times</h3>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Jogador</th>
-                                    <th>Posição</th>
-                                    <th>Time</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${jogadores.length > 0 ? jogadores
-                                    .filter(j => times.some(t => t.id === j.time_id)) // Filtra apenas jogadores dos times do torneio
-                                    .map(j => `
-                                        <tr>
-                                            <td>${j.nome}</td>
-                                            <td>${j.posicao || "Não especificada"}</td>
-                                            <td>${times.find(t => t.id === j.time_id)?.nome || "Sem time"}</td>
-                                        </tr>
-                                    `).join("") : "<tr><td colspan='3'>Nenhum jogador cadastrado</td></tr>"}
-                            </tbody>
-                        </table>
-                    </div>`;
+                if (currentRound.length > 0) rodadasMataMata.push(currentRound);
             }
         }
+
+        mataMataContainer.innerHTML = "<h3>Mata-mata</h3>";
+        rodadasMataMata.forEach((rodada, idx) => {
+            mataMataContainer.innerHTML += `
+                <div class="mata-mata-round">
+                    <h4>${idx === 0 ? "Oitavas" : idx === 1 ? "Quartas" : idx === 2 ? "Semifinal" : "Final"}</h4>
+                    ${rodada.map(partida => {
+                        const time1 = times.find(t => t.id === partida.time1_id);
+                        const time2 = times.find(t => t.id === partida.time2_id);
+                        return `
+                            <div class="mata-mata-match">
+                                <span><img src="${time1?.logo ? `/static/imagens/times/${time1.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time1?.nome || "TBD"}</span> 
+                                ${partida.resultado || "A definir"}
+                                <span><img src="${time2?.logo ? `/static/imagens/times/${time2.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time2?.nome || "TBD"}</span>
+                            </div>`;
+                    }).join("")}
+                </div>`;
+        });
+    } else if (configuracao.formato === "mata-mata") {
+        let rodadasMataMata = [partidas];
+        let currentRound = partidas;
+
+        while (currentRound.length > 1) {
+            const vencedores = currentRound.map(partida => {
+                const vencedorId = determinarVencedorMataMata(partida);
+                return { id: vencedorId || Math.random() };
+            }).filter(v => v.id !== null);
+            currentRound = [];
+            for (let i = 0; i < vencedores.length; i += 2) {
+                if (i + 1 < vencedores.length) {
+                    currentRound.push({
+                        time1_id: vencedores[i].id,
+                        time2_id: vencedores[i + 1].id,
+                        resultado: null
+                    });
+                }
+            }
+            if (currentRound.length > 0) rodadasMataMata.push(currentRound);
+        }
+
+        mataMataContainer.innerHTML = "<h3>Mata-mata</h3>";
+        rodadasMataMata.forEach((rodada, idx) => {
+            mataMataContainer.innerHTML += `
+                <div class="mata-mata-round">
+                    <h4>${idx === 0 ? "Oitavas" : idx === 1 ? "Quartas" : idx === 2 ? "Semifinal" : "Final"}</h4>
+                    ${rodada.map(partida => {
+                        const time1 = times.find(t => t.id === partida.time1_id);
+                        const time2 = times.find(t => t.id === partida.time2_id);
+                        return `
+                            <div class="mata-mata-match">
+                                <span><img src="${time1?.logo ? `/static/imagens/times/${time1.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time1?.nome || "TBD"}</span> 
+                                ${partida.resultado || "A definir"}
+                                <span><img src="${time2?.logo ? `/static/imagens/times/${time2.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time2?.nome || "TBD"}</span>
+                            </div>`;
+                    }).join("")}
+                </div>`;
+        });
+    } else if (configuracao.formato === "classificacao") {
+        const classificacao = calcularClassificacao(times, partidas);
+        gruposContainer.innerHTML = `
+            <div class="grupo-container">
+                <h3>Classificação Geral</h3>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Posição</th>
+                            <th>Time</th>
+                            <th>Pontos</th>
+                            <th>Vitórias</th>
+                            <th>Empates</th>
+                            <th>Derrotas</th>
+                            <th>Saldo de Gols</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${classificacao.map((c, idx) => `
+                            <tr>
+                                <td>${idx + 1}</td>
+                                <td><img src="${c.time.logo ? `/static/imagens/times/${c.time.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${c.time.nome}</td>
+                                <td>${c.pontos}</td>
+                                <td>${c.vitorias}</td>
+                                <td>${c.empates}</td>
+                                <td>${c.derrotas}</td>
+                                <td>${c.golsPro - c.golsContra}</td>
+                            </tr>`).join("")}
+                    </tbody>
+                </table>
+            </div>`;
+    }
+}
 
         document.addEventListener("DOMContentLoaded", () => {
             carregarDados();

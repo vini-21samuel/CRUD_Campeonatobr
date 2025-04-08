@@ -82,3 +82,8 @@ async def login_user(
     response.set_cookie(key="access_token", value=access_token, httponly=True)
     return response
 
+@router.get("/logout", response_class=HTMLResponse)
+async def logout():
+    response = RedirectResponse(url="/usuarios/login", status_code=303)
+    response.delete_cookie("access_token")  # Remove o cookie de autenticação
+    return response
