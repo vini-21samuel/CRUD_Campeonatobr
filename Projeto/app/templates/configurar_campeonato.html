@@ -17,6 +17,12 @@
         .btn-configurar { background-color: #136db0; color: white; padding: 10px 20px; border-radius: 12px; font-weight: bold; text-transform: uppercase; transition: all 0.3s ease-in-out; }
         .btn-configurar:hover { background-color: #0e5a8f; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); }
 
+        .btn-voltar { background-color: #11a125; color: white; padding: 8px 16px; border-radius: 8px; font-weight: bold; text-transform: uppercase; transition: all 0.3s ease-in-out; position: fixed; top: 85px; right: 20px; z-index: 101; }
+        .btn-voltar:hover { background-color: #0e8c1f; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); }
+
+        .btn-gerar-pdf { background-color: #ff5733; color: white; padding: 10px 20px; border-radius: 12px; font-weight: bold; text-transform: uppercase; transition: all 0.3s ease-in-out; }
+        .btn-gerar-pdf:hover { background-color: #e04e2d; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); }
+
         .table { width: 100%; max-width: 800px; margin-top: 10px; border-collapse: collapse; background-color: #ffffff; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden; }
         .table th, .table td { padding: 12px; text-align: left; border: 1px solid #ddd; vertical-align: middle; }
         .table th { background: linear-gradient(135deg, #136db0, #11a125); color: white; font-weight: bold; text-transform: uppercase; }
@@ -31,6 +37,19 @@
         .mata-mata-match { background-color: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 15px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); display: flex; align-items: center; justify-content: space-between; }
         .mata-mata-match span { font-weight: bold; }
         .regras-container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); margin-bottom: 20px; }
+
+        /* Estilos para impressão */
+        @media print {
+            body { padding-top: 0; }
+            .navbar, .btn-voltar, .btn-gerar-pdf, .btn-configurar, .modal { display: none; }
+            .container { margin-top: 0; width: 100%; max-width: none; }
+            .table { width: 100%; max-width: none; box-shadow: none; }
+            .grupo-container, .mata-mata-container { page-break-inside: avoid; }
+            h2, h3 { color: #136db0; }
+            .regras-container { border: 1px solid #ddd; }
+            .print-only { display: block; }
+            .no-print { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -54,6 +73,9 @@
         </div>
     </nav>
 
+    <!-- Botão Voltar -->
+    <a href="/torneios/gerenciar_torneio/{{ torneio.id }}" class="btn-voltar">Voltar</a>
+
     <div class="container mt-4">
         <h2>Configurar Campeonato: {{ torneio.nome }}</h2>
         <p><strong>Formato:</strong> <span id="formatoTorneio">{{ torneio.formato }}</span></p>
@@ -69,15 +91,21 @@
             </ul>
         </div>
 
-        <div class="mb-4">
+        <div class="mb-4 no-print">
             <button class="btn-configurar" data-bs-toggle="modal" data-bs-target="#modalConfigurar">Configurar Formato</button>
+            <button class="btn-gerar-pdf" onclick="window.print()" style="margin-left: 10px;">
+                <img src="/static/imagens/gerarPDF.png" alt="Gerar PDF" style="width: 20px; margin-right: 5px;"> Gerar PDF
+            </button>
         </div>
+
+        <!-- Seção de Times e Jogadores (para PDF) -->
+        <div class="print-only" id="times-jogadores-container" style="display: none;"></div>
 
         <div id="grupos-container"></div>
         <div id="mata-mata-container" class="mata-mata-container"></div>
     </div>
 
-    <div class="modal fade" id="modalConfigurar" tabindex="-1" aria-labelledby="modalConfigurarLabel" aria-hidden="true">
+    <div class="modal fade no-print" id="modalConfigurar" tabindex="-1" aria-labelledby="modalConfigurarLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -112,19 +140,35 @@
         const torneioId = "{{ torneio.id }}";
         let times = [];
         let partidas = [];
-        let configuracao = { formato: "{{ torneio.formato }}", numGrupos: 1, numClassificados: 2 };
+        let jogadores = [];
+        let configuracao = {};
 
+        // Carrega os dados iniciais, incluindo times, partidas e jogadores
         function carregarDados() {
             Promise.all([
                 fetch(`/times/torneio/${torneioId}/`).then(response => response.json()),
-                fetch(`/partidas/?torneio_id=${torneioId}`).then(response => response.json())
+                fetch(`/partidas/?torneio_id=${torneioId}`).then(response => response.json()),
+                fetch(`/jogadores/torneio/${torneioId}/`).then(response => response.json()), // Endpoint para jogadores
+                fetch(`/torneios/torneios/${torneioId}`).then(response => response.json())
             ])
-            .then(([timesData, partidasData]) => {
+            .then(([timesData, partidasData, jogadoresData, torneioData]) => {
                 times = timesData;
                 partidas = partidasData;
+                jogadores = jogadoresData;
+                configuracao = {
+                    formato: torneioData.formato,
+                    numGrupos: torneioData.numGrupos || 1,
+                    numClassificados: torneioData.numClassificados || 2
+                };
+                document.getElementById("formatoTorneio").textContent = configuracao.formato;
+                document.getElementById("formato").value = configuracao.formato;
+                mostrarCamposFormato();
                 console.log("Times:", times);
                 console.log("Partidas:", partidas);
+                console.log("Jogadores:", jogadores);
+                console.log("Configuração carregada:", configuracao);
                 atualizarExibicao();
+                carregarTimesEJogadoresParaPDF();
             })
             .catch(error => console.error("Erro ao carregar dados:", error));
         }
@@ -134,16 +178,45 @@
             document.getElementById("campos-grupos").style.display = formato === "grupos" ? "block" : "none";
         }
 
+        // Salva a configuração no backend
+        function salvarConfiguracao() {
+            const formato = document.getElementById("formato").value;
+            const dados = {
+                formato: formato
+            };
+            if (formato === "grupos") {
+                dados.numGrupos = parseInt(document.getElementById("numGrupos").value);
+                dados.numClassificados = parseInt(document.getElementById("numClassificados").value);
+            }
+
+            fetch(`/torneios/torneios/${torneioId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(dados)
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Erro ao salvar configuração");
+                return response.json();
+            })
+            .then(data => {
+                configuracao = { 
+                    formato: data.formato, 
+                    numGrupos: data.numGrupos || 1, 
+                    numClassificados: data.numClassificados || 2 
+                };
+                document.getElementById("formatoTorneio").textContent = configuracao.formato;
+                atualizarExibicao();
+                carregarTimesEJogadoresParaPDF();
+                bootstrap.Modal.getInstance(document.getElementById("modalConfigurar")).hide();
+            })
+            .catch(error => console.error("Erro ao salvar configuração:", error));
+        }
+
         document.getElementById("formConfigurar").addEventListener("submit", function(e) {
             e.preventDefault();
-            configuracao.formato = document.getElementById("formato").value;
-            if (configuracao.formato === "grupos") {
-                configuracao.numGrupos = parseInt(document.getElementById("numGrupos").value);
-                configuracao.numClassificados = parseInt(document.getElementById("numClassificados").value);
-            }
-            document.getElementById("formatoTorneio").textContent = configuracao.formato;
-            atualizarExibicao();
-            bootstrap.Modal.getInstance(document.getElementById("modalConfigurar")).hide();
+            salvarConfiguracao();
         });
 
         function dividirEmGrupos(times, numGrupos) {
@@ -215,6 +288,54 @@
             if (golsTime1 > golsTime2) return partida.time1_id;
             if (golsTime2 > golsTime1) return partida.time2_id;
             return null;
+        }
+
+        // Função para carregar times e jogadores no PDF
+        function carregarTimesEJogadoresParaPDF() {
+            const container = document.getElementById("times-jogadores-container");
+            container.innerHTML = `
+                <h3>Times e Jogadores</h3>
+                ${times.map(time => `
+                    <div class="grupo-container">
+                        <h4>${time.nome}</h4>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nome do Jogador</th>
+                                    <th>Posição</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${jogadores.filter(j => j.time_id === time.id).map(j => `
+                                    <tr>
+                                        <td>${j.nome}</td>
+                                        <td>${j.posicao || "Não especificada"}</td>
+                                    </tr>
+                                `).join("")}
+                            </tbody>
+                        </table>
+                    </div>
+                `).join("")}
+                <h3>Partidas Realizadas</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Time 1</th>
+                            <th>Resultado</th>
+                            <th>Time 2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${partidas.map(p => `
+                            <tr>
+                                <td>${times.find(t => t.id === p.time1_id)?.nome || "TBD"}</td>
+                                <td>${p.resultado || "A definir"}</td>
+                                <td>${times.find(t => t.id === p.time2_id)?.nome || "TBD"}</td>
+                            </tr>
+                        `).join("")}
+                    </tbody>
+                </table>
+            `;
         }
 
         function atualizarExibicao() {
@@ -372,6 +493,28 @@
                                         <td>${c.derrotas}</td>
                                         <td>${c.golsPro - c.golsContra}</td>
                                     </tr>`).join("")}
+                            </tbody>
+                        </table>
+                        <!-- Tabela de Jogadores dos Times Envolvidos -->
+                        <h3>Jogadores dos Times</h3>
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Jogador</th>
+                                    <th>Posição</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${jogadores.length > 0 ? jogadores
+                                    .filter(j => times.some(t => t.id === j.time_id)) // Filtra apenas jogadores dos times do torneio
+                                    .map(j => `
+                                        <tr>
+                                            <td>${j.nome}</td>
+                                            <td>${j.posicao || "Não especificada"}</td>
+                                            <td>${times.find(t => t.id === j.time_id)?.nome || "Sem time"}</td>
+                                        </tr>
+                                    `).join("") : "<tr><td colspan='3'>Nenhum jogador cadastrado</td></tr>"}
                             </tbody>
                         </table>
                     </div>`;

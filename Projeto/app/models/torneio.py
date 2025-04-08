@@ -10,6 +10,8 @@ class Torneio(Base):
     organizador = Column(String, nullable=False)
     data_inicio = Column(Date, nullable=False)
     formato = Column(String, nullable=False)
+    numGrupos = Column(Integer, nullable=True)  # Novo campo
+    numClassificados = Column(Integer, nullable=True)  # Novo campo
     descricao = Column(String, nullable=True)
     capa = Column(String, nullable=True)
 

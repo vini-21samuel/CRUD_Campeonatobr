@@ -61,6 +61,8 @@
             cursor: pointer;
             border: none;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            display: inline-block; /* Garante que o <a> tenha o mesmo comportamento de tamanho que os <button> */
         }
 
         .btn-gerenciar-times { background-color: #136db0; }
@@ -70,7 +72,12 @@
         .btn-gerenciar-partidas { background-color: #ff8c00; }
         .btn-gerenciar-partidas:hover { background-color: #e07b00; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); }
         .btn-configurar-campeonato { background-color: #6f42c1; }
-        .btn-configurar-campeonato:hover { background-color: #5a32a3; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); }
+        .btn-configurar-campeonato:hover { 
+            background-color: #5a32a3; 
+            transform: translateY(-3px); 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
+            text-decoration: none;
+        }
 
         .btn-action-editar, .btn-action-excluir {
             padding: 4px 8px;
@@ -255,7 +262,7 @@
                     <li class="nav-item"><a class="nav-link" href="/">Início</a></li>
                     <li class="nav-item"><a class="nav-link" href="/torneios/campeonatos">Campeonatos</a></li>
                     <li class="nav-item"><a class="nav-link" href="/torneios/sobre">Sobre</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/torneios/perfil">Perfil</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/usuarios/perfil">Perfil</a></li>
                 </ul>
             </div>
         </div>
@@ -356,6 +363,10 @@
                         <div class="mb-3">
                             <label for="jogadorPosicao" class="form-label">Posição</label>
                             <input type="text" class="form-control" id="jogadorPosicao" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jogadorGols" class="form-label">Gols</label>
+                            <input type="number" class="form-control" id="jogadorGols" min="0" value="0" required>
                         </div>
                         <div class="mb-3">
                             <label for="jogadorTimeId" class="form-label">Time</label>
@@ -462,7 +473,7 @@
                     jogadores.filter(j => j.time && j.time.torneio_id === parseInt(torneioId)).forEach(jogador => {
                         lista.innerHTML += `
                             <li class="list-group-item">
-                                ${jogador.nome} - ${jogador.posicao} (Gols: ${jogador.gols}) - Time: ${jogador.time.nome}
+                                ${jogador.nome} - ${jogador.posicao} (Gols: ${jogador.gols || 0}) - Time: ${jogador.time?.nome || 'Sem time'}
                                 <div>
                                     <button class="btn-action-editar" onclick="editarJogador(${jogador.id})">Editar</button>
                                     <button class="btn-action-excluir" onclick="deletarJogador(${jogador.id})">Excluir</button>
@@ -474,53 +485,53 @@
         }
 
         function carregarPartidas() {
-    console.log("Iniciando carregarPartidas, torneioId:", torneioId);
-    fetch(`/partidas/?torneio_id=${torneioId}`)
-        .then(response => {
-            console.log("Status da resposta:", response.status);
-            if (!response.ok) {
-                throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
-            }
-            return response.json();
-        })
-        .then(partidas => {
-            console.log("Partidas recebidas:", partidas);
-            const lista = document.getElementById("lista-partidas");
-            if (!lista) {
-                console.error("Elemento 'lista-partidas' não encontrado no DOM");
-                return;
-            }
-            lista.innerHTML = "";
-            if (!Array.isArray(partidas) || partidas.length === 0) {
-                lista.innerHTML = "<p>Nenhuma partida encontrada para este torneio.</p>";
-                return;
-            }
-            partidas.forEach(partida => {
-                const time1Logo = partida.time1_logo ? `/static/imagens/times/${partida.time1_logo}` : '/static/imagens/default.jpg';
-                const time2Logo = partida.time2_logo ? `/static/imagens/times/${partida.time2_logo}` : '/static/imagens/default.jpg';
-                lista.innerHTML += `
-                    <div class="partida-card">
-                        <div class="partida-time">
-                            <img src="${time1Logo}" alt="${partida.time1_nome || 'Desconhecido'}">
-                            <span>${partida.time1_nome || 'Desconhecido'}</span>
-                        </div>
-                        <div class="partida-vs">${partida.resultado || "A definir"}</div>
-                        <div class="partida-time">
-                            <img src="${time2Logo}" alt="${partida.time2_nome || 'Desconhecido'}">
-                            <span>${partida.time2_nome || 'Desconhecido'}</span>
-                        </div>
-                        <div class="partida-info">
-                            <div class="data">${partida.data || 'Sem data'}</div>
-                        </div>
-                        <div class="partida-actions">
-                            <button class="btn-action-editar" onclick="editarPartida(${partida.id})">Editar</button>
-                            <button class="btn-action-excluir" onclick="deletarPartida(${partida.id})">Excluir</button>
-                        </div>
-                    </div>`;
-            });
-        })
-        .catch(error => console.error("Erro ao carregar partidas:", error));
-}
+            console.log("Iniciando carregarPartidas, torneioId:", torneioId);
+            fetch(`/partidas/?torneio_id=${torneioId}`)
+                .then(response => {
+                    console.log("Status da resposta:", response.status);
+                    if (!response.ok) {
+                        throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(partidas => {
+                    console.log("Partidas recebidas:", partidas);
+                    const lista = document.getElementById("lista-partidas");
+                    if (!lista) {
+                        console.error("Elemento 'lista-partidas' não encontrado no DOM");
+                        return;
+                    }
+                    lista.innerHTML = "";
+                    if (!Array.isArray(partidas) || partidas.length === 0) {
+                        lista.innerHTML = "<p>Nenhuma partida encontrada para este torneio.</p>";
+                        return;
+                    }
+                    partidas.forEach(partida => {
+                        const time1Logo = partida.time1_logo ? `/static/imagens/times/${partida.time1_logo}` : '/static/imagens/default.jpg';
+                        const time2Logo = partida.time2_logo ? `/static/imagens/times/${partida.time2_logo}` : '/static/imagens/default.jpg';
+                        lista.innerHTML += `
+                            <div class="partida-card">
+                                <div class="partida-time">
+                                    <img src="${time1Logo}" alt="${partida.time1_nome || 'Desconhecido'}">
+                                    <span>${partida.time1_nome || 'Desconhecido'}</span>
+                                </div>
+                                <div class="partida-vs">${partida.resultado || "A definir"}</div>
+                                <div class="partida-time">
+                                    <img src="${time2Logo}" alt="${partida.time2_nome || 'Desconhecido'}">
+                                    <span>${partida.time2_nome || 'Desconhecido'}</span>
+                                </div>
+                                <div class="partida-info">
+                                    <div class="data">${partida.data || 'Sem data'}</div>
+                                </div>
+                                <div class="partida-actions">
+                                    <button class="btn-action-editar" onclick="editarPartida(${partida.id})">Editar</button>
+                                    <button class="btn-action-excluir" onclick="deletarPartida(${partida.id})">Excluir</button>
+                                </div>
+                            </div>`;
+                    });
+                })
+                .catch(error => console.error("Erro ao carregar partidas:", error));
+        }
 
         document.getElementById("formTime").addEventListener("submit", function(e) {
             e.preventDefault();
@@ -590,13 +601,14 @@
             const id = document.getElementById("jogadorId").value;
             const nome = document.getElementById("jogadorNome").value;
             const posicao = document.getElementById("jogadorPosicao").value;
+            const gols = parseInt(document.getElementById("jogadorGols").value);
             const timeId = document.getElementById("jogadorTimeId").value;
 
             const jogadorData = {
                 id,
                 nome,
                 posicao,
-                gols: 0,
+                gols,
                 time_id: parseInt(timeId)
             };
 
@@ -629,7 +641,8 @@
                     document.getElementById("jogadorId").value = jogador.id;
                     document.getElementById("jogadorNome").value = jogador.nome;
                     document.getElementById("jogadorPosicao").value = jogador.posicao;
-                    document.getElementById("jogadorTimeId").value = jogador.time.id;
+                    document.getElementById("jogadorGols").value = jogador.gols || 0;
+                    document.getElementById("jogadorTimeId").value = jogador.time?.id || "";
                     document.getElementById("modalJogadoresLabel").textContent = "Editar Jogador";
                     const modal = new bootstrap.Modal(document.getElementById("modalJogadores"));
                     modal.show();
@@ -654,7 +667,6 @@
 
         document.getElementById("formPartida").addEventListener("submit", function(e) {
             e.preventDefault();
-
             const time1Id = document.getElementById("partidaTime1Id").value;
             const time2Id = document.getElementById("partidaTime2Id").value;
             const data = document.getElementById("partidaData").value;

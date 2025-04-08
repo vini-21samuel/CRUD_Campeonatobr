@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.models.torneio import Torneio
 from app.database.database import get_db, SessionLocal
 from app.services.torneios_services import TorneioService
-from app.schemas.torneio import TorneioResponse
+from app.schemas.torneio import TorneioResponse, TorneioUpdate
 from fastapi.templating import Jinja2Templates
 from typing import List
 
@@ -36,6 +36,8 @@ def listar_torneios(db: Session = Depends(get_db)):
             "data_inicio": t.data_inicio.strftime("%Y-%m-%d"),
             "descricao": t.descricao,
             "formato": t.formato,
+            "numGrupos": t.numGrupos,
+            "numClassificados": t.numClassificados,
             "capa": f"/static/imagens/torneios/{t.capa}" if t.capa else "/static/imagens/default.jpg"
         }
         for t in torneios
@@ -61,14 +63,16 @@ def criar_torneio(
             "data_inicio": novo_torneio.data_inicio.strftime("%Y-%m-%d"),
             "descricao": novo_torneio.descricao,
             "formato": novo_torneio.formato,
+            "numGrupos": novo_torneio.numGrupos,
+            "numClassificados": novo_torneio.numClassificados,
             "capa": f"/static/imagens/torneios/{novo_torneio.capa}" if novo_torneio.capa else "/static/imagens/default.jpg"
         }
     except Exception as e:
         print(f"Erro ao criar torneio: {e}")
         raise HTTPException(status_code=500, detail="Erro interno ao criar torneio.")
 
-# Rota para obter um torneio específico (usada para edição ou consulta)
-@router.get("/torneios/{torneio_id}")
+# Rota para obter um torneio específico
+@router.get("/torneios/{torneio_id}", response_model=TorneioResponse)
 def obter_torneio(torneio_id: int, db: Session = Depends(get_db)):
     torneio = db.query(Torneio).filter(Torneio.id == torneio_id).first()
     if not torneio:
@@ -80,31 +84,42 @@ def obter_torneio(torneio_id: int, db: Session = Depends(get_db)):
         "data_inicio": torneio.data_inicio.strftime("%Y-%m-%d"),
         "descricao": torneio.descricao,
         "formato": torneio.formato,
+        "numGrupos": torneio.numGrupos,
+        "numClassificados": torneio.numClassificados,
         "capa": f"/static/imagens/torneios/{torneio.capa}" if torneio.capa else "/static/imagens/default.jpg"
     }
 
 # Rota para editar um torneio
-@router.put("/torneios/{torneio_id}")
+@router.put("/torneios/{torneio_id}", response_model=TorneioResponse)
 async def editar_torneio(
     torneio_id: int,
-    nome: str = Form(None),
-    organizador: str = Form(None),
-    data_inicio: str = Form(None),
-    descricao: str = Form(None),
-    formato: str = Form(None),
-    capa: UploadFile = None,
+    torneio_update: TorneioUpdate,
     db: Session = Depends(get_db)
 ):
-    try:
-        torneio_atualizado = TorneioService.editar_torneio(
-            db, torneio_id, nome, organizador, data_inicio, descricao, formato, capa
-        )
-        return {"message": "Torneio atualizado com sucesso", "torneio": torneio_atualizado}
-    except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    torneio = db.query(Torneio).filter(Torneio.id == torneio_id).first()
+    if not torneio:
+        raise HTTPException(status_code=404, detail="Torneio não encontrado.")
+    
+    update_data = torneio_update.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(torneio, key, value)
+    
+    db.commit()
+    db.refresh(torneio)
+    return {
+        "id": torneio.id,
+        "nome": torneio.nome,
+        "organizador": torneio.organizador,
+        "data_inicio": torneio.data_inicio.strftime("%Y-%m-%d"),
+        "descricao": torneio.descricao,
+        "formato": torneio.formato,
+        "numGrupos": torneio.numGrupos,
+        "numClassificados": torneio.numClassificados,
+        "capa": f"/static/imagens/torneios/{torneio.capa}" if torneio.capa else "/static/imagens/default.jpg"
+    }
 
 # Rota para deletar um torneio
-@router.delete("/{torneio_id}")
+@router.delete("/torneios/{torneio_id}")
 def deletar_torneio(torneio_id: int, db: Session = Depends(get_db)):
     try:
         TorneioService.deletar_torneio(db, torneio_id)
@@ -114,7 +129,7 @@ def deletar_torneio(torneio_id: int, db: Session = Depends(get_db)):
     except Exception:
         raise HTTPException(status_code=500, detail="Erro interno ao deletar torneio.")
 
-
+# Rota para gerenciar torneio
 @router.get("/gerenciar_torneio/{torneio_id}", response_class=HTMLResponse)
 async def gerenciar_torneio(request: Request, torneio_id: int, db: Session = Depends(get_db)):
     torneio = db.query(Torneio).filter(Torneio.id == torneio_id).first()
@@ -131,18 +146,20 @@ async def gerenciar_torneio(request: Request, torneio_id: int, db: Session = Dep
                 "organizador": torneio.organizador,
                 "data_inicio": torneio.data_inicio.strftime("%Y-%m-%d"),
                 "formato": torneio.formato,
+                "numGrupos": torneio.numGrupos,
+                "numClassificados": torneio.numClassificados,
                 "descricao": torneio.descricao or "Sem descrição.",
                 "capa": f"/static/imagens/torneios/{torneio.capa}" if torneio.capa else "/static/imagens/default.jpg"
             }
         }
     )
 
-
+# Rota para listar campeonatos
 @router.get("/campeonatos", response_class=HTMLResponse)
 async def get_campeonatos(request: Request):
     return templates.TemplateResponse("campeonatos.html", {"request": request})
 
-
+# Rota para listar dados de campeonatos
 @router.get("/campeonatos/dados", response_model=List[TorneioResponse])
 def listar_torneios_campeonatos(db: Session = Depends(get_db)):
     torneios = TorneioService.listar_torneios(db)
@@ -155,16 +172,19 @@ def listar_torneios_campeonatos(db: Session = Depends(get_db)):
             "data_inicio": t.data_inicio.strftime("%Y-%m-%d"),
             "descricao": t.descricao,
             "formato": t.formato,
+            "numGrupos": t.numGrupos,
+            "numClassificados": t.numClassificados,
             "capa": f"/static/imagens/torneios/{t.capa}" if t.capa else "/static/imagens/default.jpg"
         }
         for t in torneios
     ]
 
-
+# Rota para a página "Sobre"
 @router.get("/sobre", response_class=HTMLResponse)
 async def get_sobre(request: Request):
     return templates.TemplateResponse("sobre.html", {"request": request})
 
+# Rota para configurar campeonato
 @router.get("/configurar_campeonato/{torneio_id}", response_class=HTMLResponse)
 async def configurar_campeonato(request: Request, torneio_id: int, db: Session = Depends(get_db)):
     torneio = db.query(Torneio).filter(Torneio.id == torneio_id).first()
@@ -180,6 +200,8 @@ async def configurar_campeonato(request: Request, torneio_id: int, db: Session =
                 "formato": torneio.formato,
                 "organizador": torneio.organizador,
                 "data_inicio": torneio.data_inicio.strftime("%Y-%m-%d"),
+                "numGrupos": torneio.numGrupos,
+                "numClassificados": torneio.numClassificados,
                 "descricao": torneio.descricao or "Sem descrição.",
                 "capa": f"/static/imagens/torneios/{torneio.capa}" if torneio.capa else "/static/imagens/default.jpg"
             }

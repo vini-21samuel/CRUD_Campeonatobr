@@ -189,6 +189,15 @@ body {
     transition: all 0.3s ease-in-out;
 }
 
+#btnSalvarTorneio{
+    background-color: #11a125;
+
+}
+
+#btnSalvarTorneio:hover {
+    background-color: #136db0;
+    transform: scale(1.05);
+}
 
 .row {
     display: flex;
