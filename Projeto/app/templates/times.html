@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}CRUD de Partidas{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ titulo }}</h2>
+
+    <!-- Botão Adicionar Time -->
+    <a href="/times/adicionar">
+        <button class="add-time">Adicionar Time</button>
+    </a>
+
+    <!-- Verificação de times -->
+    {% if times %}
+    <table class="times-table">
+        <thead>
+            <tr>
+                <th>ID</th>  <!-- Adicionado o cabeçalho para o ID -->
+                <th>Nome do Time</th>
+                <th>Lugar</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for time in times %}
+            <tr>
+                <td>{{ time.id }}</td>  <!-- Adicionado a exibição do ID do time -->
+                <td>{{ time.nome }}</td>
+                <td>{{ time.lugar }}</td>
+                <td>
+                    <a href="/times/editar/{{ time.id }}" class="edit">Editar</a>
+                    <form action="/times/deletar/{{ time.id }}" method="post" style="display: inline;">
+                        <button type="submit" class="delete" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="no-times">Nenhum time cadastrado. Clique no botão acima para adicionar um time.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <h2>Gerencie seus Campeonatos</h2>
+    <button class="btn btn-success" id="btnCriarTorneio">Criar Novo Campeonato</button>
+</div>
+
+<div id="torneiosList" class="row row-cols-1 row-cols-md-3 g-4"></div>
+
+<!-- Modal do Formulário de Torneio -->
+<div class="modal fade" id="modalTorneio" tabindex="-1" aria-labelledby="modalTorneioLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTorneioLabel">Criar Novo Campeonato</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formTorneioCreate">
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome do Torneio:</label>
+                        <input type="text" id="nome" name="nome" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="organizador" class="form-label">Organizador:</label>
+                        <input type="text" id="organizador" name="organizador" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="data_inicio" class="form-label">Data de Início:</label>
+                        <input type="date" id="data_inicio" name="data_inicio" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formato" class="form-label">Formato do Torneio:</label>
+                        <select id="formato" name="formato" class="form-control" required>
+                            <option value="grupo">Fases de Grupo</option>
+                            <option value="pontos">Pontos Corridos</option>
+                            <option value="mata-mata">Mata-Mata</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("btnCriarTorneio").addEventListener("click", function () {
+        var modal = new bootstrap.Modal(document.getElementById("modalTorneio"));
+        modal.show();
+    });
+    
+    function carregarTorneios() {
+        fetch('/torneios/dados')
+            .then(response => response.json())
+            .then(torneios => {
+                document.getElementById("torneiosList").innerHTML = "";
+                torneios.forEach(torneio => {
+                    adicionarTorneioCard(torneio);
+                });
+            })
+            .catch(error => {
+                console.error('Erro ao carregar torneios:', error);
+            });
+    }
+    
+    function adicionarTorneioCard(torneio) {
+        const torneiosList = document.getElementById("torneiosList");
+        const card = `
+            <div class="col">
+                <div class="card" style="width: 18rem;">
+                    <img src="${torneio.capa || '/static/imagens/default.jpg'}" class="card-img-top" alt="Capa do Torneio">
+                    <div class="card-body">
+                        <h5 class="card-title">${torneio.nome}</h5>
+                        <p class="card-text">Organizador: ${torneio.organizador}</p>
+                        <p class="card-text">Data de Início: ${torneio.data_inicio}</p>
+                        <p class="card-text">Formato: ${torneio.formato || 'Não informado'}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        torneiosList.innerHTML += card;
+    }
+    
+    document.addEventListener("DOMContentLoaded", carregarTorneios);
+</script>
+{% endblock %}

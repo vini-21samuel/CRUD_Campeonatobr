@@ -1,0 +1,441 @@
+/* Estilos gerais */
+body {
+    background-color: #f8f9fab9;
+    transition: background-color 0.3s ease-in-out;
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    background: linear-gradient(135deg, #136db0, #11a125);
+    padding: 8px 10px; /* Reduzi o padding para diminuir o tamanho (era 15px 20px) */
+    position: fixed; /* Garantindo que fique fixo */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 75px;
+    z-index: 100; /* Mantém o navbar acima de outros elementos */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #fff;
+    font-size: 1.5rem; /* Tamanho da fonte do logo/texto */
+    transition: color 0.3s ease-in-out;
+}
+
+.navbar-brand:hover {
+    color: #fff; /* Mantém branco no hover para contraste */
+}
+
+.navbar-nav .nav-link {
+    color: #fff;
+    font-weight: 500;
+    padding: 8px 12px; /* Reduzi o padding dos links para acompanhar o navbar menor (era 10px 15px) */
+    font-size: 1.1rem; /* Tamanho da fonte dos links */
+    transition: all 0.3s ease-in-out;
+    position: relative;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #fff; /* Mantém branco para contraste */
+    background: rgba(19, 109, 176, 0.3); /* Fundo sutil baseado em #136db0 com transparência */
+    transform: scale(1.05); /* Leve aumento */
+    border-radius: 5px; /* Bordas suaves no hover */
+}
+
+/* Welcome Banner */
+.welcome-banner {
+    background: linear-gradient(135deg, #136db0, #11a125);
+    color: white;
+    padding: 70px 20px;
+    text-align: center;
+    width: 100%;
+    margin-top: 70px; /* ⬅️ Isso empurra o banner pra baixo da navbar */
+    border-radius: 0;
+}
+
+.welcome-banner h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.welcome-banner p {
+    font-size: 1.2rem;
+}
+.footer {
+    background-color: #11a125;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+#formTorneio {
+    display: none;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    max-width: 600px; /* Aumentei para dar mais espaço */
+    margin: 30px auto; /* Aumentei a margem para destacar */
+    border: 1px solid #ddd;
+}
+
+#formTorneio h2 {
+    font-size: 24px;
+    color: #136db0;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.torneio-card {
+    margin-top: 20px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 300%; /* Corrigido de 200% para 100% para respeitar o grid do Bootstrap */
+    max-width: 250px; /* Reduzi de 320px para 250px para cards menores */
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 35px; /* Cantos arredondados */
+    border: 1px solid #ddd; /* Borda leve */
+    background-color: #fff; /* Fundo branco */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.952); /* Sombra para destaque */
+}
+
+.torneio-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.card-img-top {
+    width: 100%;
+    height: auto;
+    max-height: 100px; /* Reduzi de 120px para 100px para cards menores */
+    object-fit: cover;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.torneio-card:hover .card-body {
+    background: #136db0;
+}
+
+.torneio-card:hover .card-title {
+    color: #ffffff;
+}
+
+.torneio-card:hover .btn-gerenciar {
+    background-color: #0a9e05;
+    transform: scale(1.1);
+}
+
+/* Estilo do conteúdo dentro do card */
+.card-body {
+    padding: 10px; /* Reduzi de 15px para 10px para compactar */
+    transition: background-color 0.3s ease-in-out;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.card-body p {
+    font-size: 14px; /* Reduzi de 16px para 14px para compactar o texto */
+    color: #000;
+    font-weight: bold;
+    margin: 3px 0; /* Reduzi de 5px para 3px */
+}
+
+.card-body .card-title {
+    font-size: 18px; /* Reduzi de 20px para 18px */
+    color: #136db0;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+.icon-menu {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.icon-dropdown {
+    width: 18px;
+    margin-right: 8px;
+}
+
+/* Botão 'Gerenciar' na página inicial */
+.btn-gerenciar {
+    background-color: #11a125;
+    color: black;
+    border-radius: 12px;
+    padding: 5px 12px; /* Reduzi de 6px 15px para compactar */
+    font-weight: bold;
+    font-size: 14px; /* Adicionei para reduzir o texto */
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.btn-gerenciar:hover {
+    background-color: #0a9e05;
+    transform: scale(1.05);
+}
+
+#btnCriarTorneio {
+    background-color: #11a125;
+    color: white;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}
+
+.torneio-form .form-label {
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.torneio-form .form-control {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 14px;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.torneio-form .form-control:focus {
+    border-color: #11a125;
+    box-shadow: 0 0 5px rgba(17, 161, 37, 0.5);
+    outline: none;
+}
+
+.torneio-form textarea.form-control {
+    resize: vertical; /* Permite redimensionar apenas verticalmente */
+    min-height: 80px;
+}
+
+.torneio-form select.form-control {
+    appearance: none; /* Remove estilo padrão do navegador */
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="gray" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>') no-repeat right 10px center;
+    background-size: 12px;
+    padding-right: 30px; /* Espaço para o ícone de dropdown */
+}
+
+#btnSalvarTorneio {
+    background-color: #11a125; /* Verde para "Criar Torneio" */
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-weight: bold;
+    font-size: 16px;
+    text-transform: uppercase;
+    width: 100%;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+#btnSalvarTorneio:hover {
+    background-color: #136db0; /* Azul no hover */
+    transform: scale(1.05);
+}
+
+#btnSalvarTorneio.edit-mode {
+    background-color: #ffc107; /* Amarelo para "Salvar Alterações" */
+    color: black;
+}
+
+#btnSalvarTorneio.edit-mode:hover {
+    background-color: #e0a800; /* Amarelo mais escuro no hover */
+    transform: scale(1.05);
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.col {
+    display: flex;
+    justify-content: center;
+    flex-basis: 22%;
+    min-width: 250px;
+}
+
+@media (max-width: 768px) {
+    .col {
+        flex-basis: 45%;
+    }
+}
+
+@media (max-width: 480px) {
+    .col {
+        flex-basis: 100%;
+    }
+}
+
+/* Estilos específicos para gerenciar_torneio.html */
+.torneio-info h2 {
+    font-size: 24px;
+    color: #136db0;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.torneio-info p {
+    font-size: 16px;
+    color: #333;
+    margin: 5px 0;
+}
+
+.torneio-capa {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.gerenciar-botoes {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Botões de gerenciamento */
+.btn-gerenciar-times, .btn-gerenciar-jogadores, .btn-gerenciar-partidas, .btn-editar-torneio, .btn-excluir-torneio {
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+    transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-gerenciar-times {
+    background-color: #136db0;
+}
+
+.btn-gerenciar-times:hover {
+    background-color: #0e5a8f;
+    transform: scale(1.05);
+}
+
+.btn-gerenciar-jogadores {
+    background-color: #11a125;
+}
+
+.btn-gerenciar-jogadores:hover {
+    background-color: #0a9e05;
+    transform: scale(1.05);
+}
+
+.btn-gerenciar-partidas {
+    background-color: #ff8c00;
+}
+
+.btn-gerenciar-partidas:hover {
+    background-color: #e07b00;
+    transform: scale(1.05);
+}
+
+.btn-editar-torneio {
+    background-color: #ffc107;
+    color: black;
+}
+
+.btn-editar-torneio:hover {
+    background-color: #e0a800;
+    transform: scale(1.05);
+}
+
+.btn-excluir-torneio {
+    background-color: #dc3545;
+}
+
+.btn-excluir-torneio:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+/* Estilo das listas */
+.lista-container h3 {
+    font-size: 20px;
+    color: #136db0;
+    margin-bottom: 10px;
+}
+
+.list-group {
+    max-width: 600px;
+}
+
+.list-group-item {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.list-group-item:hover {
+    background-color: #f1f1f1;
+}
+
+/* Estilos para a tabela de times */
+.table {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 10px;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.table th, .table td {
+    padding: 10px;
+    text-align: left;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #136db0;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.table-striped tbody tr:nth-child(odd) {
+    background-color: #f8f9fa;
+}
+
+.table-striped tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+.logo-col {
+    width: 10%; /* A tabela define a largura da coluna, ajustável */
+    text-align: center;
+}
+
+.logo-time {
+    width: 100%; /* A imagem ocupa toda a largura da célula */
+    height: auto; /* Altura ajustada automaticamente para manter proporção */
+    display: block;
+    margin: 0 auto; /* Centraliza a imagem */
+}
+

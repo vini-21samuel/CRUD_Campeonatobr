@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}CRUD de Jogadores{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ titulo }}</h2>
+
+    <!-- Botão Adicionar Jogador -->
+    <a href="/jogadores/adicionar">
+        <button class="add-jogador">Adicionar Jogador</button>
+    </a>
+
+    <!-- Verificação de jogadores -->
+    {% if jogadores %}
+    <table class="jogadores-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Posição</th>
+                <th>Time</th>
+                <th>Gols</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for jogador in jogadores %}
+            <tr>
+                <td>{{ jogador.id }}</td>
+                <td>{{ jogador.nome }}</td>
+                <td>{{ jogador.posicao }}</td>
+                <td>{{ jogador.time.nome if jogador.time else 'Não especificado' }}</td>
+                <td>{{ jogador.gols }}</td>
+                <td>
+                    <a href="/jogadores/editar/{{ jogador.id }}" class="edit">Editar</a>
+
+                    <!-- Formulário de Exclusão -->
+                    <form action="/jogadores/deletar/{{ jogador.id }}" method="post" style="display: inline;">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="delete" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="no-jogadores">Nenhum jogador cadastrado. Clique no botão acima para adicionar um jogador.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+<!-- CSS Inline -->
+<style>
+    /* Estilo global */
+    body {
+        background-image: url('./imagens/fundo.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        font-family: Arial, sans-serif;
+        color: #333;
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    /* Container principal */
+    .container {
+        background-color: rgba(255, 255, 255, 0.6);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 95%;
+        max-width: 1200px;
+        margin: 20px auto;
+    }
+
+    /* Botão Adicionar Jogador */
+    .add-jogador {
+        background-color: #28a745;
+        color: white;
+        padding: 15px 25px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 20px;
+        font-size: 16px;
+        text-align: center;
+        transition: all 0.3s ease;
+        display: block;
+    }
+
+    .add-jogador:hover {
+        background-color: #218838;
+        transform: scale(1.05);
+    }
+
+    /* Tabela de Jogadores */
+    table.jogadores-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table.jogadores-table th,
+    table.jogadores-table td {
+        padding: 15px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+
+    table.jogadores-table th {
+        background-color: #007BFF;
+        color: white;
+    }
+
+    table.jogadores-table td {
+        background-color: #f9f9f9;
+    }
+
+    table.jogadores-table td a {
+        color: white;
+        padding: 8px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+
+    /* Botões de ação */
+    table.jogadores-table td a.edit {
+        background-color: #ffc107;
+    }
+
+    table.jogadores-table td a.edit:hover {
+        background-color: #e0a800;
+    }
+
+    table.jogadores-table td .delete {
+        background-color: #dc3545;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    table.jogadores-table td .delete:hover {
+        background-color: #c82333;
+        transform: scale(1.05);
+    }
+
+    /* Mensagem quando não há jogadores */
+    .no-jogadores {
+        text-align: center;
+        font-size: 18px;
+        color: #666;
+        margin-top: 20px;
+    }
+</style>

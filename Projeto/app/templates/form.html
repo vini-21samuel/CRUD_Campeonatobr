@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Adicionar Time</title>
+    <style>
+        /* Aqui, reutilizamos o estilo do form_jogadores */
+        :root {
+            --primary-color: #007BFF;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --text-color: #333;
+            --background-opacity: rgba(255, 255, 255, 0.6);
+            --font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-image: url(./static/imagens/fundo.jpg);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            font-family: var(--font-family);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        .container {
+            background-color: var(--background-opacity);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .form-control {
+    padding: 8px; /* Reduz o padding para diminuir a altura */
+    font-size: 14px; /* Reduz o tamanho do texto */
+    width: 100%; /* Mantém a largura total */
+    max-width: 400px; /* Define um limite para os campos */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        button.btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        button.btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        button.btn-secondary {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        button.btn-secondary:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Adicionar Time</h2>
+        <form action="/times/adicionar" method="post">
+            <div class="form-section">
+                <label for="nome" class="form-label">Nome do Time:</label>
+                <input type="text" name="nome" id="nome" class="form-control" placeholder="Digite o nome do time" required>
+            </div>
+            <div class="form-section">
+                <label for="lugar" class="form-label">Lugar:</label>
+                <input type="text" name="lugar" id="lugar" class="form-control" placeholder="Digite a localização do time" required>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Salvar</button>
+                <a href="/times" class="btn-secondary">Voltar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Torneio - {{ torneio.nome }}</title>
+    <link rel="shortcut icon" href="/static/imagens/logoCL.png" type="image/x-icon">     
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            padding-top: 90px;
+        }
+
+        .navbar {
+            background: linear-gradient(135deg, #136db0, #11a125);
+            padding: 8px 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 75px;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: #fff;
+            font-size: 1.5rem;
+            transition: color 0.3s ease-in-out;
+        }
+
+        .navbar-brand:hover {
+            color: #fff;
+        }
+
+        .navbar-nav .nav-link {
+            color: #fff;
+            font-weight: 500;
+            padding: 8px 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #fff;
+            background: rgba(19, 109, 176, 0.3);
+            transform: scale(1.05);
+            border-radius: 5px;
+        }
+
+        .btn-gerenciar-times, .btn-gerenciar-jogadores, .btn-gerenciar-partidas, .btn-configurar-campeonato {
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: white;
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            display: inline-block; /* Garante que o <a> tenha o mesmo comportamento de tamanho que os <button> */
+        }
+
+        .btn-gerenciar-times { background-color: #136db0; }
+        .btn-gerenciar-times:hover { background-color: #0e5a8f; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); }
+        .btn-gerenciar-jogadores { background-color: #11a125; }
+        .btn-gerenciar-jogadores:hover { background-color: #0a9e05; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); }
+        .btn-gerenciar-partidas { background-color: #ff8c00; }
+        .btn-gerenciar-partidas:hover { background-color: #e07b00; transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); }
+        .btn-configurar-campeonato { background-color: #6f42c1; }
+        .btn-configurar-campeonato:hover { 
+            background-color: #5a32a3; 
+            transform: translateY(-3px); 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); 
+            text-decoration: none;
+        }
+
+        .btn-action-editar, .btn-action-excluir {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 12px;
+            text-transform: uppercase;
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-action-editar {
+            background-color: #ffc107;
+            color: black;
+            margin-right: 5px;
+        }
+        .btn-action-editar:hover {
+            background-color: #e0a800;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-action-excluir {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-action-excluir:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .lista-container h3 {
+            font-size: 22px;
+            color: #136db0;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .list-group { max-width: 800px; }
+        .list-group-item {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .list-group-item:hover {
+            background-color: #f1f1f1;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .table {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 10px;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            vertical-align: middle;
+            border: 1px solid #ddd;
+        }
+
+        .table th {
+            background: linear-gradient(135deg, #136db0, #11a125);
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .table-striped tbody tr:nth-child(odd) { background-color: #f8f9fa; }
+        .table-striped tbody tr:hover { background-color: #e9ecef; }
+        .logo-col { width: 75px; text-align: center; }
+        .logo-time {
+            width: 60px;
+            height: 50px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .partida-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+            max-width: 800px;
+        }
+
+        .partida-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .partida-time {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .partida-time img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .partida-time span {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .partida-vs {
+            font-size: 18px;
+            font-weight: bold;
+            color: #136db0;
+            margin: 0 20px;
+        }
+
+        .partida-info {
+            text-align: center;
+            flex: 1;
+        }
+
+        .partida-info .data {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .partida-info .resultado {
+            font-size: 16px;
+            font-weight: bold;
+            color: #11a125;
+            margin-top: 5px;
+        }
+
+        .partida-actions {
+            display: flex;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="/static/imagens/logoCL.png" alt="Logo Campus League" style="max-height: 80px; margin-right: 30px;">
+                Campus League
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/torneios/campeonatos">Campeonatos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/torneios/sobre">Sobre</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/usuarios/logout">
+                            <img src="/static/imagens/logout.png" alt="Logout" style="max-height: 24px; vertical-align: middle;">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="torneio-info row">
+            <div class="col-md-4">
+                <img src="{{ torneio.capa }}" alt="Capa do Torneio" class="torneio-capa img-fluid">
+            </div>
+            <div class="col-md-8">
+                <h2>{{ torneio.nome }}</h2>
+                <p><strong>Organizador:</strong> {{ torneio.organizador }}</p>
+                <p><strong>Data de Início:</strong> {{ torneio.data_inicio }}</p>
+                <p><strong>Formato:</strong> {{ torneio.formato }}</p>
+                <p><strong>Descrição:</strong> {{ torneio.descricao }}</p>
+            </div>
+        </div>
+
+        <div class="mt-4 gerenciar-botoes">
+            <button class="btn-gerenciar-times" data-bs-toggle="modal" data-bs-target="#modalTimes">Adicionar Time</button>
+            <button class="btn-gerenciar-jogadores" data-bs-toggle="modal" data-bs-target="#modalJogadores">Adicionar Jogador</button>
+            <button class="btn-gerenciar-partidas" data-bs-toggle="modal" data-bs-target="#modalPartidas">Adicionar Partida</button>
+            <a href="/torneios/configurar_campeonato/{{ torneio.id }}" class="btn-configurar-campeonato">Configurar Campeonato</a>
+        </div>
+
+        <div class="mt-4 lista-container">
+            <h3>Times Cadastrados</h3>
+            <table id="tabela-times" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Logo</th>
+                        <th>Nome</th>
+                        <th>Lugar</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="corpo-tabela-times"></tbody>
+            </table>
+        </div>
+
+        <div class="mt-4 lista-container">
+            <h3>Jogadores Cadastrados</h3>
+            <ul id="lista-jogadores" class="list-group"></ul>
+        </div>
+
+        <div class="mt-4 lista-container">
+            <h3>Partidas Cadastradas</h3>
+            <div id="lista-partidas" class="partidas-container"></div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalTimes" tabindex="-1" aria-labelledby="modalTimesLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTimesLabel">Adicionar Time</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formTime">
+                        <div class="mb-3">
+                            <label for="timeNome" class="form-label">Nome do Time</label>
+                            <input type="text" class="form-control" id="timeNome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="timeLugar" class="form-label">Lugar</label>
+                            <input type="text" class="form-control" id="timeLugar" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="timeLogo" class="form-label">Logo do Time</label>
+                            <input type="file" class="form-control" id="timeLogo" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn btn-gerenciar-times">Adicionar Time</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalJogadores" tabindex="-1" aria-labelledby="modalJogadoresLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalJogadoresLabel">Adicionar Jogador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formJogador">
+                        <div class="mb-3">
+                            <label for="jogadorId" class="form-label">ID do Jogador</label>
+                            <input type="number" class="form-control" id="jogadorId" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jogadorNome" class="form-label">Nome do Jogador</label>
+                            <input type="text" class="form-control" id="jogadorNome" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jogadorPosicao" class="form-label">Posição</label>
+                            <input type="text" class="form-control" id="jogadorPosicao" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jogadorGols" class="form-label">Gols</label>
+                            <input type="number" class="form-control" id="jogadorGols" min="0" value="0" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jogadorTimeId" class="form-label">Time</label>
+                            <select class="form-control" id="jogadorTimeId" required>
+                                <option value="">Selecione um time</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-gerenciar-jogadores">Adicionar Jogador</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalPartidas" tabindex="-1" aria-labelledby="modalPartidasLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalPartidasLabel">Adicionar/Editar Partida</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formPartida">
+                        <div class="mb-3">
+                            <label for="partidaTime1Id" class="form-label">Time 1</label>
+                            <select class="form-select" id="partidaTime1Id" required></select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="partidaTime2Id" class="form-label">Time 2</label>
+                            <select class="form-select" id="partidaTime2Id" required></select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="partidaData" class="form-label">Data</label>
+                            <input type="date" class="form-control" id="partidaData" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="partidaResultado" class="form-label">Resultado (opcional)</label>
+                            <input type="text" class="form-control" id="partidaResultado">
+                        </div>
+                        <button type="submit" class="btn btn-gerenciar-partidas" id="btnSalvarPartida">Adicionar Partida</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const torneioId = "{{ torneio.id }}";
+        let timeEmEdicao = null;
+        let jogadorEmEdicao = null;
+        let partidaEmEdicao = null;
+
+        function carregarTimesNoSelect() {
+            fetch(`/times/torneio/${torneioId}/`)
+                .then(response => response.json())
+                .then(times => {
+                    const selectJogador = document.getElementById("jogadorTimeId");
+                    const selectTime1 = document.getElementById("partidaTime1Id");
+                    const selectTime2 = document.getElementById("partidaTime2Id");
+
+                    selectJogador.innerHTML = '<option value="">Selecione um time</option>';
+                    selectTime1.innerHTML = '<option value="">Selecione o Time 1</option>';
+                    selectTime2.innerHTML = '<option value="">Selecione o Time 2</option>';
+
+                    times.forEach(time => {
+                        selectJogador.innerHTML += `<option value="${time.id}">${time.nome}</option>`;
+                        selectTime1.innerHTML += `<option value="${time.id}">${time.nome}</option>`;
+                        selectTime2.innerHTML += `<option value="${time.id}">${time.nome}</option>`;
+                    });
+                })
+                .catch(error => console.error("Erro ao carregar times no select:", error));
+        }
+
+        function carregarTimes() {
+            fetch(`/times/torneio/${torneioId}/`)
+                .then(response => response.json())
+                .then(times => {
+                    const corpoTabela = document.getElementById("corpo-tabela-times");
+                    corpoTabela.innerHTML = "";
+                    times.forEach(time => {
+                        const logoImg = time.logo ? `<img src="/static/imagens/times/${time.logo}" alt="Logo do Time" class="logo-time">` : 'Sem logo';
+                        corpoTabela.innerHTML += `
+                            <tr>
+                                <td class="logo-col">${logoImg}</td>
+                                <td>${time.nome}</td>
+                                <td>${time.lugar}</td>
+                                <td>
+                                    <button class="btn-action-editar" onclick="editarTime(${time.id})">Editar</button>
+                                    <button class="btn-action-excluir" onclick="deletarTime(${time.id})">Excluir</button>
+                                </td>
+                            </tr>`;
+                    });
+                })
+                .catch(error => console.error("Erro ao carregar times:", error));
+        }
+
+        function carregarJogadores() {
+            fetch("/jogadores/")
+                .then(response => response.json())
+                .then(jogadores => {
+                    const lista = document.getElementById("lista-jogadores");
+                    lista.innerHTML = "";
+                    jogadores.filter(j => j.time && j.time.torneio_id === parseInt(torneioId)).forEach(jogador => {
+                        lista.innerHTML += `
+                            <li class="list-group-item">
+                                ${jogador.nome} - ${jogador.posicao} (Gols: ${jogador.gols || 0}) - Time: ${jogador.time?.nome || 'Sem time'}
+                                <div>
+                                    <button class="btn-action-editar" onclick="editarJogador(${jogador.id})">Editar</button>
+                                    <button class="btn-action-excluir" onclick="deletarJogador(${jogador.id})">Excluir</button>
+                                </div>
+                            </li>`;
+                    });
+                })
+                .catch(error => console.error("Erro ao carregar jogadores:", error));
+        }
+
+        function carregarPartidas() {
+            console.log("Iniciando carregarPartidas, torneioId:", torneioId);
+            fetch(`/partidas/?torneio_id=${torneioId}`)
+                .then(response => {
+                    console.log("Status da resposta:", response.status);
+                    if (!response.ok) {
+                        throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(partidas => {
+                    console.log("Partidas recebidas:", partidas);
+                    const lista = document.getElementById("lista-partidas");
+                    if (!lista) {
+                        console.error("Elemento 'lista-partidas' não encontrado no DOM");
+                        return;
+                    }
+                    lista.innerHTML = "";
+                    if (!Array.isArray(partidas) || partidas.length === 0) {
+                        lista.innerHTML = "<p>Nenhuma partida encontrada para este torneio.</p>";
+                        return;
+                    }
+                    partidas.forEach(partida => {
+                        const time1Logo = partida.time1_logo ? `/static/imagens/times/${partida.time1_logo}` : '/static/imagens/default.jpg';
+                        const time2Logo = partida.time2_logo ? `/static/imagens/times/${partida.time2_logo}` : '/static/imagens/default.jpg';
+                        lista.innerHTML += `
+                            <div class="partida-card">
+                                <div class="partida-time">
+                                    <img src="${time1Logo}" alt="${partida.time1_nome || 'Desconhecido'}">
+                                    <span>${partida.time1_nome || 'Desconhecido'}</span>
+                                </div>
+                                <div class="partida-vs">${partida.resultado || "A definir"}</div>
+                                <div class="partida-time">
+                                    <img src="${time2Logo}" alt="${partida.time2_nome || 'Desconhecido'}">
+                                    <span>${partida.time2_nome || 'Desconhecido'}</span>
+                                </div>
+                                <div class="partida-info">
+                                    <div class="data">${partida.data || 'Sem data'}</div>
+                                </div>
+                                <div class="partida-actions">
+                                    <button class="btn-action-editar" onclick="editarPartida(${partida.id})">Editar</button>
+                                    <button class="btn-action-excluir" onclick="deletarPartida(${partida.id})">Excluir</button>
+                                </div>
+                            </div>`;
+                    });
+                })
+                .catch(error => console.error("Erro ao carregar partidas:", error));
+        }
+
+        document.getElementById("formTime").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const nome = document.getElementById("timeNome").value;
+            const lugar = document.getElementById("timeLugar").value;
+            const logo = document.getElementById("timeLogo").files[0];
+
+            const formData = new FormData();
+            formData.append("nome", nome);
+            formData.append("lugar", lugar);
+            formData.append("torneio_id", torneioId);
+            if (logo) formData.append("logo", logo);
+
+            const url = timeEmEdicao ? `/times/${timeEmEdicao}/` : "/times/";
+            const method = timeEmEdicao ? "PUT" : "POST";
+
+            fetch(url, {
+                method: method,
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(JSON.stringify(err)) });
+                }
+                return response.json();
+            })
+            .then(data => {
+                carregarTimes();
+                resetarFormularioTime();
+                bootstrap.Modal.getInstance(document.getElementById("modalTimes")).hide();
+            })
+            .catch(error => console.error("Erro ao salvar time:", error));
+        });
+
+        function editarTime(id) {
+            fetch(`/times/torneio/${torneioId}/`)
+                .then(response => response.json())
+                .then(times => {
+                    const time = times.find(t => t.id === id);
+                    timeEmEdicao = id;
+                    document.getElementById("timeNome").value = time.nome;
+                    document.getElementById("timeLugar").value = time.lugar;
+                    document.getElementById("modalTimesLabel").textContent = "Editar Time";
+                    const modal = new bootstrap.Modal(document.getElementById("modalTimes"));
+                    modal.show();
+                })
+                .catch(error => console.error("Erro ao carregar time para edição:", error));
+        }
+
+        function deletarTime(id) {
+    fetch(`/times/${id}`, { method: "DELETE" })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(data => { throw new Error(data.detail || "Erro ao deletar time"); });
+            }
+            carregarTimes();
+        })
+        .catch(error => {
+            console.error("Erro ao deletar time:", error);
+            alert(error.message);
+        });
+}
+
+        function resetarFormularioTime() {
+            document.getElementById("formTime").reset();
+            document.getElementById("modalTimesLabel").textContent = "Adicionar Time";
+            timeEmEdicao = null;
+        }
+
+        document.getElementById("formJogador").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const id = document.getElementById("jogadorId").value;
+            const nome = document.getElementById("jogadorNome").value;
+            const posicao = document.getElementById("jogadorPosicao").value;
+            const gols = parseInt(document.getElementById("jogadorGols").value);
+            const timeId = document.getElementById("jogadorTimeId").value;
+
+            const jogadorData = {
+                id,
+                nome,
+                posicao,
+                gols,
+                time_id: parseInt(timeId)
+            };
+
+            const url = jogadorEmEdicao ? `/jogadores/${jogadorEmEdicao}/` : "/jogadores/";
+            const method = jogadorEmEdicao ? "PUT" : "POST";
+
+            fetch(url, {
+                method: method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(jogadorData)
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Erro ao salvar jogador");
+                return response.json();
+            })
+            .then(() => {
+                carregarJogadores();
+                resetarFormularioJogador();
+                bootstrap.Modal.getInstance(document.getElementById("modalJogadores")).hide();
+            })
+            .catch(error => console.error("Erro ao salvar jogador:", error));
+        });
+
+        function editarJogador(id) {
+            fetch(`/jogadores/`)
+                .then(response => response.json())
+                .then(jogadores => {
+                    const jogador = jogadores.find(j => j.id === id);
+                    jogadorEmEdicao = id;
+                    document.getElementById("jogadorId").value = jogador.id;
+                    document.getElementById("jogadorNome").value = jogador.nome;
+                    document.getElementById("jogadorPosicao").value = jogador.posicao;
+                    document.getElementById("jogadorGols").value = jogador.gols || 0;
+                    document.getElementById("jogadorTimeId").value = jogador.time?.id || "";
+                    document.getElementById("modalJogadoresLabel").textContent = "Editar Jogador";
+                    const modal = new bootstrap.Modal(document.getElementById("modalJogadores"));
+                    modal.show();
+                })
+                .catch(error => console.error("Erro ao carregar jogador para edição:", error));
+        }
+
+        function deletarJogador(id) {
+            fetch(`/jogadores/${id}/`, { method: "DELETE" })
+                .then(response => {
+                    if (!response.ok) throw new Error("Erro ao deletar jogador");
+                    carregarJogadores();
+                })
+                .catch(error => console.error("Erro ao deletar jogador:", error));
+        }
+
+        function resetarFormularioJogador() {
+            document.getElementById("formJogador").reset();
+            document.getElementById("modalJogadoresLabel").textContent = "Adicionar Jogador";
+            jogadorEmEdicao = null;
+        }
+
+        document.getElementById("formPartida").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const time1Id = document.getElementById("partidaTime1Id").value;
+            const time2Id = document.getElementById("partidaTime2Id").value;
+            const data = document.getElementById("partidaData").value;
+            const resultado = document.getElementById("partidaResultado").value || null;
+
+            const partidaData = {
+                time1_id: parseInt(time1Id),
+                time2_id: parseInt(time2Id),
+                data,
+                resultado,
+                torneio_id: parseInt(torneioId)
+            };
+
+            const url = partidaEmEdicao ? `/partidas/${partidaEmEdicao}/` : "/partidas/";
+            const method = partidaEmEdicao ? "PUT" : "POST";
+
+            fetch(url, {
+                method: method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(partidaData)
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Erro ao salvar partida");
+                return response.json();
+            })
+            .then(() => {
+                carregarPartidas();
+                resetarFormularioPartida();
+                bootstrap.Modal.getInstance(document.getElementById("modalPartidas")).hide();
+            })
+            .catch(error => console.error("Erro ao salvar partida:", error));
+        });
+
+        function editarPartida(id) {
+            fetch(`/partidas/${id}`)
+                .then(response => response.json())
+                .then(partida => {
+                    partidaEmEdicao = id;
+                    document.getElementById("partidaTime1Id").value = partida.time1_id;
+                    document.getElementById("partidaTime2Id").value = partida.time2_id;
+                    document.getElementById("partidaData").value = partida.data;
+                    document.getElementById("partidaResultado").value = partida.resultado || "";
+                    document.getElementById("btnSalvarPartida").textContent = "Salvar Alterações";
+                    const modal = new bootstrap.Modal(document.getElementById("modalPartidas"));
+                    modal.show();
+                })
+                .catch(error => console.error("Erro ao carregar partida para edição:", error));
+        }
+
+        function deletarPartida(id) {
+            fetch(`/partidas/${id}/`, { method: "DELETE" })
+                .then(response => {
+                    if (!response.ok) throw new Error("Erro ao deletar partida");
+                    carregarPartidas();
+                })
+                .catch(error => console.error("Erro ao deletar partida:", error));
+        }
+
+        function resetarFormularioPartida() {
+            document.getElementById("formPartida").reset();
+            document.getElementById("btnSalvarPartida").textContent = "Adicionar Partida";
+            partidaEmEdicao = null;
+            carregarTimesNoSelect();
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            carregarTimes();
+            carregarJogadores();
+            carregarPartidas();
+        });
+
+        document.getElementById("modalTimes").addEventListener("shown.bs.modal", carregarTimesNoSelect);
+        document.getElementById("modalJogadores").addEventListener("shown.bs.modal", carregarTimesNoSelect);
+        document.getElementById("modalPartidas").addEventListener("shown.bs.modal", carregarTimesNoSelect);
+        document.getElementById("modalTimes").addEventListener("hidden.bs.modal", resetarFormularioTime);
+        document.getElementById("modalJogadores").addEventListener("hidden.bs.modal", resetarFormularioJogador);
+        document.getElementById("modalPartidas").addEventListener("hidden.bs.modal", resetarFormularioPartida);
+    </script>
+</body>
+</html>
