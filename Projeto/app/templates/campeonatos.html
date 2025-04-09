@@ -41,11 +41,9 @@
                     <li class="nav-item"><a class="nav-link" href="/">Início</a></li>
                     <li class="nav-item"><a class="nav-link" href="/torneios/campeonatos">Campeonatos</a></li>
                     <li class="nav-item"><a class="nav-link" href="/torneios/sobre">Sobre</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/usuarios/logout">
-                            <img src="/static/imagens/logout.png" alt="Logout" style="max-height: 24px; vertical-align: middle;">
-                        </a>
-                    </li>
+                    <a class="nav-link" href="/usuarios/logout">
+                        <img src="/static/imagens/logout.png" alt="Logout" style="max-height: 24px; vertical-align: middle;">
+                    </a>
                 </ul>
             </div>
         </div>
@@ -76,7 +74,7 @@
     <script>
         function carregarTorneios() {
             console.log("Carregando torneios...");
-            fetch('/torneios/campeonatos/dados') // Ajustado para o prefixo /torneios
+            fetch('/torneios/campeonatos/dados') 
                 .then(response => {
                     console.log("Resposta recebida:", response);
                     if (!response.ok) throw new Error(`Erro ${response.status}: ${response.statusText}`);

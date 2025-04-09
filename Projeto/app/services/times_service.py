@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, UploadFile
+from app.models.time import Time
 from app.repositories.time_repository import TimeRepository
 from app.schemas.time import TimeCreate, TimeResponse
 import os
@@ -48,8 +49,9 @@ class TimeService:
 
     @staticmethod
     def deletar_time(db: Session, time_id: int):
-        time = TimeRepository.obter_time(db, time_id)
+        time = db.query(Time).filter(Time.id == time_id).first()
         if not time:
-            raise HTTPException(status_code=404, detail="Time não encontrado")
-        TimeRepository.deletar_time(db, time_id)
-        return {"detail": "Time deletado com sucesso"}
+            return False
+        db.delete(time)
+        db.commit()
+        return True

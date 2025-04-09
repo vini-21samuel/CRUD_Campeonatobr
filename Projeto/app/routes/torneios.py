@@ -1,26 +1,15 @@
-import os
 from fastapi import APIRouter, Depends, HTTPException, Form, Request, UploadFile, File
 from fastapi.responses import JSONResponse, HTMLResponse
 from sqlalchemy.orm import Session
 from app.models.torneio import Torneio
 from app.database.database import get_db, SessionLocal
 from app.services.torneios_services import TorneioService
-from app.schemas.torneio import TorneioResponse
+from app.schemas.torneio import TorneioResponse, TorneioUpdate
 from fastapi.templating import Jinja2Templates
-from typing import List, Optional
-from pathlib import Path
-import logging
-
-# Configuração de logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from typing import List
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
-
-# Diretório para salvar as capas dos torneios
-UPLOAD_DIR = Path("app/templates/static/imagens/torneios")
-UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 # Função para obter a sessão do banco de dados
 def get_db():
@@ -104,43 +93,17 @@ def obter_torneio(torneio_id: int, db: Session = Depends(get_db)):
 @router.put("/torneios/{torneio_id}", response_model=TorneioResponse)
 async def editar_torneio(
     torneio_id: int,
-    nome: Optional[str] = Form(None),
-    organizador: Optional[str] = Form(None),
-    data_inicio: Optional[str] = Form(None),
-    descricao: Optional[str] = Form(None),
-    formato: Optional[str] = Form(None),  # Certifique-se de que aceita formato
-    numGrupos: Optional[int] = Form(None),  # Adicione numGrupos
-    numClassificados: Optional[int] = Form(None),  # Adicione numClassificados
-    capa: UploadFile = File(None),
+    torneio_update: TorneioUpdate,
     db: Session = Depends(get_db)
 ):
     torneio = db.query(Torneio).filter(Torneio.id == torneio_id).first()
     if not torneio:
         raise HTTPException(status_code=404, detail="Torneio não encontrado.")
-
-    if nome is not None:
-        torneio.nome = nome
-    if organizador is not None:
-        torneio.organizador = organizador
-    if data_inicio is not None:
-        torneio.data_inicio = data_inicio
-    if descricao is not None:
-        torneio.descricao = descricao
-    if formato is not None:
-        torneio.formato = formato
-    if numGrupos is not None:
-        torneio.numGrupos = numGrupos
-    if numClassificados is not None:
-        torneio.numClassificados = numClassificados
-    if capa:
-        file_extension = capa.filename.split(".")[-1]
-        safe_nome = torneio.nome.replace(" ", "_").replace("/", "_")
-        file_name = f"{torneio_id}_{safe_nome}.{file_extension}"
-        file_path = UPLOAD_DIR / file_name
-        with open(file_path, "wb") as buffer:
-            buffer.write(await capa.read())
-        torneio.capa = file_name
-
+    
+    update_data = torneio_update.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(torneio, key, value)
+    
     db.commit()
     db.refresh(torneio)
     return {
@@ -155,17 +118,16 @@ async def editar_torneio(
         "capa": f"/static/imagens/torneios/{torneio.capa}" if torneio.capa else "/static/imagens/default.jpg"
     }
 
-# Rota para deletar um torneio (corrigida)
-@router.delete("/{torneio_id}")
+# Rota para deletar um torneio
+@router.delete("/torneios/{torneio_id}")
 def deletar_torneio(torneio_id: int, db: Session = Depends(get_db)):
     try:
         TorneioService.deletar_torneio(db, torneio_id)
         return JSONResponse(content={"message": "Torneio deletado com sucesso."}, status_code=200)
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
-    except Exception as e:
-        logger.error(f"Erro ao deletar torneio: {e}")
-        raise HTTPException(status_code=500, detail=f"Erro interno ao deletar torneio: {str(e)}")
+    except Exception:
+        raise HTTPException(status_code=500, detail="Erro interno ao deletar torneio.")
 
 # Rota para gerenciar torneio
 @router.get("/gerenciar_torneio/{torneio_id}", response_class=HTMLResponse)
@@ -201,7 +163,7 @@ async def get_campeonatos(request: Request):
 @router.get("/campeonatos/dados", response_model=List[TorneioResponse])
 def listar_torneios_campeonatos(db: Session = Depends(get_db)):
     torneios = TorneioService.listar_torneios(db)
-    logger.info(f"Torneios retornados: {torneios}")
+    print("Torneios retornados:", torneios)  
     return [
         {
             "id": t.id,

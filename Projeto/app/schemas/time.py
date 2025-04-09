@@ -12,6 +12,6 @@ class TimeResponse(TimeBase):
     id: int
     torneio_id: Optional[int] = None
     logo: Optional[str] = None
-    lugar: Optional[str] = None  # Tornando 'lugar' opcional
+
     class Config:
         orm_mode = True

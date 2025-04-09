@@ -52,14 +52,29 @@
     <!-- Formulário do Torneio -->
     {% include "form_torneio.html" %}
 
-    <!-- Footer -->
-    <div class="footer">
-        Desenvolvido por <strong>Vinicius Samuel</strong>
+    <!-- Modal de Confirmação de Deleção -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel">Confirmar Deleção</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja deletar este torneio? Esta ação não pode ser desfeita.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Deletar</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         let torneioEmEdicao = null;
+        let torneioIdToDelete = null;
 
         // Mostrar o formulário e rolar até ele
         function mostrarFormulario() {
@@ -105,7 +120,7 @@
                                         <li><a class="dropdown-item" href="#" onclick="editarTorneio('${torneio.id}')">
                                             <img src="/static/imagens/editar.png" class="icon-dropdown"> Editar
                                         </a></li>
-                                        <li><a class="dropdown-item text-danger" href="#" onclick="deletarTorneio('${torneio.id}')">
+                                        <li><a class="dropdown-item text-danger" href="#" onclick="mostrarConfirmacaoDelete('${torneio.id}')">
                                             <img src="/static/imagens/botao-apagar.png" class="icon-dropdown"> Deletar
                                         </a></li>
                                     </ul>
@@ -142,20 +157,37 @@
                 .catch(error => console.error("Erro ao carregar torneio para edição:", error));
         }
 
-        // Deletar torneio
-        function deletarTorneio(id) {
-            if (confirm("Tem certeza que deseja deletar este torneio?")) {
-                fetch(`/torneios/${id}`, { method: 'DELETE' })
+        // Mostrar modal de confirmação de deleção
+        function mostrarConfirmacaoDelete(id) {
+            torneioIdToDelete = id;
+            const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+            modal.show();
+        }
+
+        // Deletar torneio após confirmação
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+            if (torneioIdToDelete) {
+                fetch(`/torneios/torneios/${torneioIdToDelete}`, { method: 'DELETE' })
                     .then(response => {
-                        if (uthenticatedResponse.ok) {
-                            carregarTorneios();
+                        if (response.ok) {
+                            carregarTorneios(); // Atualiza a lista automaticamente
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('deleteConfirmModal'));
+                            modal.hide();
                         } else {
-                            alert("Erro ao deletar torneio!");
+                            return response.text().then(text => {
+                                throw new Error(text || "Erro ao deletar torneio");
+                            });
                         }
                     })
-                    .catch(error => console.error("Erro ao deletar torneio:", error));
+                    .catch(error => {
+                        console.error("Erro ao deletar torneio:", error);
+                        alert("Erro ao deletar torneio: " + error.message);
+                    })
+                    .finally(() => {
+                        torneioIdToDelete = null; // Reseta o ID após a tentativa
+                    });
             }
-        }
+        });
 
         // Resetar formulário
         function resetarFormulario() {
@@ -189,6 +221,7 @@
 
         // Carregar torneios ao iniciar a página
         document.addEventListener("DOMContentLoaded", carregarTorneios);
+
     </script>
 </body>
 </html>

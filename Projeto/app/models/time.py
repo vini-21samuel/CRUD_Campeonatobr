@@ -7,7 +7,7 @@ class Time(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String, nullable=False)
-    lugar = Column(String)
+    lugar = Column(String, nullable=False)
     torneio_id = Column(Integer, ForeignKey("torneios.id"), nullable=True)
     logo = Column(String, nullable=True)
 

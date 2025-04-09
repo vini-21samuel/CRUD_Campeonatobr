@@ -38,6 +38,7 @@
         .mata-mata-match span { font-weight: bold; }
         .regras-container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); margin-bottom: 20px; }
 
+        /* Estilos para impressão */
         @media print {
             body { padding-top: 0; }
             .navbar, .btn-voltar, .btn-gerar-pdf, .btn-configurar, .modal { display: none; }
@@ -66,22 +67,22 @@
                     <li class="nav-item"><a class="nav-link" href="/">Início</a></li>
                     <li class="nav-item"><a class="nav-link" href="/torneios/campeonatos">Campeonatos</a></li>
                     <li class="nav-item"><a class="nav-link" href="/torneios/sobre">Sobre</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/usuarios/logout">
-                            <img src="/static/imagens/logout.png" alt="Logout" style="max-height: 24px; vertical-align: middle;">
-                        </a>
-                    </li>
+                    <a class="nav-link" href="/usuarios/logout">
+                        <img src="/static/imagens/logout.png" alt="Logout" style="max-height: 24px; vertical-align: middle;">
+                    </a>
                 </ul>
             </div>
         </div>
     </nav>
 
+    <!-- Botão Voltar -->
     <a href="/torneios/gerenciar_torneio/{{ torneio.id }}" class="btn-voltar">Voltar</a>
 
     <div class="container mt-4">
         <h2>Configurar Campeonato: {{ torneio.nome }}</h2>
         <p><strong>Formato:</strong> <span id="formatoTorneio">{{ torneio.formato }}</span></p>
 
+        <!-- Quadro de Regras -->
         <div class="regras-container">
             <h3>Regras de Pontuação e Desempate</h3>
             <ul>
@@ -99,6 +100,7 @@
             </button>
         </div>
 
+        <!-- Seção de Times e Jogadores (para PDF) -->
         <div class="print-only" id="times-jogadores-container" style="display: none;"></div>
 
         <div id="grupos-container"></div>
@@ -143,113 +145,75 @@
         let jogadores = [];
         let configuracao = {};
 
+        // Carrega os dados iniciais, incluindo times, partidas e jogadores
         function carregarDados() {
-    Promise.allSettled([
-        fetch(`/times/torneio/${torneioId}`).then(response => {
-            if (!response.ok) throw new Error(`Erro ao carregar times: ${response.status}`);
-            return response.json();
-        }),
-        fetch(`/partidas?torneio_id=${torneioId}`).then(response => {
-            if (!response.ok) throw new Error(`Erro ao carregar partidas: ${response.status}`);
-            return response.json();
-        }),
-        fetch(`/jogadores/torneio/${torneioId}`).then(response => {
-            if (!response.ok) throw new Error(`Erro ao carregar jogadores: ${response.status}`);
-            return response.json();
-        }),
-        fetch(`/torneios/torneios/${torneioId}`).then(response => {
-            if (!response.ok) throw new Error(`Erro ao carregar torneio: ${response.status}`);
-            return response.json();
-        })
-    ])
-    .then(results => {
-        const [timesResult, partidasResult, jogadoresResult, torneioResult] = results;
-
-        console.log("Resposta bruta /times/torneio:", timesResult.status === "fulfilled" ? timesResult.value : timesResult.reason);
-        console.log("Resposta bruta /partidas:", partidasResult.status === "fulfilled" ? partidasResult.value : partidasResult.reason);
-        console.log("Resposta bruta /jogadores/torneio:", jogadoresResult.status === "fulfilled" ? jogadoresResult.value : jogadoresResult.reason);
-        console.log("Resposta bruta /torneios/torneios:", torneioResult.status === "fulfilled" ? torneioResult.value : torneioResult.reason);
-
-        times = timesResult.status === "fulfilled" ? timesResult.value : [];
-        partidas = partidasResult.status === "fulfilled" ? partidasResult.value : [];
-        jogadores = jogadoresResult.status === "fulfilled" ? jogadoresResult.value : [];
-        configuracao = torneioResult.status === "fulfilled" ? {
-            formato: torneioResult.value.formato || "grupos",
-            numGrupos: torneioResult.value.numGrupos || 1,
-            numClassificados: torneioResult.value.numClassificados || 2
-        } : { formato: "grupos", numGrupos: 1, numClassificados: 2 };
-
-        console.log("Partidas carregadas do backend:", partidas); // Log extra
-
-        document.getElementById("formatoTorneio").textContent = configuracao.formato;
-        document.getElementById("formato").value = configuracao.formato;
-        mostrarCamposFormato();
-
-        console.log("Dados processados:", { times, partidas, jogadores, configuracao });
-
-        atualizarExibicao();
-        carregarTimesEJogadoresParaPDF();
-
-        const erros = results.filter(r => r.status === "rejected").map(r => r.reason);
-        if (erros.length > 0) {
-            console.error("Erros ao carregar dados:", erros);
-            alert("Alguns dados não foram carregados corretamente. Verifique o console.");
+            Promise.all([
+                fetch(`/times/torneio/${torneioId}/`).then(response => response.json()),
+                fetch(`/partidas/?torneio_id=${torneioId}`).then(response => response.json()),
+                fetch(`/jogadores/torneio/${torneioId}/`).then(response => response.json()), // Endpoint para jogadores
+                fetch(`/torneios/torneios/${torneioId}`).then(response => response.json())
+            ])
+            .then(([timesData, partidasData, jogadoresData, torneioData]) => {
+                times = timesData;
+                partidas = partidasData;
+                jogadores = jogadoresData;
+                configuracao = {
+                    formato: torneioData.formato,
+                    numGrupos: torneioData.numGrupos || 1,
+                    numClassificados: torneioData.numClassificados || 2
+                };
+                document.getElementById("formatoTorneio").textContent = configuracao.formato;
+                document.getElementById("formato").value = configuracao.formato;
+                mostrarCamposFormato();
+                console.log("Times:", times);
+                console.log("Partidas:", partidas);
+                console.log("Jogadores:", jogadores);
+                console.log("Configuração carregada:", configuracao);
+                atualizarExibicao();
+                carregarTimesEJogadoresParaPDF();
+            })
+            .catch(error => console.error("Erro ao carregar dados:", error));
         }
-    })
-    .catch(error => {
-        console.error("Erro inesperado ao carregar dados:", error);
-        alert("Erro ao carregar os dados do campeonato. Verifique o console.");
-    });
-}
 
         function mostrarCamposFormato() {
             const formato = document.getElementById("formato").value;
             document.getElementById("campos-grupos").style.display = formato === "grupos" ? "block" : "none";
         }
 
+        // Salva a configuração no backend
         function salvarConfiguracao() {
             const formato = document.getElementById("formato").value;
-            const dados = { formato: formato };
+            const dados = {
+                formato: formato
+            };
             if (formato === "grupos") {
-                const numGrupos = parseInt(document.getElementById("numGrupos").value);
-                const numClassificados = parseInt(document.getElementById("numClassificados").value);
-                if (isNaN(numGrupos) || numGrupos < 1 || isNaN(numClassificados) || numClassificados < 1) {
-                    alert("Por favor, insira valores válidos para número de grupos e classificados.");
-                    return;
-                }
-                dados.numGrupos = numGrupos;
-                dados.numClassificados = numClassificados;
+                dados.numGrupos = parseInt(document.getElementById("numGrupos").value);
+                dados.numClassificados = parseInt(document.getElementById("numClassificados").value);
             }
-
-            console.log("Enviando dados para o backend:", dados);
 
             fetch(`/torneios/torneios/${torneioId}`, {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify(dados)
             })
             .then(response => {
-                if (!response.ok) {
-                    return response.text().then(text => { throw new Error(`Erro ao salvar: ${response.status} - ${text}`); });
-                }
+                if (!response.ok) throw new Error("Erro ao salvar configuração");
                 return response.json();
             })
             .then(data => {
-                configuracao = {
-                    formato: data.formato,
-                    numGrupos: data.numGrupos || 1,
-                    numClassificados: data.numClassificados || 2
+                configuracao = { 
+                    formato: data.formato, 
+                    numGrupos: data.numGrupos || 1, 
+                    numClassificados: data.numClassificados || 2 
                 };
                 document.getElementById("formatoTorneio").textContent = configuracao.formato;
-                console.log("Configuração salva:", configuracao);
-                carregarDados();
+                atualizarExibicao();
+                carregarTimesEJogadoresParaPDF();
                 bootstrap.Modal.getInstance(document.getElementById("modalConfigurar")).hide();
-                alert("Configuração salva com sucesso!");
             })
-            .catch(error => {
-                console.error("Erro ao salvar configuração:", error);
-                alert("Erro ao salvar a configuração. Verifique o console.");
-            });
+            .catch(error => console.error("Erro ao salvar configuração:", error));
         }
 
         document.getElementById("formConfigurar").addEventListener("submit", function(e) {
@@ -278,13 +242,19 @@
                 let golsTime1 = 0, golsTime2 = 0;
                 if (partida.resultado) {
                     [golsTime1, golsTime2] = partida.resultado.split("x").map(Number);
-                    if (isNaN(golsTime1) || isNaN(golsTime2)) return;
+                    if (isNaN(golsTime1) || isNaN(golsTime2)) {
+                        console.warn("Resultado inválido:", partida.resultado);
+                        return;
+                    }
                 }
 
                 const time1 = classificacao.find(c => c.time.id === partida.time1_id);
                 const time2 = classificacao.find(c => c.time.id === partida.time2_id);
 
-                if (!time1 || !time2) return;
+                if (!time1 || !time2) {
+                    console.warn("Time não encontrado:", partida);
+                    return;
+                }
 
                 if (golsTime1 > golsTime2) {
                     time1.pontos += 3;
@@ -322,6 +292,7 @@
             return null;
         }
 
+        // Função para carregar times e jogadores no PDF
         function carregarTimesEJogadoresParaPDF() {
             const container = document.getElementById("times-jogadores-container");
             container.innerHTML = `
@@ -370,214 +341,165 @@
         }
 
         function atualizarExibicao() {
-            const gruposContainer = document.getElementById("grupos-container");
-            const mataMataContainer = document.getElementById("mata-mata-container");
-            gruposContainer.innerHTML = "";
-            mataMataContainer.innerHTML = "";
+    const gruposContainer = document.getElementById("grupos-container");
+    const mataMataContainer = document.getElementById("mata-mata-container");
+    gruposContainer.innerHTML = "";
+    mataMataContainer.innerHTML = "";
 
-            console.log("Atualizando exibição com:", { configuracao, times, partidas, jogadores });
+    if (configuracao.formato === "grupos") {
+        const grupos = dividirEmGrupos(times, configuracao.numGrupos);
+        const partidasPorGrupo = grupos.map(grupo => 
+            partidas.filter(p => grupo.some(t => t.id === p.time1_id || t.id === p.time2_id))
+        );
 
-            if (!times || times.length === 0) {
-                gruposContainer.innerHTML = "<p>Nenhum time cadastrado para este torneio. Adicione times para ver a configuração.</p>";
-                console.log("Nenhum time disponível para exibir.");
-                return;
-            }
-
-            if (configuracao.formato === "grupos") {
-                const grupos = dividirEmGrupos(times, configuracao.numGrupos);
-                const partidasPorGrupo = grupos.map(grupo => 
-                    partidas.filter(p => grupo.some(t => t.id === p.time1_id || t.id === p.time2_id))
-                );
-
-                console.log("Grupos gerados:", grupos);
-                console.log("Partidas por grupo:", partidasPorGrupo);
-
-                grupos.forEach((grupo, index) => {
-                    const classificacao = calcularClassificacao(grupo, partidasPorGrupo[index] || []);
-                    gruposContainer.innerHTML += `
-                        <div class="grupo-container">
-                            <h3>Grupo ${index + 1}</h3>
-                            <table class="table table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Time</th>
-                                        <th>Pontos</th>
-                                        <th>Vitórias</th>
-                                        <th>Empates</th>
-                                        <th>Derrotas</th>
-                                        <th>Saldo de Gols</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    ${classificacao.map(c => `
-                                        <tr>
-                                            <td><img src="${c.time.logo ? `/static/imagens/times/${c.time.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${c.time.nome}</td>
-                                            <td>${c.pontos}</td>
-                                            <td>${c.vitorias}</td>
-                                            <td>${c.empates}</td>
-                                            <td>${c.derrotas}</td>
-                                            <td>${c.golsPro - c.golsContra}</td>
-                                        </tr>`).join("")}
-                                </tbody>
-                            </table>
-                        </div>`;
-                });
-
-                const classificados = grupos.flatMap(grupo => 
-                    calcularClassificacao(grupo, partidasPorGrupo[grupos.indexOf(grupo)] || []).slice(0, configuracao.numClassificados)
-                );
-                const partidasMataMata = partidas.filter(p => !partidasPorGrupo.some(pg => pg.includes(p)));
-
-                console.log("Classificados para mata-mata:", classificados);
-                console.log("Partidas de mata-mata:", partidasMataMata);
-
-                if (classificados.length > 1 && partidasMataMata.length > 0) {
-                    let rodadasMataMata = [partidasMataMata];
-                    let currentRound = partidasMataMata;
-                    while (currentRound.length > 1) {
-                        const vencedores = currentRound.map(partida => {
-                            const vencedorId = determinarVencedorMataMata(partida);
-                            return { id: vencedorId || Math.random() };
-                        }).filter(v => v.id !== null);
-                        currentRound = [];
-                        for (let i = 0; i < vencedores.length; i += 2) {
-                            if (i + 1 < vencedores.length) {
-                                currentRound.push({
-                                    time1_id: vencedores[i].id,
-                                    time2_id: vencedores[i + 1].id,
-                                    resultado: null
-                                });
-                            }
-                        }
-                        if (currentRound.length > 0) rodadasMataMata.push(currentRound);
-                    }
-
-                    mataMataContainer.innerHTML = "<h3>Mata-mata</h3>";
-                    rodadasMataMata.forEach((rodada, idx) => {
-                        mataMataContainer.innerHTML += `
-                            <div class="mata-mata-round">
-                                <h4>${idx === 0 ? "Oitavas" : idx === 1 ? "Quartas" : idx === 2 ? "Semifinal" : "Final"}</h4>
-                                ${rodada.map(partida => {
-                                    const time1 = times.find(t => t.id === partida.time1_id);
-                                    const time2 = times.find(t => t.id === partida.time2_id);
-                                    return `
-                                        <div class="mata-mata-match">
-                                            <span><img src="${time1?.logo ? `/static/imagens/times/${time1.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time1?.nome || "TBD"}</span> 
-                                            ${partida.resultado || "A definir"}
-                                            <span><img src="${time2?.logo ? `/static/imagens/times/${time2.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time2?.nome || "TBD"}</span>
-                                        </div>`;
-                                }).join("")}
-                            </div>`;
-                    });
-                } else if (classificados.length > 1) {
-                    mataMataContainer.innerHTML = "<p>Aguardando partidas de mata-mata para exibir.</p>";
-                }
-            } else if (configuracao.formato === "mata-mata") {
-                if (partidas.length === 0) {
-                    mataMataContainer.innerHTML = "<p>Nenhuma partida de mata-mata cadastrada.</p>";
-                    console.log("Nenhuma partida disponível para mata-mata.");
-                    return;
-                }
-
-                let rodadasMataMata = [partidas];
-                let currentRound = partidas;
-
-                console.log("Partidas iniciais de mata-mata:", partidas);
-
-                while (currentRound.length > 1) {
-                    const vencedores = currentRound.map(partida => {
-                        const vencedorId = determinarVencedorMataMata(partida);
-                        return { id: vencedorId || Math.random() };
-                    }).filter(v => v.id !== null);
-                    currentRound = [];
-                    for (let i = 0; i < vencedores.length; i += 2) {
-                        if (i + 1 < vencedores.length) {
-                            currentRound.push({
-                                time1_id: vencedores[i].id,
-                                time2_id: vencedores[i + 1].id,
-                                resultado: null
-                            });
-                        }
-                    }
-                    if (currentRound.length > 0) rodadasMataMata.push(currentRound);
-                }
-
-                mataMataContainer.innerHTML = "<h3>Mata-mata</h3>";
-                rodadasMataMata.forEach((rodada, idx) => {
-                    mataMataContainer.innerHTML += `
-                        <div class="mata-mata-round">
-                            <h4>${idx === 0 ? "Oitavas" : idx === 1 ? "Quartas" : idx === 2 ? "Semifinal" : "Final"}</h4>
-                            ${rodada.map(partida => {
-                                const time1 = times.find(t => t.id === partida.time1_id);
-                                const time2 = times.find(t => t.id === partida.time2_id);
-                                return `
-                                    <div class="mata-mata-match">
-                                        <span><img src="${time1?.logo ? `/static/imagens/times/${time1.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time1?.nome || "TBD"}</span> 
-                                        ${partida.resultado || "A definir"}
-                                        <span><img src="${time2?.logo ? `/static/imagens/times/${time2.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time2?.nome || "TBD"}</span>
-                                    </div>`;
-                            }).join("")}
-                        </div>`;
-                });
-            } else if (configuracao.formato === "classificacao") {
-                const classificacao = calcularClassificacao(times, partidas);
-                console.log("Classificação geral calculada:", classificacao);
-
-                gruposContainer.innerHTML = `
-                    <div class="grupo-container">
-                        <h3>Classificação Geral</h3>
-                        <table class="table table-striped table-bordered">
-                            <thead>
+        grupos.forEach((grupo, index) => {
+            const classificacao = calcularClassificacao(grupo, partidasPorGrupo[index]);
+            gruposContainer.innerHTML += `
+                <div class="grupo-container">
+                    <h3>Grupo ${index + 1}</h3>
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Pontos</th>
+                                <th>Vitórias</th>
+                                <th>Empates</th>
+                                <th>Derrotas</th>
+                                <th>Saldo de Gols</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${classificacao.map(c => `
                                 <tr>
-                                    <th>Posição</th>
-                                    <th>Time</th>
-                                    <th>Pontos</th>
-                                    <th>Vitórias</th>
-                                    <th>Empates</th>
-                                    <th>Derrotas</th>
-                                    <th>Saldo de Gols</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${classificacao.map((c, idx) => `
-                                    <tr>
-                                        <td>${idx + 1}</td>
-                                        <td><img src="${c.time.logo ? `/static/imagens/times/${c.time.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${c.time.nome}</td>
-                                        <td>${c.pontos}</td>
-                                        <td>${c.vitorias}</td>
-                                        <td>${c.empates}</td>
-                                        <td>${c.derrotas}</td>
-                                        <td>${c.golsPro - c.golsContra}</td>
-                                    </tr>`).join("")}
-                            </tbody>
-                        </table>
-                        <h3>Jogadores dos Times</h3>
-                        <table class="table table-striped table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Jogador</th>
-                                    <th>Posição</th>
-                                    <th>Time</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${jogadores.length > 0 ? jogadores
-                                    .filter(j => times.some(t => t.id === j.time_id))
-                                    .map(j => `
-                                        <tr>
-                                            <td>${j.nome}</td>
-                                            <td>${j.posicao || "Não especificada"}</td>
-                                            <td>${times.find(t => t.id === j.time_id)?.nome || "Sem time"}</td>
-                                        </tr>
-                                    `).join("") : "<tr><td colspan='3'>Nenhum jogador cadastrado</td></tr>"}
-                            </tbody>
-                        </table>
-                    </div>`;
-            } else {
-                gruposContainer.innerHTML = "<p>Formato de torneio não configurado ou inválido: " + (configuracao.formato || "não definido") + "</p>";
-                console.log("Formato inválido detectado:", configuracao.formato);
+                                    <td><img src="${c.time.logo ? `/static/imagens/times/${c.time.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${c.time.nome}</td>
+                                    <td>${c.pontos}</td>
+                                    <td>${c.vitorias}</td>
+                                    <td>${c.empates}</td>
+                                    <td>${c.derrotas}</td>
+                                    <td>${c.golsPro - c.golsContra}</td>
+                                </tr>`).join("")}
+                        </tbody>
+                    </table>
+                </div>`;
+        });
+
+        const classificados = grupos.flatMap(grupo => 
+            calcularClassificacao(grupo, partidasPorGrupo[grupos.indexOf(grupo)]).slice(0, configuracao.numClassificados)
+        );
+        const partidasMataMata = partidas.filter(p => !partidasPorGrupo.some(pg => pg.includes(p)));
+        let rodadasMataMata = [];
+
+        if (partidasMataMata.length > 0) {
+            rodadasMataMata.push(partidasMataMata);
+            let currentRound = partidasMataMata;
+            while (currentRound.length > 1) {
+                const vencedores = currentRound.map(partida => {
+                    const vencedorId = determinarVencedorMataMata(partida);
+                    return { id: vencedorId || Math.random() };
+                }).filter(v => v.id !== null);
+                currentRound = [];
+                for (let i = 0; i < vencedores.length; i += 2) {
+                    if (i + 1 < vencedores.length) {
+                        currentRound.push({
+                            time1_id: vencedores[i].id,
+                            time2_id: vencedores[i + 1].id,
+                            resultado: null
+                        });
+                    }
+                }
+                if (currentRound.length > 0) rodadasMataMata.push(currentRound);
             }
         }
+
+        mataMataContainer.innerHTML = "<h3>Mata-mata</h3>";
+        rodadasMataMata.forEach((rodada, idx) => {
+            mataMataContainer.innerHTML += `
+                <div class="mata-mata-round">
+                    <h4>${idx === 0 ? "Oitavas" : idx === 1 ? "Quartas" : idx === 2 ? "Semifinal" : "Final"}</h4>
+                    ${rodada.map(partida => {
+                        const time1 = times.find(t => t.id === partida.time1_id);
+                        const time2 = times.find(t => t.id === partida.time2_id);
+                        return `
+                            <div class="mata-mata-match">
+                                <span><img src="${time1?.logo ? `/static/imagens/times/${time1.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time1?.nome || "TBD"}</span> 
+                                ${partida.resultado || "A definir"}
+                                <span><img src="${time2?.logo ? `/static/imagens/times/${time2.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time2?.nome || "TBD"}</span>
+                            </div>`;
+                    }).join("")}
+                </div>`;
+        });
+    } else if (configuracao.formato === "mata-mata") {
+        let rodadasMataMata = [partidas];
+        let currentRound = partidas;
+
+        while (currentRound.length > 1) {
+            const vencedores = currentRound.map(partida => {
+                const vencedorId = determinarVencedorMataMata(partida);
+                return { id: vencedorId || Math.random() };
+            }).filter(v => v.id !== null);
+            currentRound = [];
+            for (let i = 0; i < vencedores.length; i += 2) {
+                if (i + 1 < vencedores.length) {
+                    currentRound.push({
+                        time1_id: vencedores[i].id,
+                        time2_id: vencedores[i + 1].id,
+                        resultado: null
+                    });
+                }
+            }
+            if (currentRound.length > 0) rodadasMataMata.push(currentRound);
+        }
+
+        mataMataContainer.innerHTML = "<h3>Mata-mata</h3>";
+        rodadasMataMata.forEach((rodada, idx) => {
+            mataMataContainer.innerHTML += `
+                <div class="mata-mata-round">
+                    <h4>${idx === 0 ? "Oitavas" : idx === 1 ? "Quartas" : idx === 2 ? "Semifinal" : "Final"}</h4>
+                    ${rodada.map(partida => {
+                        const time1 = times.find(t => t.id === partida.time1_id);
+                        const time2 = times.find(t => t.id === partida.time2_id);
+                        return `
+                            <div class="mata-mata-match">
+                                <span><img src="${time1?.logo ? `/static/imagens/times/${time1.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time1?.nome || "TBD"}</span> 
+                                ${partida.resultado || "A definir"}
+                                <span><img src="${time2?.logo ? `/static/imagens/times/${time2.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${time2?.nome || "TBD"}</span>
+                            </div>`;
+                    }).join("")}
+                </div>`;
+        });
+    } else if (configuracao.formato === "classificacao") {
+        const classificacao = calcularClassificacao(times, partidas);
+        gruposContainer.innerHTML = `
+            <div class="grupo-container">
+                <h3>Classificação Geral</h3>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Posição</th>
+                            <th>Time</th>
+                            <th>Pontos</th>
+                            <th>Vitórias</th>
+                            <th>Empates</th>
+                            <th>Derrotas</th>
+                            <th>Saldo de Gols</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${classificacao.map((c, idx) => `
+                            <tr>
+                                <td>${idx + 1}</td>
+                                <td><img src="${c.time.logo ? `/static/imagens/times/${c.time.logo}` : '/static/imagens/default.jpg'}" class="logo-time">${c.time.nome}</td>
+                                <td>${c.pontos}</td>
+                                <td>${c.vitorias}</td>
+                                <td>${c.empates}</td>
+                                <td>${c.derrotas}</td>
+                                <td>${c.golsPro - c.golsContra}</td>
+                            </tr>`).join("")}
+                    </tbody>
+                </table>
+            </div>`;
+    }
+}
 
         document.addEventListener("DOMContentLoaded", () => {
             carregarDados();

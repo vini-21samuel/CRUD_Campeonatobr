@@ -62,7 +62,7 @@
             border: none;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             text-decoration: none;
-            display: inline-block; /* Garante que o <a> tenha o mesmo comportamento de tamanho que os <button> */
+            display: inline-block;
         }
 
         .btn-gerenciar-times { background-color: #136db0; }
@@ -245,6 +245,54 @@
             display: flex;
             gap: 5px;
         }
+
+        .torneio-info-container {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .torneio-info-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .torneio-info-table th, .torneio-info-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .torneio-info-table th {
+            background-color: #f1f1f1;
+            color: #136db0;
+            font-weight: bold;
+            width: 30%;
+        }
+
+        .torneio-info-table td {
+            color: #333;
+        }
+
+        .torneio-capa {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            margin-bottom: 15px;
+        }
+
+        .torneio-info h2 {
+            font-size: 24px;
+            color: #136db0;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -262,11 +310,9 @@
                     <li class="nav-item"><a class="nav-link" href="/">Início</a></li>
                     <li class="nav-item"><a class="nav-link" href="/torneios/campeonatos">Campeonatos</a></li>
                     <li class="nav-item"><a class="nav-link" href="/torneios/sobre">Sobre</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/usuarios/logout">
-                            <img src="/static/imagens/logout.png" alt="Logout" style="max-height: 24px; vertical-align: middle;">
-                        </a>
-                    </li>
+                    <a class="nav-link" href="/usuarios/logout">
+                        <img src="/static/imagens/logout.png" alt="Logout" style="max-height: 24px; vertical-align: middle;">
+                    </a>
                 </ul>
             </div>
         </div>
@@ -278,11 +324,27 @@
                 <img src="{{ torneio.capa }}" alt="Capa do Torneio" class="torneio-capa img-fluid">
             </div>
             <div class="col-md-8">
-                <h2>{{ torneio.nome }}</h2>
-                <p><strong>Organizador:</strong> {{ torneio.organizador }}</p>
-                <p><strong>Data de Início:</strong> {{ torneio.data_inicio }}</p>
-                <p><strong>Formato:</strong> {{ torneio.formato }}</p>
-                <p><strong>Descrição:</strong> {{ torneio.descricao }}</p>
+                <div class="torneio-info-container">
+                    <h2>{{ torneio.nome }}</h2>
+                    <table class="torneio-info-table">
+                        <tr>
+                            <th>Organizador</th>
+                            <td>{{ torneio.organizador }}</td>
+                        </tr>
+                        <tr>
+                            <th>Data de Início</th>
+                            <td>{{ torneio.data_inicio }}</td>
+                        </tr>
+                        <tr>
+                            <th>Formato</th>
+                            <td>{{ torneio.formato }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descrição</th>
+                            <td>{{ torneio.descricao }}</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -316,6 +378,63 @@
         <div class="mt-4 lista-container">
             <h3>Partidas Cadastradas</h3>
             <div id="lista-partidas" class="partidas-container"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Deleção de Time -->
+    <div class="modal fade" id="deleteTimeModal" tabindex="-1" aria-labelledby="deleteTimeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteTimeModalLabel">Confirmar Deleção de Time</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja deletar este time? Todos os dados relacionados a ele serão perdidos permanentemente.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteTimeBtn">Deletar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Deleção de Jogador -->
+    <div class="modal fade" id="deleteJogadorModal" tabindex="-1" aria-labelledby="deleteJogadorModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteJogadorModalLabel">Confirmar Deleção de Jogador</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja deletar este jogador? Esta ação removerá todas as estatísticas associadas a ele.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteJogadorBtn">Deletar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Deleção de Partida -->
+    <div class="modal fade" id="deletePartidaModal" tabindex="-1" aria-labelledby="deletePartidaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deletePartidaModalLabel">Confirmar Deleção de Partida</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja deletar esta partida? Todos os dados relacionados ao confronto serão excluídos.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeletePartidaBtn">Deletar</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -423,6 +542,7 @@
         let timeEmEdicao = null;
         let jogadorEmEdicao = null;
         let partidaEmEdicao = null;
+        let itemIdToDelete = null;
 
         function carregarTimesNoSelect() {
             fetch(`/times/torneio/${torneioId}/`)
@@ -460,7 +580,7 @@
                                 <td>${time.lugar}</td>
                                 <td>
                                     <button class="btn-action-editar" onclick="editarTime(${time.id})">Editar</button>
-                                    <button class="btn-action-excluir" onclick="deletarTime(${time.id})">Excluir</button>
+                                    <button class="btn-action-excluir" onclick="mostrarConfirmacaoDeleteTime(${time.id})">Excluir</button>
                                 </td>
                             </tr>`;
                     });
@@ -480,7 +600,7 @@
                                 ${jogador.nome} - ${jogador.posicao} (Gols: ${jogador.gols || 0}) - Time: ${jogador.time?.nome || 'Sem time'}
                                 <div>
                                     <button class="btn-action-editar" onclick="editarJogador(${jogador.id})">Editar</button>
-                                    <button class="btn-action-excluir" onclick="deletarJogador(${jogador.id})">Excluir</button>
+                                    <button class="btn-action-excluir" onclick="mostrarConfirmacaoDeleteJogador(${jogador.id})">Excluir</button>
                                 </div>
                             </li>`;
                     });
@@ -489,22 +609,13 @@
         }
 
         function carregarPartidas() {
-            console.log("Iniciando carregarPartidas, torneioId:", torneioId);
             fetch(`/partidas/?torneio_id=${torneioId}`)
                 .then(response => {
-                    console.log("Status da resposta:", response.status);
-                    if (!response.ok) {
-                        throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
-                    }
+                    if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
                     return response.json();
                 })
                 .then(partidas => {
-                    console.log("Partidas recebidas:", partidas);
                     const lista = document.getElementById("lista-partidas");
-                    if (!lista) {
-                        console.error("Elemento 'lista-partidas' não encontrado no DOM");
-                        return;
-                    }
                     lista.innerHTML = "";
                     if (!Array.isArray(partidas) || partidas.length === 0) {
                         lista.innerHTML = "<p>Nenhuma partida encontrada para este torneio.</p>";
@@ -529,13 +640,95 @@
                                 </div>
                                 <div class="partida-actions">
                                     <button class="btn-action-editar" onclick="editarPartida(${partida.id})">Editar</button>
-                                    <button class="btn-action-excluir" onclick="deletarPartida(${partida.id})">Excluir</button>
+                                    <button class="btn-action-excluir" onclick="mostrarConfirmacaoDeletePartida(${partida.id})">Excluir</button>
                                 </div>
                             </div>`;
                     });
                 })
                 .catch(error => console.error("Erro ao carregar partidas:", error));
         }
+
+        // Funções de Confirmação de Deleção
+        function mostrarConfirmacaoDeleteTime(id) {
+            itemIdToDelete = id;
+            const modal = new bootstrap.Modal(document.getElementById('deleteTimeModal'));
+            modal.show();
+        }
+
+        function mostrarConfirmacaoDeleteJogador(id) {
+            itemIdToDelete = id;
+            const modal = new bootstrap.Modal(document.getElementById('deleteJogadorModal'));
+            modal.show();
+        }
+
+        function mostrarConfirmacaoDeletePartida(id) {
+            itemIdToDelete = id;
+            const modal = new bootstrap.Modal(document.getElementById('deletePartidaModal'));
+            modal.show();
+        }
+
+        // Listeners para confirmação de deleção
+        document.getElementById('confirmDeleteTimeBtn').addEventListener('click', function() {
+            if (itemIdToDelete) {
+                fetch(`/times/${itemIdToDelete}`, { method: "DELETE" })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(text => {
+                                let errorMessage = "Erro ao deletar time";
+                                try {
+                                    const data = JSON.parse(text);
+                                    errorMessage = data.detail || errorMessage;
+                                } catch (e) {
+                                    errorMessage = text || errorMessage;
+                                }
+                                throw new Error(errorMessage);
+                            });
+                        }
+                        carregarTimes();
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('deleteTimeModal'));
+                        modal.hide();
+                    })
+                    .catch(error => {
+                        console.error("Erro ao deletar time:", error);
+                        alert(`Falha ao deletar time: ${error.message}`);
+                    })
+                    .finally(() => itemIdToDelete = null);
+            }
+        });
+
+        document.getElementById('confirmDeleteJogadorBtn').addEventListener('click', function() {
+            if (itemIdToDelete) {
+                fetch(`/jogadores/${itemIdToDelete}/`, { method: "DELETE" })
+                    .then(response => {
+                        if (!response.ok) throw new Error("Erro ao deletar jogador");
+                        carregarJogadores();
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('deleteJogadorModal'));
+                        modal.hide();
+                    })
+                    .catch(error => {
+                        console.error("Erro ao deletar jogador:", error);
+                        alert(`Falha ao deletar jogador: ${error.message}`);
+                    })
+                    .finally(() => itemIdToDelete = null);
+            }
+        });
+
+        document.getElementById('confirmDeletePartidaBtn').addEventListener('click', function() {
+            if (itemIdToDelete) {
+                fetch(`/partidas/${itemIdToDelete}/`, { method: "DELETE" })
+                    .then(response => {
+                        if (!response.ok) throw new Error("Erro ao deletar partida");
+                        carregarPartidas();
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('deletePartidaModal'));
+                        modal.hide();
+                    })
+                    .catch(error => {
+                        console.error("Erro ao deletar partida:", error);
+                        alert(`Falha ao deletar partida: ${error.message}`);
+                    })
+                    .finally(() => itemIdToDelete = null);
+            }
+        });
 
         document.getElementById("formTime").addEventListener("submit", function(e) {
             e.preventDefault();
@@ -584,20 +777,6 @@
                 })
                 .catch(error => console.error("Erro ao carregar time para edição:", error));
         }
-
-        function deletarTime(id) {
-    fetch(`/times/${id}`, { method: "DELETE" })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(data => { throw new Error(data.detail || "Erro ao deletar time"); });
-            }
-            carregarTimes();
-        })
-        .catch(error => {
-            console.error("Erro ao deletar time:", error);
-            alert(error.message);
-        });
-}
 
         function resetarFormularioTime() {
             document.getElementById("formTime").reset();
@@ -659,15 +838,6 @@
                 .catch(error => console.error("Erro ao carregar jogador para edição:", error));
         }
 
-        function deletarJogador(id) {
-            fetch(`/jogadores/${id}/`, { method: "DELETE" })
-                .then(response => {
-                    if (!response.ok) throw new Error("Erro ao deletar jogador");
-                    carregarJogadores();
-                })
-                .catch(error => console.error("Erro ao deletar jogador:", error));
-        }
-
         function resetarFormularioJogador() {
             document.getElementById("formJogador").reset();
             document.getElementById("modalJogadoresLabel").textContent = "Adicionar Jogador";
@@ -723,15 +893,6 @@
                     modal.show();
                 })
                 .catch(error => console.error("Erro ao carregar partida para edição:", error));
-        }
-
-        function deletarPartida(id) {
-            fetch(`/partidas/${id}/`, { method: "DELETE" })
-                .then(response => {
-                    if (!response.ok) throw new Error("Erro ao deletar partida");
-                    carregarPartidas();
-                })
-                .catch(error => console.error("Erro ao deletar partida:", error));
         }
 
         function resetarFormularioPartida() {

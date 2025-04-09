@@ -1,6 +1,6 @@
 <div id="formTorneio" style="display: none;" class="container mt-5">
     <h2>Criar Novo Torneio</h2>
-    <form id="formTorneioForm" enctype="multipart/form-data" class="torneio-form">
+    <form id="formTorneioForm" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="torneioNome" class="form-label">Nome do Torneio</label>
             <input type="text" class="form-control" id="torneioNome" name="nome" required>
@@ -18,18 +18,19 @@
             <textarea class="form-control" id="torneioDescricao" name="descricao" rows="3"></textarea>
         </div>
         <div class="mb-3">
-            <label for="torneioFormato" class="form-label">Formato</label>
+            <label for="torneioFormato" class="form-label">Formato do Campeonato</label>
             <select class="form-control" id="torneioFormato" name="formato" required>
-                <option value="" disabled selected>Selecione o formato</option>
-                <option value="Pontos Corridos">Pontos Corridos</option>
-                <option value="Fases de Grupos">Fases de Grupos</option>
-                <option value="Mata-Mata">Mata-Mata</option>
+                <option value="classificacao">Pontos Corridos</option>
+                <option value="grupos">Fases de Grupos + Mata-mata</option>
+                <option value="mata-mata">Mata-mata</option>
             </select>
         </div>
         <div class="mb-3">
             <label for="torneioCapa" class="form-label">Capa do Torneio</label>
             <input type="file" class="form-control" id="torneioCapa" name="capa" accept="image/*">
         </div>
-        <button type="submit" class="btn btn-custom" id="btnSalvarTorneio">Criar Torneio</button>
+        <div class="button-group">
+            <button type="submit" class="btn btn-custom" id="btnSalvarTorneio">Criar Campeonato</button>
+        </div>
     </form>
 </div>
