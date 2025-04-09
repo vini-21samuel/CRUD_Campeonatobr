@@ -400,6 +400,24 @@
         </div>
     </div>
 
+    <!-- Modal de Aviso de Dependências -->
+    <div class="modal fade" id="deleteTimeWithDependenciesModal" tabindex="-1" aria-labelledby="deleteTimeWithDependenciesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteTimeWithDependenciesModalLabel">Atenção: Time com Dependências</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Este time possui partidas ou jogadores associados e não pode ser deletado enquanto houver essas dependências.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal de Confirmação de Deleção de Jogador -->
     <div class="modal fade" id="deleteJogadorModal" tabindex="-1" aria-labelledby="deleteJogadorModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -672,6 +690,13 @@
             if (itemIdToDelete) {
                 fetch(`/times/${itemIdToDelete}`, { method: "DELETE" })
                     .then(response => {
+                        if (response.status === 500) { // Erro de dependências
+                            const dependenciesModal = new bootstrap.Modal(document.getElementById('deleteTimeWithDependenciesModal'));
+                            dependenciesModal.show();
+                            const initialModal = bootstrap.Modal.getInstance(document.getElementById('deleteTimeModal'));
+                            initialModal.hide();
+                            return; // Para o fluxo aqui
+                        }
                         if (!response.ok) {
                             return response.text().then(text => {
                                 let errorMessage = "Erro ao deletar time";
