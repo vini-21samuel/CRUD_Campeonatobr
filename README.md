@@ -1,168 +1,113 @@
-# API de Interclasse Escolar ⚽
+# Sistema de Gerenciamento de Campeonatos de futebol, futsal e entre outras modalidades 🏆
 
-Este projeto é uma API desenvolvida para gerenciar competições esportivas de interclasse em ambiente escolar. A API permite criar, listar, atualizar e deletar informações sobre partidas, equipes e resultados, promovendo uma organização eficiente das competições. Além disso, fornece endpoints bem documentados para interação com o sistema.
+Este projeto é um sistema completo para gerenciar competições esportivas escolares, como torneios de interclasse. Ele combina uma API robusta com uma interface de usuário (frontend) interativa, permitindo criar, listar, atualizar e deletar informações sobre torneios, times, jogadores e partidas. O sistema é projetado para promover organização eficiente e oferecer uma experiência acessível para administradores, como professores e organizadores.
 
 ---
 
 ## 💡 Para que serve no mundo real?
 
-No mundo real, esta API pode ser utilizada por escolas para gerenciar torneios esportivos internos, facilitando a administração e divulgação de informações como:
-- Agendamento de partidas.
-- Registro de equipes e seus integrantes.
-- Controle de resultados e estatísticas de jogos.
-- Consulta de informações para alunos, professores e organizadores.
+No contexto real, este sistema pode ser usado por escolas para:
+- Gerenciar torneios internos, como competições entre turmas ou times.
+- Organizar informações sobre times (nome, logo, local), jogadores (nome, posição, gols) e partidas (datas, resultados).
+- Facilitar a administração com uma interface visual para adicionar, editar ou remover dados.
+- Fornecer transparência e acesso a estatísticas para alunos, professores e organizadores.
 
-Este projeto pode ser adaptado para atender a qualquer tipo de torneio ou competição esportiva em diversos contextos, promovendo organização e transparência.
+O projeto é flexível e pode ser adaptado para outros tipos de competições esportivas, desde eventos locais até torneios regionais.
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **Python 3.12**: Linguagem de programação principal.
+### Backend
+- **Python 3.12**: Linguagem principal para o backend.
 - **FastAPI**: Framework para construção de APIs rápidas e eficientes.
 - **Uvicorn**: Servidor ASGI para rodar a aplicação.
-- **SQLAlchemy**: ORM para gerenciamento de banco de dados.
-- **Pydantic**: Validação e tipagem de dados.
-- **Docker**: Contêinerização do ambiente de desenvolvimento.
-- **PostgreSQL**: Banco de dados relacional.
-- **Git**: Controle de versão.
+- **SQLAlchemy**: ORM para gerenciamento do banco de dados relacional.
+- **Pydantic**: Validação e tipagem de dados nas requisições/respostas.
+- **PostgreSQL**: Banco de dados relacional para persistência de dados.
+- **Docker**: Contêinerização do ambiente de desenvolvimento e produção.
+
+### Frontend
+- **HTML5/CSS3**: Estrutura e estilização da interface de usuário.
+- **Bootstrap 5.3**: Framework CSS para design responsivo e componentes prontos.
+- **JavaScript (Vanilla)**: Lógica dinâmica no cliente, incluindo chamadas à API via `fetch`.
+- **Jinja2**: Motor de templates para renderização dinâmica de páginas no backend.
+
+### Controle de Versão
+- **Git**: Gerenciamento de versões do código.
 
 ---
 
-## 📌 Documentação das Rotas
+## 📌 Estrutura do Sistema
 
-### 🏠 Main
+O sistema é composto por uma API RESTful (backend) e uma interface web (frontend). O backend fornece endpoints para manipulação de dados, enquanto o frontend consome esses endpoints e oferece uma experiência visual para os usuários.
 
-| Método  | Rota         | Descrição |
-|---------|-------------|-----------|
-| GET     | `/`         | Página principal |
+### Rotas da API (Backend)
 
+#### 🏠 Main
+| Método | Rota       | Descrição                  |
+|--------|------------|----------------------------|
+| GET    | `/`        | Página principal do sistema |
 
-### 👤 Usuários
+#### 👤 Usuários
+| Método | Rota                | Descrição                   |
+|--------|---------------------|-----------------------------|
+| GET    | `/usuarios/register` | Formulário de registro      |
+| POST   | `/usuarios/register` | Cadastra novo usuário       |
+| GET    | `/usuarios/login`    | Formulário de login         |
+| POST   | `/usuarios/login`    | Autentica um usuário        |
 
-| Método  | Rota                     | Descrição |
-|---------|--------------------------|-----------|
-| GET     | `/usuarios/register`      | Retorna o formulário de registro de usuários. |
-| POST    | `/usuarios/register`      | Cadastra um novo usuário. |
-| GET     | `/usuarios/login`         | Retorna o formulário de login. |
-| POST    | `/usuarios/login`         | Autentica um usuário. |
+#### ⚽ Times
+| Método | Rota             | Descrição                   |
+|--------|------------------|-----------------------------|
+| GET    | `/times/`        | Lista todos os times        |
+| POST   | `/times/`        | Cadastra um novo time       |
+| GET    | `/times/{time_id}` | Detalhes de um time       |
+| PUT    | `/times/{time_id}` | Atualiza um time          |
+| DELETE | `/times/{time_id}` | Remove um time            |
 
-### ⚽ Times
+#### 🏃 Jogadores
+| Método | Rota                  | Descrição                   |
+|--------|-----------------------|-----------------------------|
+| GET    | `/jogadores/`         | Lista todos os jogadores    |
+| POST   | `/jogadores/`         | Cadastra um novo jogador    |
+| GET    | `/jogadores/{jogador_id}` | Detalhes de um jogador  |
+| PUT    | `/jogadores/{jogador_id}` | Atualiza um jogador     |
+| DELETE | `/jogadores/{jogador_id}` | Remove um jogador       |
 
-| Método  | Rota                | Descrição |
-|---------|---------------------|-----------|
-| GET     | `/times/`           | Retorna a lista de times. |
-| POST    | `/times/`           | Cadastra um novo time. |
-| GET     | `/times/{time_id}`  | Retorna detalhes de um time específico. |
-| PUT     | `/times/{time_id}`  | Atualiza um time. |
-| DELETE  | `/times/{time_id}`  | Remove um time. |
+#### 🏟️ Partidas
+| Método | Rota                  | Descrição                   |
+|--------|-----------------------|-----------------------------|
+| GET    | `/partidas/`          | Lista todas as partidas     |
+| POST   | `/partidas/`          | Cadastra uma nova partida   |
+| GET    | `/partidas/{partida_id}` | Detalhes de uma partida  |
+| PUT    | `/partidas/{partida_id}` | Atualiza uma partida     |
+| DELETE | `/partidas/{partida_id}` | Remove uma partida       |
 
-### 🏃 Jogadores
+#### 🏆 Torneios (Adicionado com base no frontend)
+| Método | Rota                              | Descrição                   |
+|--------|-----------------------------------|-----------------------------|
+| GET    | `/torneios/campeonatos`           | Lista os campeonatos        |
+| GET    | `/torneios/sobre`                 | Página "Sobre"              |
+| GET    | `/torneios/configurar_campeonato/{torneio_id}` | Configuração de torneio |
 
-| Método  | Rota                     | Descrição |
-|---------|--------------------------|-----------|
-| GET     | `/jogadores/`            | Retorna a lista de jogadores. |
-| POST    | `/jogadores/`            | Cadastra um novo jogador. |
-| GET     | `/jogadores/{jogador_id}` | Retorna detalhes de um jogador. |
-| PUT     | `/jogadores/{jogador_id}` | Atualiza um jogador. |
-| DELETE  | `/jogadores/{jogador_id}` | Remove um jogador. |
+### Interface Web (Frontend)
+O frontend é uma aplicação dinâmica que consome a API e exibe os dados em uma interface amigável. Ele inclui:
+- **Navbar**: Navegação com links para "Início", "Campeonatos", "Sobre" e "Logout".
+- **Gerenciamento de Torneios**: Exibe informações do torneio (nome, organizador, data, formato, descrição) e permite gerenciar times, jogadores e partidas.
+- **Modais**: Formulários para adicionar/editar times, jogadores e partidas, além de confirmações de deleção com aviso de dependências.
 
-### 🏟️ Partidas
+---
 
-| Método  | Rota                     | Descrição |
-|---------|--------------------------|-----------|
-| GET     | `/partidas/`             | Retorna a lista de partidas. |
-| POST    | `/partidas/`             | Cadastra uma nova partida. |
-| GET     | `/partidas/{partida_id}` | Retorna detalhes de uma partida. |
-| PUT     | `/partidas/{partida_id}` | Atualiza uma partida. |
-| DELETE  | `/partidas/{partida_id}` | Remove uma partida. |
-
-
-
-## 🚀 Como usar o projeto
+## 🚀 Como Configurar e Testar o Sistema
 
 ### 1. Pré-requisitos
-
-Certifique-se de ter os seguintes softwares instalados:
-- **Docker** e **Docker Compose**
-- **Git**
+- **Docker** e **Docker Compose**: Para contêinerização.
+- **Git**: Para clonar o repositório.
+- **Versão Anterior**: Certifique-se de ter a versão anterior da API (CRUD_Campeonatobr) como referência para migrar dados ou ajustar rotas, se necessário.
 
 ### 2. Clonar o Repositório
-
 ```bash
 git clone https://github.com/vini-21samuel/CRUD_Campeonatobr.git
-cd Projeto
+cd CRUD_Campeonatobr/Projeto
 ```
-### 3. Configuração com Docker
-
-Subir os contêineres:
-```bash
-  docker-compose up --build
-```
-Acesse a aplicação no navegador:
-```bash
-  http://localhost:8000
-```
-Teste as rotas na documentação interativa:
-```bash
-    http://localhost:8000/docs
-```
-### 4. Uso de Jinja2 para Templates
-A aplicação utiliza Jinja2 para renderizar templates HTML. A partir de agora, ao acessar o sistema, você pode ver as páginas com o conteúdo dinâmico sendo gerado diretamente pelo servidor.
-
-### 5 Banco de Dados - Estrutura de Tabelas
-
-Este projeto utiliza o banco de dados PostgreSQL e as seguintes tabelas foram criadas:
-
-## Tabela que tem que criar ao subir os conteiners
-
-Armazena as informações dos usuários do sistema.
-
-```sql
-CREATE TABLE usuarios (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    username VARCHAR(100) UNIQUE NOT NULL,
-    phone VARCHAR(20) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    hashed_password TEXT NOT NULL
-);
-
-CREATE TABLE times (
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(100),
-    lugar VARCHAR(100)
-);
-
-CREATE TABLE jogadores (
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(100),
-    posicao VARCHAR(100),
-    gols INT DEFAULT 0,
-    time_id INT REFERENCES times(id)
-);
-CREATE TABLE partidas (
-    id SERIAL PRIMARY KEY,
-    time1_id INT REFERENCES times(id),
-    time2_id INT REFERENCES times(id),
-    resultado VARCHAR(100),
-    data DATE
-);
-```
-
-
-### 6. resultados dos templates
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/dd6b7d7b-3435-40c7-85b7-adb23c42a9aa" />
-</p>
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/54d147c7-1cfc-4bd8-a124-0d8fd3b2e708" />
-</p>
-
-
-
- 
-
-
