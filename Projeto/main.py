@@ -28,7 +28,7 @@ async def home(request: Request, db: Session = Depends(get_db)):
     torneios = db.query(Torneio).all()
     return templates.TemplateResponse("base.html", {"request": request, "torneios": torneios})
 
-# Importe e registre todas as rotas
+
 from app.routes.times import router as times_router
 from app.routes.jogadores import router as jogadores_router
 from app.routes.partidas import router as partidas_router
