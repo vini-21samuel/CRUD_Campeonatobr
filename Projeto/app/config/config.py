@@ -1,15 +1,9 @@
-from pydantic_settings import BaseSettings
+import os
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-class Settings(BaseSettings):
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_HOST: str
-    DATABASE_PORT: int
-    POSTGRES_DB: str
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-    class Config:
-        env_file = ".env"  # Caminho do arquivo .env
-        env_file_encoding = 'utf-8'
-
-settings = Settings()
-
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
